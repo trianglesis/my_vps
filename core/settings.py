@@ -94,6 +94,7 @@ CURR_HOSTNAME = socket.getfqdn()
 ALLOWED_HOSTS = ['localhost',
                  '127.0.0.1',
                  core.security.Credentials.SITE,
+                 core.security.Credentials.SITE_IP,
                  core.security.Credentials.FQDN,
                  socket.getfqdn(),
                  socket.gethostname()
