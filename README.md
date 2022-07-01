@@ -1,2 +1,2 @@
-# my_vps
+# core
 My Local Tools and projects
