@@ -5,6 +5,8 @@ yum install libffi-devel
 yum install perl-IPC-Cmd
 
 
+### https://docs.python.org/3.10/using/unix.html
+
 
 ### Install OPEN SSL
 curl -O https://www.openssl.org/source/openssl-3.0.4.tar.gz
@@ -22,24 +24,61 @@ curl -O https://www.python.org/ftp/python/3.10.5/Python-3.10.5.tgz
 tar -xzf Python-3.10.5.tgz
 cd Python-3.10.5
 
-./configure CFLAGS="-I/usr/local/include" LDFLAGS="-L/usr/local/lib" -C --enable-optimizations --with-lto --enable-shared --with-openssl=/usr/local/bin/custom-openssl --with-openssl-rpath=auto --prefix=/usr/local
+CFLAGS="-I/usr/local/include" \
+
+./configure \
+    LDFLAGS="-Wl,-rpath /usr/local/lib" \
+    -C \
+    --enable-loadable-sqlite-extensions \
+    --enable-optimizations \
+    --enable-shared \
+    --with-lto \
+    --with-openssl=/usr/local/bin/custom-openssl \
+    --with-openssl-rpath=auto \
+    --prefix=/usr/local/python3.10.5
 
 make -j8
 make altinstall
 
+# Linking
+from /usr/local/python3.10.5/bin/ to /usr/bin/
+
+ln -s /usr/local/python3.10.5/bin/pip3.10 /usr/bin/
+ln -s /usr/local/python3.10.5/bin/python3.10 /usr/bin/
+ln -s /usr/local/python3.10.5/bin/python3.10-config /usr/bin/
+
+ln -s /usr/local/python3.10.5/bin/pip3.10 /usr/local/bin/
+ln -s /usr/local/python3.10.5/bin/python3.10 /usr/local/bin/
+ln -s /usr/local/python3.10.5/bin/python3.10-config /usr/local/bin/
+
+ln -s /usr/local/python3.10.5/bin/python3.10 /usr/local/sbin/
 
 # maybe add:
 export CPATH=/usr/local/include
 export LIBRARY_PATH=/usr/local/lib
 export LD_LIBRARY_PATH=/usr/local/lib
 
+export LIBRARY_PATH=LIBRARY_PATH:/usr/local/python3.10.5/lib/ && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python3.10.5/lib/
+
 # Probable fix
 # error while loading shared libraries: libpython3.10.so.1.0: cannot open shared object file: No such file or directory
-ldconfig /usr/local/lib
+ldconfig /usr/local/python3.10.5/lib/
+
+vi /etc/ld.so.conf.d/python3.10.5.conf
+include /usr/local/python3.10.5/lib/
+
 
 ####### REPEATEDLY failing with python shared libs:
 // https://stackoverflow.com/a/43623903
 P.S. I came across a similar problem while using virtualenv with python3.6, and I fixed it like so:
 
-First, append include <lib path of python3.x> to /etc/ld.so.conf (Something like: include /opt/python361/lib or include /usr/local/lib)
-Then, activate the new configuration by running sudo /sbin/ldconfig -v.
+First, append include <lib path of python3.x> to /etc/ld.so.conf
+(Something like: include /opt/python361/lib or include /usr/local/lib)
+
+Then, activate the new configuration by running
+sudo /sbin/ldconfig -v
+
+
+rm -rf /usr/local/bin/2to3-3.10 && rm -rf /usr/local/bin/idle3.10 && rm -rf /usr/local/bin/pip3.10 && rm -rf /usr/local/bin/pydoc3.10 && rm -rf /usr/local/bin/python3.10 && rm -rf /usr/local/bin/python3.10-config
+
+rm -rf /usr/local/lib/libpython3.10.so -> libpython3.10.so.1.0 && rm -rf /usr/local/lib/libpython3.10.so.1.0 && rm -rf /usr/local/lib/python3.10
