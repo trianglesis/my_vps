@@ -1,3 +1,10 @@
+ln -s /usr/local/bin/pip3.10 /usr/local/bin/pip3
+ln -s /usr/local/bin/pip3.10 /usr/bin/
+ln -s /usr/local/bin/pip3.10 /usr/bin/pip3
+
+yum install python3-devel
+
+
 ========= WSGI MOD ================================
 We should have HTTPD installed!
 pip3 install mod_wsgi
@@ -6,11 +13,11 @@ pip3 install mod_wsgi
 # https://virtualenv.pypa.io/en/latest/reference/#virtualenv-command
 pip3 install virtualenv
 
-virtualenv --python=/usr/local/bin/python3 core
+virtualenv --python=/usr/local/bin/python3.10 venv
 OR (from added symlink)
 
 cd /var/www/octopus
-virtualenv --python=/usr/bin/python3 venv --system-site-packages
+virtualenv --python=/usr/local/bin/python3.10 venv --system-site-packages
 source venv/bin/activate
 source venv/bin/deactivate
 

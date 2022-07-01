@@ -90,6 +90,7 @@ cd httpd-2.4.54
 
 make && make install
 ln -s /usr/local/apache2/sbin/apachectl /usr/local/sbin/
+ln -s /usr/local/apache2/bin/apxs /usr/local/sbin/
 
 # Customize
 vi /usr/local/apache2/conf/httpd.conf
