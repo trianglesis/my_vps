@@ -1,3 +1,7 @@
 
+## NEVER TRACK THIS FILE, ONLY CREATE ONCE
+my_vps/security.py
+
+
 .idea/
 *.pyc
