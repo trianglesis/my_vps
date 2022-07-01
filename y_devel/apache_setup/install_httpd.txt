@@ -17,8 +17,7 @@ https://httpd.apache.org/download.cgi
 https://httpd.apache.org/docs/2.4/install.html
 
 curl -O https://dlcdn.apache.org/httpd/httpd-2.4.54.tar.gz
-#### gzip -d gzip -d httpd-2.4.54.tar.gz
-tar xvf httpd-2.4.54.tar
+tar xvf httpd-2.4.54.tar.gz
 cd httpd-2.4.54
 
 # Alternative flags used:
@@ -56,6 +55,16 @@ make install
 vi /usr/local/apache2/conf/httpd.conf
 # Test
 /usr/local/apache2/bin/apachectl -k start
+
+
+## SETUP:
+apachectl configtest
+
+firewall-cmd --zone=public --add-service=https
+iptables -A INPUT -p tcp --dport 443 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 443 -m conntrack --ctstate ESTABLISHED -j ACCEPT
+
+service httpd restart
 
 
 
@@ -100,3 +109,6 @@ Try to set up OpenSSL with other versions maybe?
 
 
 ## nghttp2 version is too old
+
+
+

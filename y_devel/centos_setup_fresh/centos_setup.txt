@@ -1,0 +1,13 @@
+yum install epel-release
+yum update
+
+
+yum install wget
+
+setenforce 0
+sestatus
+
+
+yum groupinstall "Development Tools"
+yum install openssl-devel
+yum install libffi-devel

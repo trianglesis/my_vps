@@ -1,0 +1,6 @@
+https://dev.mysql.com/downloads/repo/yum/
+wget https://dev.mysql.com/get/mysql80-community-release-el8-4.noarch.rpm
+rpm -ivh mysql80-community-release-el8-4.noarch.rpm
+yum update
+
+yum install mysql-server
