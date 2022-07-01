@@ -1,4 +1,4 @@
-## Inb4:
+## Inb4: https://developpaper.com/source-installation-apache-problems-encountered-and-solutions/
 1.
 yum install gcc
 
@@ -17,29 +17,45 @@ https://httpd.apache.org/download.cgi
 https://httpd.apache.org/docs/2.4/install.html
 
 curl -O https://dlcdn.apache.org/httpd/httpd-2.4.54.tar.gz
-
-
-Extract	$ gzip -d gzip -d httpd-2.4.54.tar.gz
+#### gzip -d gzip -d httpd-2.4.54.tar.gz
 tar xvf httpd-2.4.54.tar
 cd httpd-2.4.54
 
 # Alternative flags used:
-./configure LDFLAGS="-Wl,-V,-L/usr/local/lib" --with-openssl=/usr/local/bin/custom-openssl --with-openssl-rpath=auto --with-pcre=/u01/app/apache/pcre/bin --prefix=/usr/local/apache2
+## 0.
+./configure --prefix=/usr/local/apache2
+## 1.
+./configure LDFLAGS="-Wl,-V,-L/usr/local/lib" --with-openssl=/usr/local/bin/custom-openssl --prefix=/usr/local/apache2
 
-# ERROR may occur:
-## collect2: error: ld returned 1 exit status
-## Try to ignore and install anyway:
+## 2.
+./configure \
+    --prefix=/usr/local/apache2 \
+    --enable-ssl \
+    --with-ssl=/usr/local/bin/custom-openssl \
+    --enable-ssl-staticlib-deps \
+    --enable-mods-static=ssl
+
+## 3.
+./configure \
+    LDFLAGS="-Wl,-V,-L/usr/local/lib" \
+    --with-openssl=/usr/local/bin/custom-openssl \
+    --prefix=/usr/local/apache2 \
+    --sbindir=/usr/local/apache2/sbin \
+    --with-apr=/usr/local/apr/ \
+    --with-apr-util=/usr/local/apr-util \
+    --with-pcre=/usr/local/pcre/ \
+    --enable-ssl \
+    --enable-proxy=shared \
+    --enable-so \
+    --enable-mods-shared=all
+
 make
-
-# No luck with:
-## collect2: error: ld returned 1 exit status
 make install
 
 # Customize
 vi /usr/local/apache2/conf/httpd.conf
 # Test
 /usr/local/apache2/bin/apachectl -k start
-
 
 
 
@@ -58,10 +74,29 @@ make install
 curl -O https://downloads.apache.org/apr/apr-util-1.6.1.tar.gz
 tar xzf apr-util-1.6.1.tar.gz
 cd apr-util-1.6.1
-./configure --with-apr=/usr/local/apr/bin/apr-1-config
+./configure --with-apr=/usr/local/apr/bin/apr-1-config --prefix=/usr/local/apr-util
+make
+make install
+
+## warning: remember to run
+libtool --finish /usr/local/apr/lib
+
+
+## PCRE installation
+wget https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.gz
+tar xzf pcre2-10.40.tar.gz
+cd pcre2-10.40
+./configure --prefix=/usr/local/pcre
 make
 make install
 
 
 ## fatal error: expat.h: No such file or directory
 yum install expat-devel
+
+
+## collect2: error: ld returned 1 exit status
+Try to set up OpenSSL with other versions maybe?
+
+
+## nghttp2 version is too old
