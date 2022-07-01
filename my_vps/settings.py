@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
-import my_vps.config_cred
+import socket
+import my_vps.security
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = my_vps.config_cred.Credentials.SECRET_KEY
+SECRET_KEY = my_vps.security.Credentials.SECRET_KEY
 CURR_HOSTNAME = socket.getfqdn()
 
 ALLOWED_HOSTS = ['localhost',
                  '127.0.0.1',
-                 my_vps.config_cred.Credentials.FQDN,
+                 my_vps.security.Credentials.FQDN,
                  socket.getfqdn(),
                  socket.gethostname()
                  ]
@@ -34,7 +35,7 @@ ALLOWED_HOSTS = ['localhost',
 CSRF_TRUSTED_ORIGINS = [
     "https://127.0.0.1",
     "https://localhost",
-    f"https://{my_vps.config_cred.Credentials.FQDN}",
+    f"https://{my_vps.security.Credentials.FQDN}",
 ]
 
 INTERNAL_IPS = [
@@ -130,12 +131,12 @@ DATABASES = {
 # Later ADD Mysql to:
 # DATABASES = {
 #     'default': {
-#         'ENGINE': my_vps.config_cred.Credentials.ENGINE,
-#         'NAME': my_vps.config_cred.Credentials.NAME,
-#         'USER': my_vps.config_cred.Credentials.USER,
-#         'PASSWORD': my_vps.config_cred.Credentials.PASSWORD,
-#         'HOST': my_vps.config_cred.Credentials.HOST,
-#         'PORT': my_vps.config_cred.Credentials.PORT,
+#         'ENGINE': my_vps.security.Credentials.ENGINE,
+#         'NAME': my_vps.security.Credentials.NAME,
+#         'USER': my_vps.security.Credentials.USER,
+#         'PASSWORD': my_vps.security.Credentials.PASSWORD,
+#         'HOST': my_vps.security.Credentials.HOST,
+#         'PORT': my_vps.security.Credentials.PORT,
 #         'CONN_MAX_AGE': 8000,
 #         'OPTIONS': {
 #             'read_default_file': '/etc/my.cnf',
@@ -197,12 +198,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # https://docs.djangoproject.com/en/2.0/topics/email/
-EMAIL_HOST = my_vps.config_cred.Credentials.EMAIL_HOST
+EMAIL_HOST = my_vps.security.Credentials.EMAIL_HOST
 
 # Mail addr:
-EMAIL_ADDR = my_vps.config_cred.Credentials.HOSTEMAIL
-SITE_DOMAIN = my_vps.config_cred.Credentials.FQDN
-SITE_SHORT_NAME = my_vps.config_cred.Credentials.SITE_SHORT_NAME
+EMAIL_ADDR = my_vps.security.Credentials.HOSTEMAIL
+SITE_DOMAIN = my_vps.security.Credentials.FQDN
+SITE_SHORT_NAME = my_vps.security.Credentials.SITE_SHORT_NAME
 
 # Django registration:
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -213,7 +214,7 @@ REGISTRATION_OPEN = True
 # https://github.com/celery/django-celery/issues/359
 CONN_MAX_AGE = 8000
 
-ADMINS = my_vps.config_cred.ADMINS
+ADMINS = my_vps.security.ADMINS
 
 
 ASGI_APPLICATION = "my_vps.asgi.application"
