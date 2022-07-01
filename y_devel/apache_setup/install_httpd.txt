@@ -1,17 +1,57 @@
 ## Inb4: https://developpaper.com/source-installation-apache-problems-encountered-and-solutions/
 1.
 yum install gcc
+yum install perl-IPC-Cmd
+yum install libxml2-devel
+yum install expat-devel
 
 2. Check OpenSSL compile newest
-curl -O https://www.openssl.org/source/openssl-1.1.1p.tar.gz
-tar xzf openssl-1.1.1p.tar.gz
-pushd openssl-1.1.1p
+curl -O https://www.openssl.org/source/openssl-3.0.4.tar.gz
+tar xzf openssl-3.0.4.tar.gz
+cd openssl-3.0.4
 ./config --prefix=/usr/local/bin/custom-openssl --libdir=lib --openssldir=/etc/pki/tls
 make -j1 depend
 make -j8
 make install_sw
-popd
 
+
+## INSTALL apr
+
+curl -O https://downloads.apache.org/apr/apr-1.7.0.tar.gz
+tar xzf apr-1.7.0.tar.gz
+cd apr-1.7.0
+./configure
+make && make install
+
+### Error: rm: cannot remove `libtoolT': No such file or directory
+touch libtoolT
+
+
+## INSTALL apr-utils
+curl -O https://downloads.apache.org/apr/apr-util-1.6.1.tar.gz
+tar xzf apr-util-1.6.1.tar.gz
+cd apr-util-1.6.1
+./configure --with-apr=/usr/local/apr/bin/apr-1-config --prefix=/usr/local/apr-util
+make && make install
+
+### WARNING: remember to run
+libtool --finish /usr/local/apr/lib
+
+
+## PCRE installation
+wget https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.gz
+tar xzf pcre2-10.40.tar.gz
+cd pcre2-10.40
+./configure --prefix=/usr/local/pcre
+make && make install
+
+
+
+##############################################################################################
+##############################################################################################
+############################# INSTALL APACHE2 ###############################################
+##############################################################################################
+##############################################################################################
 
 https://httpd.apache.org/download.cgi
 https://httpd.apache.org/docs/2.4/install.html
@@ -37,19 +77,19 @@ cd httpd-2.4.54
 ## 3.
 ./configure \
     LDFLAGS="-Wl,-V,-L/usr/local/lib" \
-    --with-openssl=/usr/local/bin/custom-openssl \
+    --with-ssl=/usr/local/bin/custom-openssl \
     --prefix=/usr/local/apache2 \
     --sbindir=/usr/local/apache2/sbin \
-    --with-apr=/usr/local/apr/ \
+    --with-apr=/usr/local/apr \
     --with-apr-util=/usr/local/apr-util \
-    --with-pcre=/usr/local/pcre/ \
+    --with-pcre=/usr/local/pcre/bin/pcre2-config \
     --enable-ssl \
     --enable-proxy=shared \
     --enable-so \
     --enable-mods-shared=all
 
-make
-make install
+make && make install
+ln -s /usr/local/apache2/sbin/apachectl /usr/local/sbin/
 
 # Customize
 vi /usr/local/apache2/conf/httpd.conf
@@ -65,50 +105,3 @@ iptables -A INPUT -p tcp --dport 443 -m conntrack --ctstate NEW,ESTABLISHED -j A
 iptables -A OUTPUT -p tcp --sport 443 -m conntrack --ctstate ESTABLISHED -j ACCEPT
 
 service httpd restart
-
-
-
-# ERRORS:
-## configure: error: APR not found.  Please read the documentation.
-## READ: https://geekflare.com/apache-installation-troubleshooting/
-
-curl -O https://downloads.apache.org/apr/apr-1.7.0.tar.gz
-tar xzf apr-1.7.0.tar.gz
-cd apr-1.7.0
-./configure
-make
-make install
-
-## configure: error: APR UTIL not found.  Please read the documentation.
-curl -O https://downloads.apache.org/apr/apr-util-1.6.1.tar.gz
-tar xzf apr-util-1.6.1.tar.gz
-cd apr-util-1.6.1
-./configure --with-apr=/usr/local/apr/bin/apr-1-config --prefix=/usr/local/apr-util
-make
-make install
-
-## warning: remember to run
-libtool --finish /usr/local/apr/lib
-
-
-## PCRE installation
-wget https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.gz
-tar xzf pcre2-10.40.tar.gz
-cd pcre2-10.40
-./configure --prefix=/usr/local/pcre
-make
-make install
-
-
-## fatal error: expat.h: No such file or directory
-yum install expat-devel
-
-
-## collect2: error: ld returned 1 exit status
-Try to set up OpenSSL with other versions maybe?
-
-
-## nghttp2 version is too old
-
-
-

@@ -15,14 +15,14 @@ cd Python-3.11.0a1/
 # Install OPEN SSL
 yum install perl-IPC-Cmd
 
-`curl -O https://www.openssl.org/source/openssl-3.11.0a1.tar.gz
+curl -O https://www.openssl.org/source/openssl-3.11.0a1.tar.gz
 tar xzf openssl-3.11.0a1.tar.gz
 pushd openssl-3.11.0a1
 ./config --prefix=/usr/local/bin/custom-openssl --libdir=lib --openssldir=/etc/pki/tls
 make -j1 depend
 make -j8
 make install_sw
-popd`
+popd
 
 # Install python with SSL Option
 
