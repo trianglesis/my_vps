@@ -1,0 +1,67 @@
+## Inb4:
+1.
+yum install gcc
+
+2. Check OpenSSL compile newest
+curl -O https://www.openssl.org/source/openssl-1.1.1p.tar.gz
+tar xzf openssl-1.1.1p.tar.gz
+pushd openssl-1.1.1p
+./config --prefix=/usr/local/bin/custom-openssl --libdir=lib --openssldir=/etc/pki/tls
+make -j1 depend
+make -j8
+make install_sw
+popd
+
+
+https://httpd.apache.org/download.cgi
+https://httpd.apache.org/docs/2.4/install.html
+
+curl -O https://dlcdn.apache.org/httpd/httpd-2.4.54.tar.gz
+
+
+Extract	$ gzip -d gzip -d httpd-2.4.54.tar.gz
+tar xvf httpd-2.4.54.tar
+cd httpd-2.4.54
+
+# Alternative flags used:
+./configure LDFLAGS="-Wl,-V,-L/usr/local/lib" --with-openssl=/usr/local/bin/custom-openssl --with-openssl-rpath=auto --with-pcre=/u01/app/apache/pcre/bin --prefix=/usr/local/apache2
+
+# ERROR may occur:
+## collect2: error: ld returned 1 exit status
+## Try to ignore and install anyway:
+make
+
+# No luck with:
+## collect2: error: ld returned 1 exit status
+make install
+
+# Customize
+vi /usr/local/apache2/conf/httpd.conf
+# Test
+/usr/local/apache2/bin/apachectl -k start
+
+
+
+
+# ERRORS:
+## configure: error: APR not found.  Please read the documentation.
+## READ: https://geekflare.com/apache-installation-troubleshooting/
+
+curl -O https://downloads.apache.org/apr/apr-1.7.0.tar.gz
+tar xzf apr-1.7.0.tar.gz
+cd apr-1.7.0
+./configure
+make
+make install
+
+## configure: error: APR UTIL not found.  Please read the documentation.
+curl -O https://downloads.apache.org/apr/apr-util-1.6.1.tar.gz
+tar xzf apr-util-1.6.1.tar.gz
+cd apr-util-1.6.1
+./configure --with-apr=/usr/local/apr/bin/apr-1-config
+make
+make install
+
+
+## fatal error: expat.h: No such file or directory
+yum install expat-devel
