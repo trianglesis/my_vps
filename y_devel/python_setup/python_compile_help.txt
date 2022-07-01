@@ -2,32 +2,28 @@ Pre-Requisits:
 yum groupinstall "Development Tools"
 yum install openssl-devel
 yum install libffi-devel
-
-
-### curl -O https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz
-
-curl -O https://www.python.org/ftp/python/3.11.0/Python-3.11.0a1.tgz
-tar -xzf Python-3.11.0a1.tgz
-cd Python-3.11.0a1/
-
-
-
-# Install OPEN SSL
 yum install perl-IPC-Cmd
 
-curl -O https://www.openssl.org/source/openssl-3.11.0a1.tar.gz
-tar xzf openssl-3.11.0a1.tar.gz
-pushd openssl-3.11.0a1
+
+
+### Install OPEN SSL
+curl -O https://www.openssl.org/source/openssl-3.0.4.tar.gz
+tar xzf openssl-3.0.4.tar.gz
+pushd openssl-3.0.4
 ./config --prefix=/usr/local/bin/custom-openssl --libdir=lib --openssldir=/etc/pki/tls
 make -j1 depend
 make -j8
 make install_sw
 popd
 
-# Install python with SSL Option
 
-pushd Python-3.11.0a1
+# Install python with SSL Option
+curl -O https://www.python.org/ftp/python/3.10.5/Python-3.10.5.tgz
+tar -xzf Python-3.10.5.tgz
+cd Python-3.10.5
+
 ./configure CFLAGS="-I/usr/local/include" LDFLAGS="-L/usr/local/lib" -C --enable-optimizations --with-lto --enable-shared --with-openssl=/usr/local/bin/custom-openssl --with-openssl-rpath=auto --prefix=/usr/local
+
 make -j8
 make altinstall
 
