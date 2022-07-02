@@ -191,24 +191,24 @@ DATABASES = {
 }
 
 # Later ADD Mysql to:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': core.security.Credentials.ENGINE,
-#         'NAME': core.security.Credentials.NAME,
-#         'USER': core.security.Credentials.USER,
-#         'PASSWORD': core.security.Credentials.PASSWORD,
-#         'HOST': core.security.Credentials.HOST,
-#         'PORT': core.security.Credentials.PORT,
-#         'CONN_MAX_AGE': 8000,
-#         'OPTIONS': {
-#             'read_default_file': '/etc/my.cnf',
-#             # 'read_default_file': '/etc/my.cnf.d/win_mysql.cnf',
-#             # 'init_command': 'SET default_storage_engine=INNODB;'
-#             # 'init_command': 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
-#             # 'init_command': 'SET default_storage_engine=INNODB',
-#         },
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': core.security.Credentials.ENGINE,
+        'NAME': core.security.Credentials.NAME,
+        'USER': core.security.Credentials.USER,
+        'PASSWORD': core.security.Credentials.PASSWORD_LOCAL,
+        'HOST': core.security.Credentials.HOST,
+        'PORT': core.security.Credentials.PORT,
+        'CONN_MAX_AGE': 8000,
+        'OPTIONS': {
+            'read_default_file': '/etc/my.cnf',
+            # 'read_default_file': '/etc/my.cnf.d/win_mysql.cnf',
+            # 'init_command': 'SET default_storage_engine=INNODB;'
+            # 'init_command': 'SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED',
+            # 'init_command': 'SET default_storage_engine=INNODB',
+        },
+    }
+}
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
