@@ -258,6 +258,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # https://docs.djangoproject.com/en/2.0/topics/email/
 EMAIL_HOST = core.security.Credentials.EMAIL_HOST
+EMAIL_PORT = core.security.Credentials.EMAIL_PORT
+EMAIL_SUBJECT_PREFIX = core.security.Credentials.EMAIL_SUBJECT_PREFIX
 
 # Mail addr:
 EMAIL_ADDR = core.security.Credentials.HOSTEMAIL

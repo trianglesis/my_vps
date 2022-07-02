@@ -204,17 +204,19 @@ DATABASES = {
     }
 }
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Win have different static logic
 
 STATICFILES_DIRS = (
-    # 'static',
+    'static',
     os.path.join(os.path.join(BASE_DIR, 'static'), 'octicons'),
+    os.path.join(os.path.join(BASE_DIR, 'static'), 'favicon'),
     os.path.join(os.path.join(BASE_DIR, 'static'), 'admin'),
     os.path.join(os.path.join(BASE_DIR, 'static'), 'core'),
 )
-STATIC_URL = '/static/'
+
 print(f"STATICFILES_DIRS: {STATICFILES_DIRS}")
 
 # Password validation
@@ -254,6 +256,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # https://docs.djangoproject.com/en/2.0/topics/email/
 EMAIL_HOST = core.security.Credentials.EMAIL_HOST
+EMAIL_PORT = core.security.Credentials.EMAIL_PORT
+EMAIL_SUBJECT_PREFIX = core.security.Credentials.EMAIL_SUBJECT_PREFIX
 
 # Mail addr:
 EMAIL_ADDR = core.security.Credentials.HOSTEMAIL
