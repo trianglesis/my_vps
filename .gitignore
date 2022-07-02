@@ -9,3 +9,7 @@ core/security.py
 
 /static/admin
 db.sqlite3
+/static/css/
+/static/fonts/
+/static/img/
+/static/js/
