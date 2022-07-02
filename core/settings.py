@@ -262,6 +262,7 @@ EMAIL_PORT = core.security.Credentials.EMAIL_PORT
 EMAIL_HOST_USER = core.security.Credentials.EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = core.security.Credentials.EMAIL_HOST_PASSWORD
 EMAIL_SUBJECT_PREFIX = core.security.Credentials.EMAIL_SUBJECT_PREFIX
+DEFAULT_FROM_EMAIL = core.security.Credentials.DEFAULT_FROM_EMAIL
 
 # Mail addr:
 EMAIL_ADDR = core.security.Credentials.HOSTEMAIL
