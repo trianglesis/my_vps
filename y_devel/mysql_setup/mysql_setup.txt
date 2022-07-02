@@ -4,3 +4,7 @@ rpm -ivh mysql80-community-release-el8-4.noarch.rpm
 yum update
 
 yum install mysql-server
+
+# Use in venv:
+yum install python3-devel mysql-devel
+/var/www/my_vps/venv/bin/pip3 install mysqlclient

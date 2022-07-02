@@ -36,3 +36,6 @@ WSL
 cd /mnt/g/Projects/lobster/
 virtualenv --python=/usr/local/python3.10.5/bin/python3.10 venv --system-site-packages
 pip install -r "" --ignore-installed
+
+
+/var/www/my_vps/venv/bin/pip3 install mysqlclient
