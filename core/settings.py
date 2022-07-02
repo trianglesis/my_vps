@@ -123,6 +123,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'debug_toolbar',
     'app.apps.CoreConfig',
 ]
 
@@ -273,5 +274,3 @@ CONN_MAX_AGE = 8000
 ADMINS = core.security.ADMINS
 
 # ASGI_APPLICATION = "core.asgi.application"
-
-print(f"Loading")

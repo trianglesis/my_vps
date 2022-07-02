@@ -123,6 +123,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'debug_toolbar',
     'app.apps.CoreConfig',
 ]
 
@@ -209,11 +210,17 @@ DATABASES = {
 #     }
 # }
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Win have different static logic
 
 STATICFILES_DIRS = (
-    os.path.join(STATIC_ROOT, 'admin'),
+    'static',
+    os.path.join(os.path.join(BASE_DIR, 'static'), 'admin'),
+    os.path.join(os.path.join(BASE_DIR, 'static'), 'core'),
 )
+STATIC_URL = '/static/'
+print(f"STATICFILES_DIRS: {STATICFILES_DIRS}")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -273,5 +280,3 @@ CONN_MAX_AGE = 8000
 ADMINS = core.security.ADMINS
 
 # ASGI_APPLICATION = "core.asgi.application"
-
-print(f"Loading")
