@@ -13,3 +13,4 @@ db.sqlite3
 /static/fonts/
 /static/img/
 /static/js/
+/static/octicons/
