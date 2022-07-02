@@ -49,7 +49,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/my_vps/core.log',
+            'filename': 'D:\\Projects\\PycharmProjects\\my_vps\\core.log',
             'formatter': 'verbose',
             'maxBytes': 1024 * 1024 * 50,
             'backupCount': 5,
