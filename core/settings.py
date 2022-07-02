@@ -124,6 +124,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debug_toolbar',
+    'django_registration',
     'main.apps.CoreConfig',
 ]
 
