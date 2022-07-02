@@ -14,3 +14,4 @@ db.sqlite3
 /static/img/
 /static/js/
 /static/octicons/
+/templates/Django-and-registration/

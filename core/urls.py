@@ -25,6 +25,10 @@ urlpatterns = [
     path('main/', include('main.urls')),
 
     # Built-ins
+
+    path('accounts/', include('django_registration.backends.activation.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
 
