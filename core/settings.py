@@ -124,7 +124,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debug_toolbar',
-    'app.apps.CoreConfig',
+    'main.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [

@@ -16,7 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from main.views import *
+
 urlpatterns = [
+    path('', MainPage.as_view(), name='home'),
+
+    # Include other:
+    path('main/', include('main.urls')),
+
+    # Built-ins
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
 
