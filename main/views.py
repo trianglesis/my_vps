@@ -8,5 +8,5 @@ log = logging.getLogger("views")
 
 
 class MainPage(TemplateView):
-    template_name = 'main/main_page.html'
+    template_name = 'main/main_body.html'
     context_object_name = 'objects'

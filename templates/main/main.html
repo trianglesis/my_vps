@@ -83,6 +83,11 @@
 
 </head>
 <body>
+
+{% comment %}
+    General navbar for all site
+{% endcomment %}
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Trianglesis</a>
@@ -124,19 +129,29 @@
     </div>
 </nav>
 
-<div style="text-align: center; margin-top: 20%">
-    <ul>
-        <li>Bootstrap:
-            <button class="btn btn-sm btn-success">OK</button>
-        </li>
-        <li>
-            Font Awesome: <i class="fa-solid fa-thumbs-up fa-2x"></i>
-        </li>
-        <li>
-            Octicons:<img src="/static/octicons/icons/check-circle-24.svg" alt="">
-        </li>
-    </ul>
+
+{% comment %}
+    Extend this for each another page
+{% endcomment %}
+<div id="content" style="margin: 5px 5px 25px 5px">
+    {% block content %}{% endblock %}
 </div>
+
+<!-- Load JS  manual -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/fontawesome.js"></script>
+{% comment %}
+    <script src="{% static 'custom/js/tooltip-active.js' %}"></script>
+{% endcomment %}
+<script type="text/javascript">
+</script>
 
 </body>
 </html>
