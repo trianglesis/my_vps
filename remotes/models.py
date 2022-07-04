@@ -20,3 +20,21 @@ class Options(models.Model):
             t = f'{self.id} - {self.option_key}'
         return t
 
+
+class PerlCameras(models.Model):
+    dvr = models.SmallIntegerField()
+    cam = models.SmallIntegerField()
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = [['dvr', 'cam']]
+
+
+class PerlButtons(models.Model):
+    dom = models.CharField(max_length=50)
+    gate = models.CharField(max_length=50)
+    mode = models.CharField(max_length=50)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = [['dom', 'gate', 'mode']]
