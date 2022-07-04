@@ -11,6 +11,5 @@ class MainPage(TemplateView):
     template_name = 'main/main_body.html'
     context_object_name = 'objects'
 
-    # TODO: Later add here some photos I want to show with maybe lik to the post.
-    # TODO: Later add random or set of recent or popular posts here
+    # Do not show anything if user is not from family group.
 
