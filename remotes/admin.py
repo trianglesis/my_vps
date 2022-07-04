@@ -33,7 +33,9 @@ class RemotesOptions(admin.ModelAdmin):
     list_display = (
         'dvr',
         'cam',
+        'type',
         'description',
+        'button',
     )
 
 

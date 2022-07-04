@@ -1,4 +1,5 @@
 {% extends "main/main.html" %}
+{% load static %}
 {% load user_groups %}
 {% block page_title %}
     {{ title }}
@@ -6,9 +7,36 @@
 {% block content %}
     {% is_member 'family' as family_user %}
     {% if family_user %}
-        <div class="alert alert-dark" role="alert">
-            {{ content }}
+        <script type="text/javascript" data-model-name="branchWorkers">
+            let perl_token = "{{ objects.perl_token }}";
+            let perl_hostname = "{{ objects.perl_hostname }}";
+        </script>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for camera in objects.cameras %}
+                <div class="col">
+                    <div class="card h-100" id="{{ camera.dvr }}{{ camera.cam }}">
+                        <img class="card-img-top camera-w-100-percent cam-refresh"
+                             src="https://{{ objects.perl_hostname }}/app/cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
+                             data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
+                             alt="{{ camera.description }}">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fa-solid fa-video"></i> {{ camera.description }}</h5>
+                            <p class="card-text">
+                                <small class="text-muted current-time"></small>
+                                <small class="text-muted">Update 2 sec</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
+
+        <!-- Cam refresh -->
+        <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
+        <!-- Open buttons -->
+        <script src="{% static 'remotes/js/opener_request.js' %}"></script>
+
     {% else %}
         <div class="alert alert-dark" role="alert">
             Nothing here.

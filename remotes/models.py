@@ -21,15 +21,6 @@ class Options(models.Model):
         return t
 
 
-class PerlCameras(models.Model):
-    dvr = models.SmallIntegerField()
-    cam = models.SmallIntegerField()
-    description = models.TextField(blank=True, null=True)
-
-    class Meta:
-        unique_together = [['dvr', 'cam']]
-
-
 class PerlButtons(models.Model):
     dom = models.CharField(max_length=50)
     gate = models.CharField(max_length=50)
@@ -38,3 +29,25 @@ class PerlButtons(models.Model):
 
     class Meta:
         unique_together = [['dom', 'gate', 'mode']]
+
+    def __str__(self):
+        # t = f'{self.id} - {self.dom}:{self.gate}:{self.mode}'
+        t = f'{self.id} - {self.description}'
+        return t
+
+
+class PerlCameras(models.Model):
+    dvr = models.SmallIntegerField()
+    cam = models.SmallIntegerField()
+    type = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+
+    button = models.ForeignKey(PerlButtons, models.CASCADE,
+                               blank=True, null=True)
+
+    class Meta:
+        unique_together = [['dvr', 'cam']]
+
+    def __str__(self):
+        t = f'{self.id} - {self.dvr}:{self.cam}:{self.type}'
+        return t
