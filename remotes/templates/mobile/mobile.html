@@ -1,0 +1,17 @@
+{% extends "main/main.html" %}
+{% load user_groups %}
+{% block page_title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    {% is_member 'family' as family_user %}
+    {% if family_user %}
+        <div class="alert alert-dark" role="alert">
+            {{ content }}
+        </div>
+    {% else %}
+        <div class="alert alert-dark" role="alert">
+            Nothing here.
+        </div>
+    {% endif %}
+{% endblock %}

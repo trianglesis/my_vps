@@ -187,18 +187,18 @@
                            data-bs-toggle="dropdown" aria-expanded="false">Remotes</a>
 
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Mobile access</a></li>
-                            <li><a class="dropdown-item" href="#">Web access</a></li>
+                            <li><a class="dropdown-item" href="{% url 'remotes_mobile' %}">Mobile access</a></li>
+                            <li><a class="dropdown-item" href="{% url 'remotes_web' %}">Web access</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">All cameras</a></li>
-                            <li><a class="dropdown-item" href="#">Home cameras</a></li>
+                            <li><a class="dropdown-item" href="{% url 'remotes_cams' %}">All cameras</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Home cameras</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Home controls</a></li>
-                            <li><a class="dropdown-item" href="#">Remotes main page</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Home controls</a></li>
+                            <li><a class="dropdown-item" href="{% url 'remotes' %}">Remotes main page</a></li>
                         </ul>
                     </li>
                 {% endif %}
