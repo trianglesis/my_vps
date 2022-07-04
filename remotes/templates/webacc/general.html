@@ -24,17 +24,17 @@
 
         <nav class="nav nav-pills nav-justified" style="padding-bottom: 20px">
             <a {% if tab_active_all %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes' %}?role=all">All</a>
+               href="{% url 'remotes_web' %}?role=all">All</a>
             <a {% if candle_lo %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes' %}?role=candle_lo">{% trans 'Свечка нижний уровень' %}</a>
+               href="{% url 'remotes_web' %}?role=candle_lo">{% trans 'Свечка нижний уровень' %}</a>
             <a {% if candle_up %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes' %}?role=candle_up">{% trans 'Свечка верхний уровень' %}</a>
+               href="{% url 'remotes_web' %}?role=candle_up">{% trans 'Свечка верхний уровень' %}</a>
             <a {% if sport %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes' %}?role=sport">{% trans 'Спорт дворик' %}</a>
+               href="{% url 'remotes_web' %}?role=sport">{% trans 'Спорт дворик' %}</a>
             <a {% if inner %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes' %}?role=inner">{% trans 'Внутренний двор' %}</a>
+               href="{% url 'remotes_web' %}?role=inner">{% trans 'Внутренний двор' %}</a>
             <a {% if outer %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes' %}?role=outer">{% trans 'Внешний двор' %}</a>
+               href="{% url 'remotes_web' %}?role=outer">{% trans 'Внешний двор' %}</a>
         </nav>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
