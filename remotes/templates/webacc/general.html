@@ -4,7 +4,7 @@
 {% load user_groups %}
 {% load remote_checks %}
 {% block page_title %}
-    {{ title }}
+    {{ objects.title }}
 {% endblock %}
 {% block content %}
     {% is_member 'family' as family_user %}

@@ -32,9 +32,7 @@ class RemotesMobile(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(RemotesMobile, self).get_context_data(**kwargs)
-        title = 'Mobile cameras all'
         context.update(
-            title=title,
             content='Here show and choose some modules',
             objects=self.get_queryset(),
         )
@@ -42,7 +40,7 @@ class RemotesMobile(TemplateView):
 
     def get_queryset(self):
         role = self.request.GET.get('role', None)
-
+        title = 'Камеры'
         cams = PerlCameras.objects.all()
         if role:
             if role == 'candle_lo':
@@ -52,31 +50,37 @@ class RemotesMobile(TemplateView):
                     'candle_3',
                     'candle_4',
                 ])
+                title = 'Свеча нижний ур'
             elif role == 'candle_up':
                 cams = PerlCameras.objects.filter(type__in=[
                     'candle_5',
                     'candle_6',
                 ])
+                title = 'Свеча верхний ур'
             elif role == 'sport':
                 cams = PerlCameras.objects.filter(type__in=[
                     'sport_1',
                     'sport_2',
                     'sport_3',
                 ])
+                title = 'Спортплощадка'
             elif role == 'inner':
                 cams = PerlCameras.objects.filter(type__in=[
                     'inner_1',
                     'inner_2',
                 ])
+                title = 'Внутренний двор'
             elif role == 'outer':
                 cams = PerlCameras.objects.filter(type__in=[
                     'outer_1',
                 ])
+                title = 'Внешний двор'
 
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
 
         queryset = dict(
+            title=title,
             role=role,
             cameras=cams,
             perl_hostname=perl_hostname,
@@ -103,6 +107,7 @@ class RemotesWeb(TemplateView):
     def get_queryset(self):
         cams = PerlCameras.objects.all()
         role = self.request.GET.get('role', None)
+        title = 'Камеры'
         if role:
             if role == 'candle_lo':
                 cams = PerlCameras.objects.filter(type__in=[
@@ -111,31 +116,37 @@ class RemotesWeb(TemplateView):
                     'candle_3',
                     'candle_4',
                 ])
+                title = 'Свеча нижний ур'
             elif role == 'candle_up':
                 cams = PerlCameras.objects.filter(type__in=[
                     'candle_5',
                     'candle_6',
                 ])
+                title = 'Свеча верхний ур'
             elif role == 'sport':
                 cams = PerlCameras.objects.filter(type__in=[
                     'sport_1',
                     'sport_2',
                     'sport_3',
                 ])
+                title = 'Спортплощадка'
             elif role == 'inner':
                 cams = PerlCameras.objects.filter(type__in=[
                     'inner_1',
                     'inner_2',
                 ])
+                title = 'Внутренний двор'
             elif role == 'outer':
                 cams = PerlCameras.objects.filter(type__in=[
                     'outer_1',
                 ])
+                title = 'Внешний двор'
 
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
 
         queryset = dict(
+            title=title,
             role=role,
             cameras=cams,
             perl_hostname=perl_hostname,
