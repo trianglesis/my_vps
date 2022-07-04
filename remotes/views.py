@@ -7,8 +7,8 @@ from django.views.generic import TemplateView
 log = logging.getLogger("views")
 
 
-class MainPage(TemplateView):
-    template_name = 'main/main_body.html'
+class MainPageRemotes(TemplateView):
+    template_name = 'remotes.html'
     context_object_name = 'objects'
 
     # Do not show anything if user is not from family group.

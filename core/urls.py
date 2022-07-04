@@ -23,6 +23,8 @@ urlpatterns = [
 
     # Include other:
     path('main/', include('main.urls')),
+    path('blog/', include('blog.urls')),
+    path('remotes/', include('remotes.urls')),
 
     # Built-ins
 
