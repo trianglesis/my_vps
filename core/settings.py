@@ -126,6 +126,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_registration',
     'main.apps.CoreConfig',
+    'blog.apps.BlogConfig',
+    'remotes.apps.RemotesConfig',
 ]
 
 MIDDLEWARE = [
