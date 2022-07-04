@@ -32,7 +32,7 @@ class RemotesMobile(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(RemotesMobile, self).get_context_data(**kwargs)
-        title = 'Cameras and buttons mobile'
+        title = 'Mobile cameras all'
         context.update(
             title=title,
             content='Here show and choose some modules',
@@ -41,15 +41,43 @@ class RemotesMobile(TemplateView):
         return context
 
     def get_queryset(self):
+        role = self.request.GET.get('role', None)
+
         cams = PerlCameras.objects.all()
-        butt = PerlButtons.objects.all()
+        if role:
+            if role == 'candle_lo':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'candle_1',
+                    'candle_2',
+                    'candle_3',
+                    'candle_4',
+                ])
+            elif role == 'candle_up':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'candle_5',
+                    'candle_6',
+                ])
+            elif role == 'sport':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'sport_1',
+                    'sport_2',
+                    'sport_3',
+                ])
+            elif role == 'inner':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'inner_1',
+                    'inner_2',
+                ])
+            elif role == 'outer':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'outer_1',
+                ])
 
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
 
         queryset = dict(
             cameras=cams,
-            buttons=butt,
             perl_hostname=perl_hostname,
             perl_token=perl_token,
         )
@@ -73,14 +101,42 @@ class RemotesWeb(TemplateView):
 
     def get_queryset(self):
         cams = PerlCameras.objects.all()
-        butt = PerlButtons.objects.all()
+        role = self.request.GET.get('role', None)
+        if role:
+            if role == 'candle_lo':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'candle_1',
+                    'candle_2',
+                    'candle_3',
+                    'candle_4',
+                ])
+            elif role == 'candle_up':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'candle_5',
+                    'candle_6',
+                ])
+            elif role == 'sport':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'sport_1',
+                    'sport_2',
+                    'sport_3',
+                ])
+            elif role == 'inner':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'inner_1',
+                    'inner_2',
+                ])
+            elif role == 'outer':
+                cams = PerlCameras.objects.filter(type__in=[
+                    'outer_1',
+                ])
 
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
 
         queryset = dict(
+            role=role,
             cameras=cams,
-            buttons=butt,
             perl_hostname=perl_hostname,
             perl_token=perl_token,
         )

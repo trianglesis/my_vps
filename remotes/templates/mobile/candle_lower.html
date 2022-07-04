@@ -2,7 +2,6 @@
 {% load i18n %}
 {% load static %}
 {% load user_groups %}
-{% load remote_checks %}
 {% block page_title %}
     {{ title }}
 {% endblock %}
@@ -13,29 +12,6 @@
             let perl_token = "{{ objects.perl_token }}";
             let perl_hostname = "{{ objects.perl_hostname }}";
         </script>
-
-        {% comment %} I am so NOT WANT to make it with JS so I have to make it like this! {% endcomment %}
-        {% tab_active 'all' as tab_active_all %}
-        {% tab_active 'candle_lo' as candle_lo %}
-        {% tab_active 'candle_up' as candle_up %}
-        {% tab_active 'sport' as sport %}
-        {% tab_active 'inner' as inner %}
-        {% tab_active 'outer' as outer %}
-
-        <nav class="nav nav-pills nav-justified" style="padding-bottom: 20px">
-            <a {% if tab_active_all %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=all">All</a>
-            <a {% if candle_lo %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=candle_lo">{% trans 'Свечка нижний уровень' %}</a>
-            <a {% if candle_up %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=candle_up">{% trans 'Свечка верхний уровень' %}</a>
-            <a {% if sport %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=sport">{% trans 'Спорт дворик' %}</a>
-            <a {% if inner %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=inner">{% trans 'Внутренний двор' %}</a>
-            <a {% if outer %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=outer">{% trans 'Внешний двор' %}</a>
-        </nav>
 
         {% for camera in objects.cameras %}
             <div class="card mb-3" id="{{ camera.dvr }}{{ camera.cam }}">

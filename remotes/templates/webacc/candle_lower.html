@@ -1,4 +1,5 @@
 {% extends "main/main.html" %}
+{% load i18n %}
 {% load static %}
 {% load user_groups %}
 {% block page_title %}
@@ -12,7 +13,6 @@
             let perl_hostname = "{{ objects.perl_hostname }}";
         </script>
 
-
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for camera in objects.cameras %}
                 <div class="col">
@@ -23,6 +23,15 @@
                              alt="{% trans camera.button.description %}">
                         <div class="card-body">
                             <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.button.description %}</h5>
+                            {% if camera.button %}
+                                <a class="btn btn-sm btn-info open"
+                                   target="_blank"
+                                   href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"
+                                   title="Открыть дверь в подъезд свечки с уровня детсада"
+                                   data-dom="{{ camera.button.dom }}"
+                                   data-gate="{{ camera.button.gate }}"
+                                   data-mode="{{ camera.button.mode }}">{% trans camera.button.description %}</a>
+                            {% endif %}
                             <p class="card-text">
                                 <small class="text-muted current-time"></small>
                                 <small class="text-muted">Update 2 sec</small>
