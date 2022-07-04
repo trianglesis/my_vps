@@ -77,6 +77,7 @@ class RemotesMobile(TemplateView):
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
 
         queryset = dict(
+            role=role,
             cameras=cams,
             perl_hostname=perl_hostname,
             perl_token=perl_token,
