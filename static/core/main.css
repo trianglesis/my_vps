@@ -1,0 +1,23 @@
+.site-time {
+    color: #ade5bc !important;
+    padding-right: 5px;
+    font-size: .78em;
+    font-family: 'Maven Pro', sans-serif;
+
+}
+
+.search-blog {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: .875em;
+    font-family: 'Maven Pro', sans-serif;
+
+
+}
+
+.site-login {
+    right: 0;
+    left: auto;
+    font-size: .875em;
+    font-family: 'Maven Pro', sans-serif;
+}

@@ -6,6 +6,7 @@
     {% endcomment %}
     {% load i18n %}
     {% load static %}
+    {% load user_groups %}
     {% comment %}
 
         SCRIPTS LOAD:
@@ -99,6 +100,11 @@
     <meta charset="UTF-8">
 
     {% comment %}
+        Custom
+    {% endcomment %}
+    <link rel="stylesheet" type="text/css" href="{% static 'core/main.css' %}"/>
+
+    {% comment %}
         TITLE:
     {% endcomment %}
 
@@ -112,6 +118,11 @@
 {% comment %}
     General navbar for all site
 {% endcomment %}
+
+{% comment %}
+ Load internal functions:
+{% endcomment %}
+{% is_member 'family' as family_user %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -130,7 +141,7 @@
 
                 {# HOME #}
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                 </li>
 
                 {# BLOG and categories #}
@@ -141,7 +152,9 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="#">Category</a></li>
                         <li><a class="dropdown-item" href="#">Category</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li><a class="dropdown-item" href="#">Category</a></li>
                     </ul>
 
@@ -155,22 +168,79 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="#">Action</a></li>
                         <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
 
                 {# Disabled Dropdown and categories #}
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disable</a>
                 </li>
-            </ul>
 
+                {# Only visible for family group: #}
+                {% if family_user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Mobile access</a></li>
+                            <li><a class="dropdown-item" href="#">Web access</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">All cameras</a></li>
+                            <li><a class="dropdown-item" href="#">Home cameras</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Home controls</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+            {# Site time #}
+            <span class="navbar-text site-time">{% now "l jS F Y H:i" %}</span>
             {# Search and login MB? #}
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            <div class="search-blog">
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+            {# AUTH: DJANGO_REGISTRATION  #}
+            <div class="site-login">
+                <li class="nav-item dropdown">
+                    <a type="button" class="btn btn-sm btn-light dropdown-toggle align-right"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="float: right;">
+                        {% spaceless %}
+                            {% if user.is_authenticated %}
+                                {% trans 'Hi, ' %}{{ user }}
+                            {% else %}
+                                {% trans 'Log in' %}
+                            {% endif %}{% endspaceless %}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
+                        {% if user.is_anonymous %}
+                            <a class="dropdown-item" href="{% url 'login' %}">Log in</a>
+                            <a class="dropdown-item" href="{% url 'password_reset' %}">Reset password</a>
+                            <a class="dropdown-item" href="{% url 'django_registration_register' %}">Register</a>
+                        {% else %}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+                            <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
+                            <div class="dropdown-divider"></div>
+                            {% if user.is_staff %}
+                                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
+                                <div class="dropdown-divider"></div>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                </li>
+            </div>
         </div>
     </div>
 </nav>
