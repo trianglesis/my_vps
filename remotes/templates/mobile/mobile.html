@@ -12,10 +12,6 @@
             let perl_hostname = "{{ objects.perl_hostname }}";
         </script>
 
-        <div class="alert alert-dark" role="alert">
-            {{ content }}
-        </div>
-
         {% for camera in objects.cameras %}
             <div class="card mb-3" id="{{ camera.dvr }}{{ camera.cam }}">
 
