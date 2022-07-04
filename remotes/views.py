@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
+from remotes.models import PerlButtons, PerlCameras, Options
+
 log = logging.getLogger("core")
 
 
@@ -33,9 +35,25 @@ class RemotesMobile(TemplateView):
         title = 'Cameras and buttons mobile'
         context.update(
             title=title,
-            content='Here show and choose some modules'
+            content='Here show and choose some modules',
+            objects=self.get_queryset(),
         )
         return context
+
+    def get_queryset(self):
+        cams = PerlCameras.objects.all()
+        butt = PerlButtons.objects.all()
+
+        perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
+        perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
+
+        queryset = dict(
+            cameras=cams,
+            buttons=butt,
+            perl_hostname=perl_hostname,
+            perl_token=perl_token,
+        )
+        return queryset
 
 
 @method_decorator(login_required, name='dispatch')
