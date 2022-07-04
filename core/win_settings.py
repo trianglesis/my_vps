@@ -219,6 +219,7 @@ STATICFILES_DIRS = (
     os.path.join(os.path.join(BASE_DIR, 'static'), 'favicon'),
     os.path.join(os.path.join(BASE_DIR, 'static'), 'admin'),
     os.path.join(os.path.join(BASE_DIR, 'static'), 'core'),
+    os.path.join(os.path.join(BASE_DIR, 'static'), 'remotes'),
 )
 
 print(f"STATICFILES_DIRS: {STATICFILES_DIRS}")
