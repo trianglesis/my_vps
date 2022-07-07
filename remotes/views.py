@@ -68,6 +68,17 @@ def cam_filter(role):
     return cams, title
 
 
+def buttons_filter(gate):
+    cams = PerlButtons.objects.all()
+    title = 'Кнопки'
+    if gate:
+        if gate == 'all':
+            pass
+        else:
+            cams = PerlButtons.objects.filter(gate__exact=gate)
+    return cams, title
+
+
 @method_decorator(login_required, name='dispatch')
 class MainPageRemotes(TemplateView):
     template_name = 'remotes.html'
@@ -175,7 +186,7 @@ class RemotesAllCameras(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class RemotesAllButtons(TemplateView):
-    __url_path = '/remotes/cams/'
+    __url_path = '/remotes/btns/'
     template_name = 'webacc/all_buttons.html'
     context_object_name = 'objects'
 
@@ -190,12 +201,16 @@ class RemotesAllButtons(TemplateView):
         return context
 
     def get_queryset(self):
-        btns = PerlButtons.objects.all()
+        gate = self.request.GET.get('gate', None)
+        btns, title = buttons_filter(gate)
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
-
+        perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
         queryset = dict(
             buttons=btns,
+            title=title,
+            gate=gate,
             perl_hostname=perl_hostname,
+            perl_token=perl_token,
         )
         return queryset
 

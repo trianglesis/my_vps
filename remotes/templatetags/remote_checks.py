@@ -7,10 +7,10 @@ log = logging.getLogger("core")
 
 
 @register.simple_tag(takes_context=True)
-def tab_active(context, arg):
+def tab_active(context, val, arg):
     if context['objects']:
         obj = context['objects']
-        role = obj.get('role', None)
+        role = obj.get(val, None)
         if not role == arg:
             return False
         return True

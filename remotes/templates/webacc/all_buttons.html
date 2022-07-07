@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load user_groups %}
+{% load remote_checks %}
 {% block page_title %}
     {{ title }}
 {% endblock %}
@@ -13,29 +14,58 @@
             let perl_hostname = "{{ objects.perl_hostname }}";
         </script>
 
-        {% for button in objects.buttons %}
-            <div class="card mb-3" id="{{ button.gate }}{{ button.mode }}">
-                <div class="card-body">
-                    <div class="card-body">
-                        <button class="btn btn-sm btn-info run-open-gates"
-                                type="button"
-                                title="{% trans button.description %}"
-                                data-dom="{{ button.dom }}"
-                                data-gate="{{ button.gate }}"
-                                data-mode="{{ button.mode }}"
-                                data-nonce="{{ objects.perl_token }}"
-                                {# data-fake="fake_push_do_not_open"#}
-                                {# target="_blank"#}
-                                {# href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ button.dom }}&gate={{ button.gate }}&mode={{ button.mode }}&nonce={{ objects.perl_token }}"#}
-                        >{% trans button.description %}</button>
-                    </div>
-                    <p class="card-text">
-                        <small class="text-muted">{% trans button.description %}</small>
-                    </p>
-                </div>
-            </div>
-        {% endfor %}
+        {% comment %} I am so NOT WANT to make it with JS so I have to make it like this! {% endcomment %}
+        {% tab_active 'gate' 'all' as tab_active_all %}
+        {% tab_active 'gate' 'dom_0' as dom_0 %}
+        {% tab_active 'gate' 'dom_a' as dom_a %}
+        {% tab_active 'gate' 'dom_b' as dom_b %}
+        {% tab_active 'gate' 'dom_v' as dom_v %}
+        {% tab_active 'gate' 'vorota_a' as vorota_a %}
+        {% tab_active 'gate' 'vorota_b' as vorota_b %}
+        {% tab_active 'gate' 'vorota_v' as vorota_v %}
 
+        <nav class="nav nav-pills nav-justified" style="padding-bottom: 20px">
+
+            <a {% if tab_active_all %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_buttons' %}?gate=all">all</a>
+            <a {% if dom_0 %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_buttons' %}?gate=dom_0">Свечка</a>
+            <a {% if dom_a %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_buttons' %}?gate=dom_a">Дом А</a>
+            <a {% if dom_b %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_buttons' %}?gate=dom_b">Дом Б</a>
+            <a {% if dom_v %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_buttons' %}?gate=dom_v">Дом В</a>
+            <a {% if vorota_a %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_buttons' %}?gate=vorota_a">Ворота А</a>
+            <a {% if vorota_b %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_buttons' %}?gate=vorota_b">Ворота Б</a>
+            <a {% if vorota_v %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_buttons' %}?gate=vorota_v">Ворота В</a>
+
+        </nav>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for button in objects.buttons %}
+                <div class="card mb-3" id="{{ button.gate }}{{ button.mode }}">
+                    <div class="card-body">
+                        <div class="card-body">
+                            <button class="btn btn-sm btn-info run-open-gates"
+                                    type="button"
+                                    title="{% trans button.description %}"
+                                    data-dom="{{ button.dom }}"
+                                    data-gate="{{ button.gate }}"
+                                    data-mode="{{ button.mode }}"
+                                    data-nonce="{{ objects.perl_token }}"
+                                    {# data-fake="fake_push_do_not_open"#}
+                                    {# target="_blank"#}
+                                    {# href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ button.dom }}&gate={{ button.gate }}&mode={{ button.mode }}&nonce={{ objects.perl_token }}"#}
+                            >{% trans button.description %}</button>
+                        </div>
+{#                        <p class="card-text"><small class="text-muted">{% trans button.description %}</small></p>#}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
         <!-- Open buttons -->
         <script src="{% static 'remotes/js/buttons.js' %}"></script>
 
