@@ -50,7 +50,7 @@
                     {% if camera.button %}
                         <div class="card-body">
 
-                            <button class="btn btn-sm btn-info run-open-gates"
+                            <a class="btn btn-sm btn-info run-open-gates"
                                type="button"
                                title="{% trans camera.button.description %}"
                                data-dom="{{ camera.button.dom }}"
@@ -58,10 +58,10 @@
                                data-mode="{{ camera.button.mode }}"
                                data-nonce="{{ objects.perl_token }}"
 
-{#                               target="_blank"#}
-{#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"#}
+                               target="_blank"
+                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"
 
-                            >{% trans camera.button.description %}</button>
+                            >{% trans camera.button.description %}</a>
                         </div>
                     {% endif %}
                     <p class="card-text">
@@ -76,7 +76,7 @@
         <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
         <!-- Open buttons -->
 {#        <script src="{% static 'remotes/js/opener_request.js' %}"></script>#}
-        <script src="{% static 'remotes/js/buttons.js' %}"></script>
+{#        <script src="{% static 'remotes/js/buttons.js' %}"></script>#}
 
     {% else %}
         <div class="alert alert-dark" role="alert">

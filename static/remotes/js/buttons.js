@@ -47,7 +47,6 @@ function pushedButtonSendRequest(btn) {
 
 function changeButtonText(btn, result, fallbackMessage) {
     console.log(`Button pushed! Rest Sent! Now change button text with response, wait 1-2 sec and change text back to usual`)
-    console.log(result)
     let previousText = btn.innerText
 
     if (!fallbackMessage) {
@@ -76,9 +75,10 @@ function SetButtonBack(btn, previousText) {
 function RESTPostTask(btn) {
     $.ajax({
         type: "POST",
-        dataType: "json",
-        // contentType: "application/x-www-form-urlencoded",
-        contentType: "application/json; charset=utf8",
+        // dataType: "json",
+        dataType: "jsonp",
+        contentType: "application/x-www-form-urlencoded",
+        // contentType: "application/json; charset=utf8",
         // https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}
         // {"color":"#00FF00","status":"ok","text":"*\u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442\u0441\u044f*","new_nonce":"br_34534534253453245345345_666"}
         url: `https://${perl_hostname}/app/go.php`,
@@ -100,10 +100,11 @@ function RESTPostTask(btn) {
             }
         },
         "error": function (result) {
-            console.log("ERROR, something goes wrong...")
+            console.log("ERROR, something goes wrong... Output below:")
             console.error(result)
             let fallbackMessage = 'Nothing happened, error on the server side!';
             changeButtonText(btn, result, fallbackMessage)
         },
     });
 }
+
