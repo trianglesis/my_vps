@@ -38,8 +38,12 @@ function buttonRunNowEventListenerAssign(funcToRun) {
 function pushedButtonSendRequest(btn) {
     // console.log(`<=Run Now=> btn:`,  btn)
     // console.log(`<=Run Now=> btn.dataset:`, btn.dataset)
-    // console.log(`perl_token: `, perl_token)
-    // console.log(`perl_hostname: `, perl_hostname)
+    console.log(`perl_token: `, perl_token)
+    console.log(`perl_hostname: `, perl_hostname)
+
+    btn.dataset.perl_token = perl_token
+    btn.dataset.perl_hostname = perl_hostname
+
     console.log(btn.dataset);
     new RESTPostTask(btn);
 }
@@ -47,10 +51,11 @@ function pushedButtonSendRequest(btn) {
 
 function changeButtonText(btn, result, fallbackMessage) {
     console.log(`Button pushed! Rest Sent! Now change button text with response, wait 1-2 sec and change text back to usual`)
+    let status = result.status
     let previousText = btn.innerText
 
     if (!fallbackMessage) {
-        btn.innerText = 'Opened!'
+        btn.innerText = 'Opened! - ' + status
         btn.disabled = 'disabled';
     } else {
         btn.innerText = fallbackMessage
@@ -61,7 +66,7 @@ function changeButtonText(btn, result, fallbackMessage) {
     // Wait for a few seconds, make button disabled, and then assign previous text back
     setTimeout(function () {
         new SetButtonBack(btn, previousText);
-    }, 10000);
+    }, 5000);
 
 }
 
@@ -75,20 +80,18 @@ function SetButtonBack(btn, previousText) {
 function RESTPostTask(btn) {
     $.ajax({
         type: "POST",
-        // dataType: "json",
-        dataType: "jsonp",
+        dataType: "json",
+        // dataType: "jsonp",
         contentType: "application/x-www-form-urlencoded",
         // contentType: "application/json; charset=utf8",
-        // https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}
-        // {"color":"#00FF00","status":"ok","text":"*\u0412\u044b\u043f\u043e\u043b\u043d\u044f\u0435\u0442\u0441\u044f*","new_nonce":"br_34534534253453245345345_666"}
-        url: `https://${perl_hostname}/app/go.php`,
+        url: `/remotes/remote_open/`,
         data: btn.dataset,
         "beforeSend": function (xhr, settings) {
             $.ajaxSettings.beforeSend(xhr, settings)
         },
         "success": function (result) {
             console.log(`Request sent!`, result)
-            if (result) {
+            if (result && result.status) {
                 // On success - run get task status:
                 console.log(`Success`, result)
                 let fallbackMessage = undefined;

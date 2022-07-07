@@ -12,11 +12,14 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import logging
 import os
+import sys
 from pathlib import Path
 import socket
 
 from logging.config import dictConfig
 import core.security
+
+LOG_DIR = 'D:\\Projects\\PycharmProjects\\my_vps\\'
 
 LOGGING = {
     'version': 1,
@@ -41,6 +44,12 @@ LOGGING = {
             },
     },
     'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['django_dbug', 'require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
         'mail_admins': {
             'level': 'DEBUG',
             'class': 'django.utils.log.AdminEmailHandler',
@@ -49,21 +58,29 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'D:\\Projects\\PycharmProjects\\my_vps\\core.log',
+            'filename': LOG_DIR + 'core.log',
             'formatter': 'verbose',
             'maxBytes': 1024 * 1024 * 50,
             'backupCount': 5,
         },
+        'dev_log': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_DIR + 'dev.log',
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 1,
+            'backupCount': 1,
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
         },
         'mail': {
             'handlers': ['file', 'mail_admins'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'propagate': True,
         },
         'core': {
@@ -71,15 +88,24 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'dev': {
+            'handlers': ['dev_log'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
     },
 }
 
 dictConfig(LOGGING)
 
 log = logging.getLogger("core")
+log.info('Loaded win_settings!!!')
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(BASE_DIR, 'core'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -124,6 +150,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debug_toolbar',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
     'django_registration',
     'main.apps.CoreConfig',
     'blog.apps.BlogConfig',
@@ -283,3 +312,5 @@ CONN_MAX_AGE = 8000
 ADMINS = core.security.ADMINS
 
 # ASGI_APPLICATION = "core.asgi.application"
+
+

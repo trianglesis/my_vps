@@ -31,6 +31,10 @@ urlpatterns = [
     path('accounts/', include('django_registration.backends.activation.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 
+    path('rest-auth/', include('dj_rest_auth.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    # path('dj-rest-auth/', include('dj_rest_auth.urls')),
+
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
 
