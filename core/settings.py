@@ -163,11 +163,11 @@ MIDDLEWARE = [
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-#         'LOCATION': 'octopus_cache_table',
+#         'LOCATION': 'o_cache_table',
 #         'TIMEOUT': 60 * 5,
 #         'MAX_ENTRIES': 1000,
 #         # 'KEY_FUNCTION': 'octo.helpers.cache_key.make_key',
-#         # 'KEY_PREFIX': 'dev_octopus',
+#         # 'KEY_PREFIX': 'dev_o',
 #     }
 #     # 'default': {
 #     #     'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',

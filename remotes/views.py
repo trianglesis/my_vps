@@ -1,23 +1,17 @@
 import logging
-import requests
 
-from django.shortcuts import render
+import requests
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
+from core.helpers.mailing import Mails
+
 
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# from rest_framework.permissions import IsAuthenticatedOrReadOnly
-# from rest_framework.renderers import JSONRenderer
-# from rest_framework.response import Response
-# from rest_framework.views import APIView
-
-
-from remotes.models import PerlButtons, PerlCameras, Options
+from remotes.models import PerlCameras, Options, PerlButtons
 
 log = logging.getLogger("core")
 
@@ -214,21 +208,38 @@ class TestCaseRunTestREST(APIView):
         gate = self.request.data.get('gate', None)
         mode = self.request.data.get('mode', None)
         nonce = self.request.data.get('nonce', None)
+        fake = self.request.data.get('fake', None)
         # perl_token = self.request.data.get('perl_token', None)
         perl_hostname = self.request.data.get('perl_hostname', None)
 
-        URL = f'https://{perl_hostname}/app/go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
-        r = requests.get(URL)
+        button = PerlButtons.objects.get(dom__exact=dom, gate__exact=gate, mode__exact=mode)
+        subject = f'Remote open: {button.description}'
+        body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}'
 
-        if r.status_code == 200:
-            j_txt = r.json()
-            server_response_status = j_txt.get("status")
-            if server_response_status == 'ok':
-                log.info(f"Request successfully executed for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
-                return Response(dict(status='ok', response=j_txt))
-            else:
-                log.error(f"Request executed with some error on server side for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
-                return Response(dict(status='err', response=j_txt))
+        if fake:
+            log.info(f"FAKE ITERATION! Do not making any requests!")
+            log.info(f"self.request.user.username: {self.request.user.username}, email: {self.request.user.email}")
+
+            Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc='to@trianglesis.org.ua')
+
+            j_txt = dict()
+            return Response(dict(status='ok', response=j_txt))
         else:
-            log.error(f"Something is not working on server side for: dom={dom}&gate={gate}&mode={mode},\nStatus code: {r.status_code}\nResponse: {r.text}")
-            return Response(dict(status='err', response=r.text, code=r.status_code))
+            URL = f'https://{perl_hostname}/app/go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
+            r = requests.get(URL)
+
+            # Send even if unsuccessfully - to show that user actually tries it:
+            Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc='to@trianglesis.org.ua')
+
+            if r.status_code == 200:
+                j_txt = r.json()
+                server_response_status = j_txt.get("status")
+                if server_response_status == 'ok':
+                    log.info(f"Request successfully executed for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
+                    return Response(dict(status='ok', response=j_txt))
+                else:
+                    log.error(f"Request executed with some error on server side for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
+                    return Response(dict(status='err', response=j_txt))
+            else:
+                log.error(f"Something is not working on server side for: dom={dom}&gate={gate}&mode={mode},\nStatus code: {r.status_code}\nResponse: {r.text}")
+                return Response(dict(status='err', response=r.text, code=r.status_code))
