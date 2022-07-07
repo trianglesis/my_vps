@@ -16,3 +16,5 @@ db.sqlite3
 /static/octicons/
 /templates/Django-and-registration/
 /static/debug_toolbar/
+/core.log
+/dev.log
