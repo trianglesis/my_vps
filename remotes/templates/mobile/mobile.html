@@ -15,13 +15,13 @@
         </script>
 
         {% comment %} I am so NOT WANT to make it with JS so I have to make it like this! {% endcomment %}
-        {% tab_active 'all' as tab_active_all %}
-        {% tab_active 'candle_lo' as candle_lo %}
-        {% tab_active 'candle_up' as candle_up %}
-        {% tab_active 'sport' as sport %}
-        {% tab_active 'inner' as inner %}
-        {% tab_active 'outer' as outer %}
-        {% tab_active 'parking' as parking %}
+        {% tab_active 'role' 'all' as tab_active_all %}
+        {% tab_active 'role' 'candle_lo' as candle_lo %}
+        {% tab_active 'role' 'candle_up' as candle_up %}
+        {% tab_active 'role' 'sport' as sport %}
+        {% tab_active 'role' 'inner' as inner %}
+        {% tab_active 'role' 'outer' as outer %}
+        {% tab_active 'role' 'parking' as parking %}
 
         <nav class="nav nav-pills nav-justified" style="padding-bottom: 20px">
             <a {% if tab_active_all %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
