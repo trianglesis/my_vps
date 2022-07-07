@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import logging
 import os
-import sys
 from pathlib import Path
 import socket
 

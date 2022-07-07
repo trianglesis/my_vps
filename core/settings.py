@@ -18,6 +18,8 @@ import socket
 from logging.config import dictConfig
 import core.security
 
+LOG_DIR = '/var/log/my_vps/'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -49,10 +51,18 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/my_vps/core.log',
+            'filename': LOG_DIR + 'core.log',
             'formatter': 'verbose',
             'maxBytes': 1024 * 1024 * 50,
             'backupCount': 5,
+        },
+        'dev_log': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_DIR + 'dev.log',
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 1,
+            'backupCount': 1,
         },
     },
     'loggers': {
@@ -63,13 +73,18 @@ LOGGING = {
         },
         'mail': {
             'handlers': ['file', 'mail_admins'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': True,
         },
         'core': {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
+        },
+        'dev': {
+            'handlers': ['dev_log'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
     },
 }
@@ -124,6 +139,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debug_toolbar',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
     'django_registration',
     'main.apps.CoreConfig',
     'blog.apps.BlogConfig',
