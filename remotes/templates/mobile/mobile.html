@@ -60,7 +60,6 @@
 {#                               data-fake="fake_push_do_not_open"#}
 {#                               target="_blank"#}
 {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"#}
-
                             >{% trans camera.button.description %}</button>
                         </div>
                     {% endif %}
@@ -76,7 +75,6 @@
         <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
         <!-- Open buttons -->
         <script src="{% static 'remotes/js/buttons.js' %}"></script>
-{#        <script src="{% static 'remotes/js/opener_request.js' %}"></script>#}
 
     {% else %}
         <div class="alert alert-dark" role="alert">

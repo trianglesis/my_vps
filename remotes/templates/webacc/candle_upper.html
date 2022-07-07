@@ -24,13 +24,17 @@
                         <div class="card-body">
                             <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
                             {% if camera.button %}
-                                <a class="btn btn-sm btn-info open"
-                                   target="_blank"
-                                   href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"
-                                   title="Открыть дверь в подъезд свечки с уровня детсада"
+                                <button class="btn btn-sm btn-info run-open-gates"
+                                   type="button"
+                                   title="{% trans camera.button.description %}"
                                    data-dom="{{ camera.button.dom }}"
                                    data-gate="{{ camera.button.gate }}"
-                                   data-mode="{{ camera.button.mode }}">{% trans camera.button.description %}</a>
+                                   data-mode="{{ camera.button.mode }}"
+                                   data-nonce="{{ objects.perl_token }}"
+    {#                               data-fake="fake_push_do_not_open"#}
+    {#                               target="_blank"#}
+    {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"#}
+                                >{% trans camera.button.description %}</button>
                             {% endif %}
                             <p class="card-text">
                                 <small class="text-muted current-time"></small>
@@ -45,7 +49,7 @@
         <!-- Cam refresh -->
         <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
         <!-- Open buttons -->
-        <script src="{% static 'remotes/js/opener_request.js' %}"></script>
+        <script src="{% static 'remotes/js/buttons.js' %}"></script>
 
     {% else %}
         <div class="alert alert-dark" role="alert">
