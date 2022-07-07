@@ -21,6 +21,7 @@
         {% tab_active 'sport' as sport %}
         {% tab_active 'inner' as inner %}
         {% tab_active 'outer' as outer %}
+        {% tab_active 'parking' as parking %}
 
         <nav class="nav nav-pills nav-justified" style="padding-bottom: 20px">
             <a {% if tab_active_all %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
@@ -35,6 +36,8 @@
                href="{% url 'remotes_web' %}?role=inner">{% trans 'Внутренний двор' %}</a>
             <a {% if outer %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
                href="{% url 'remotes_web' %}?role=outer">{% trans 'Внешний двор' %}</a>
+            <a {% if parking %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_web' %}?role=parking">{% trans 'Паркинг' %}</a>
         </nav>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">

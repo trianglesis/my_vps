@@ -1,0 +1,47 @@
+{% extends "main/main.html" %}
+{% load i18n %}
+{% load static %}
+{% load user_groups %}
+{% block page_title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    {% is_member 'family' as family_user %}
+    {% if family_user %}
+        <script type="text/javascript" data-model-name="branchWorkers">
+            let perl_token = "{{ objects.perl_token }}";
+            let perl_hostname = "{{ objects.perl_hostname }}";
+        </script>
+
+        {% for button in objects.buttons %}
+            <div class="card mb-3" id="{{ button.gate }}{{ button.mode }}">
+                <div class="card-body">
+                    <div class="card-body">
+                        <button class="btn btn-sm btn-info run-open-gates"
+                                type="button"
+                                title="{% trans button.description %}"
+                                data-dom="{{ button.dom }}"
+                                data-gate="{{ button.gate }}"
+                                data-mode="{{ button.mode }}"
+                                data-nonce="{{ objects.perl_token }}"
+                                {# data-fake="fake_push_do_not_open"#}
+                                {# target="_blank"#}
+                                {# href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ button.dom }}&gate={{ button.gate }}&mode={{ button.mode }}&nonce={{ objects.perl_token }}"#}
+                        >{% trans button.description %}</button>
+                    </div>
+                    <p class="card-text">
+                        <small class="text-muted">{% trans button.description %}</small>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+
+        <!-- Open buttons -->
+        <script src="{% static 'remotes/js/buttons.js' %}"></script>
+
+    {% else %}
+        <div class="alert alert-dark" role="alert">
+            Nothing here.
+        </div>
+    {% endif %}
+{% endblock %}

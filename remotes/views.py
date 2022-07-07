@@ -4,8 +4,9 @@ import requests
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
-from core.helpers.mailing import Mails
+from django.db.models import Q
 
+from core.helpers.mailing import Mails
 
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -14,6 +15,57 @@ from rest_framework.views import APIView
 from remotes.models import PerlCameras, Options, PerlButtons
 
 log = logging.getLogger("core")
+
+
+def cam_filter(role):
+    cams = PerlCameras.objects.all()
+    title = 'Камеры'
+    if role:
+        if role == 'all':
+            cams = PerlCameras.objects.filter(
+                ~Q(type__istartswith='parking_cam') &
+                ~Q(type__exact='Remzona') &
+                ~Q(type__exact='STO_Zaezd')
+            )
+        elif role == 'candle_lo':
+            cams = PerlCameras.objects.filter(type__in=[
+                'candle_1',
+                'candle_2',
+                'candle_3',
+                'candle_4',
+            ]).order_by('type')
+            title = 'Свеча нижний ур'
+        elif role == 'candle_up':
+            cams = PerlCameras.objects.filter(type__in=[
+                'candle_5',
+                'candle_6',
+            ]).order_by('type')
+            title = 'Свеча верхний ур'
+        elif role == 'sport':
+            cams = PerlCameras.objects.filter(type__in=[
+                'sport_1',
+                'sport_2',
+                'sport_3',
+                'sport_4',
+            ]).order_by('type')
+            title = 'Спортплощадка'
+        elif role == 'inner':
+            cams = PerlCameras.objects.filter(type__in=[
+                'inner_1',
+                'inner_2',
+                'inner_3',
+            ]).order_by('type')
+            title = 'Внутренний двор'
+        elif role == 'outer':
+            cams = PerlCameras.objects.filter(type__in=[
+                'outer_1',
+                'outer_2',
+            ]).order_by('type')
+            title = 'Внешний двор'
+        elif role == 'parking':
+            cams = PerlCameras.objects.filter(type__istartswith="parking_cam").order_by('type')
+            title = 'Парковка'
+    return cams, title
 
 
 @method_decorator(login_required, name='dispatch')
@@ -46,41 +98,7 @@ class RemotesMobile(TemplateView):
 
     def get_queryset(self):
         role = self.request.GET.get('role', None)
-        title = 'Камеры'
-        cams = PerlCameras.objects.all()
-        if role:
-            if role == 'candle_lo':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'candle_1',
-                    'candle_2',
-                    'candle_3',
-                    'candle_4',
-                ])
-                title = 'Свеча нижний ур'
-            elif role == 'candle_up':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'candle_5',
-                    'candle_6',
-                ])
-                title = 'Свеча верхний ур'
-            elif role == 'sport':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'sport_1',
-                    'sport_2',
-                    'sport_3',
-                ])
-                title = 'Спортплощадка'
-            elif role == 'inner':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'inner_1',
-                    'inner_2',
-                ])
-                title = 'Внутренний двор'
-            elif role == 'outer':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'outer_1',
-                ])
-                title = 'Внешний двор'
+        cams, title = cam_filter(role)
 
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
@@ -97,6 +115,7 @@ class RemotesMobile(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class RemotesWeb(TemplateView):
+    __url = '/remotes/web/'
     template_name = 'webacc/general.html'
     context_object_name = 'objects'
 
@@ -111,42 +130,8 @@ class RemotesWeb(TemplateView):
         return context
 
     def get_queryset(self):
-        cams = PerlCameras.objects.all()
         role = self.request.GET.get('role', None)
-        title = 'Камеры'
-        if role:
-            if role == 'candle_lo':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'candle_1',
-                    'candle_2',
-                    'candle_3',
-                    'candle_4',
-                ])
-                title = 'Свеча нижний ур'
-            elif role == 'candle_up':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'candle_5',
-                    'candle_6',
-                ])
-                title = 'Свеча верхний ур'
-            elif role == 'sport':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'sport_1',
-                    'sport_2',
-                    'sport_3',
-                ])
-                title = 'Спортплощадка'
-            elif role == 'inner':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'inner_1',
-                    'inner_2',
-                ])
-                title = 'Внутренний двор'
-            elif role == 'outer':
-                cams = PerlCameras.objects.filter(type__in=[
-                    'outer_1',
-                ])
-                title = 'Внешний двор'
+        cams, title = cam_filter(role)
 
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
@@ -163,6 +148,7 @@ class RemotesWeb(TemplateView):
 
 @method_decorator(login_required, name='dispatch')
 class RemotesAllCameras(TemplateView):
+    __url_path = '/remotes/cams/'
     template_name = 'webacc/all_cameras.html'
     context_object_name = 'objects'
 
@@ -182,6 +168,33 @@ class RemotesAllCameras(TemplateView):
 
         queryset = dict(
             cameras=cams,
+            perl_hostname=perl_hostname,
+        )
+        return queryset
+
+
+@method_decorator(login_required, name='dispatch')
+class RemotesAllButtons(TemplateView):
+    __url_path = '/remotes/cams/'
+    template_name = 'webacc/all_buttons.html'
+    context_object_name = 'objects'
+
+    def get_context_data(self, **kwargs):
+        context = super(RemotesAllButtons, self).get_context_data(**kwargs)
+        title = 'All buttons'
+        context.update(
+            title=title,
+            content='Here show and choose some modules',
+            objects=self.get_queryset(),
+        )
+        return context
+
+    def get_queryset(self):
+        btns = PerlButtons.objects.all()
+        perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
+
+        queryset = dict(
+            buttons=btns,
             perl_hostname=perl_hostname,
         )
         return queryset
@@ -228,13 +241,13 @@ class TestCaseRunTestREST(APIView):
             URL = f'https://{perl_hostname}/app/go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
             r = requests.get(URL)
 
-            # Send even if unsuccessfully - to show that user actually tries it:
-            Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc='to@trianglesis.org.ua')
-
             if r.status_code == 200:
                 j_txt = r.json()
                 server_response_status = j_txt.get("status")
                 if server_response_status == 'ok':
+                    # Send even if unsuccessfully - to show that user actually tries it:
+                    Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc='to@trianglesis.org.ua')
+
                     log.info(f"Request successfully executed for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
                     return Response(dict(status='ok', response=j_txt))
                 else:

@@ -4,7 +4,7 @@ $(document).ready(function () {
 });
 
 function runContinuously() {
-    console.log("Refreshing camera views");
+
     let cameras = document.getElementsByClassName('cam-refresh');
     let cam_card_datetime = document.getElementsByClassName('current-time');
     for (let cam of cameras) {
@@ -16,12 +16,17 @@ function runContinuously() {
 }
 
 function replaceCamView(camObj) {
-    camObj.src = camObj.src + "&" + Date.now();
+    // console.log(`camObj.src:`, camObj.src)
+    // camObj.src = camObj.src + "&" + Date.now();
+    // Hmmmmmm, there is no need to add some fake data to request?
+    // Should I try then move it to django?
+    camObj.src = camObj.src;
 }
 
 function currentDateTime(camCard) {
     let today = new Date();
     camCard.textContent = ''
     camCard.textContent = today.toLocaleTimeString();
+    console.log("Refreshing camera views", camCard.textContent);
 
 }

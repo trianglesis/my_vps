@@ -10,6 +10,7 @@ urlpatterns = [
 
     path('web', RemotesWeb.as_view(), name='remotes_web'),
     path('cams', RemotesAllCameras.as_view(), name='remotes_cams'),
+    path('btns', RemotesAllButtons.as_view(), name='remotes_buttons'),
     # path('remotes/', MainPageRemotes.as_view(), name='remotes'),
 
     # REST:

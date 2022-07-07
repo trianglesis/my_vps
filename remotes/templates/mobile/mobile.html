@@ -21,6 +21,7 @@
         {% tab_active 'sport' as sport %}
         {% tab_active 'inner' as inner %}
         {% tab_active 'outer' as outer %}
+        {% tab_active 'parking' as parking %}
 
         <nav class="nav nav-pills nav-justified" style="padding-bottom: 20px">
             <a {% if tab_active_all %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
@@ -35,6 +36,8 @@
                href="{% url 'remotes_mobile' %}?role=inner">{% trans 'Внутренний двор' %}</a>
             <a {% if outer %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
                href="{% url 'remotes_mobile' %}?role=outer">{% trans 'Внешний двор' %}</a>
+            <a {% if parking %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+               href="{% url 'remotes_web' %}?role=parking">{% trans 'Паркинг' %}</a>
         </nav>
 
         {% for camera in objects.cameras %}
@@ -51,15 +54,15 @@
                         <div class="card-body">
 
                             <button class="btn btn-sm btn-info run-open-gates"
-                               type="button"
-                               title="{% trans camera.button.description %}"
-                               data-dom="{{ camera.button.dom }}"
-                               data-gate="{{ camera.button.gate }}"
-                               data-mode="{{ camera.button.mode }}"
-                               data-nonce="{{ objects.perl_token }}"
-{#                               data-fake="fake_push_do_not_open"#}
-{#                               target="_blank"#}
-{#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"#}
+                                    type="button"
+                                    title="{% trans camera.button.description %}"
+                                    data-dom="{{ camera.button.dom }}"
+                                    data-gate="{{ camera.button.gate }}"
+                                    data-mode="{{ camera.button.mode }}"
+                                    data-nonce="{{ objects.perl_token }}"
+                                    {# data-fake="fake_push_do_not_open"#}
+                                    {# target="_blank"#}
+                                    {# href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"#}
                             >{% trans camera.button.description %}</button>
                         </div>
                     {% endif %}
