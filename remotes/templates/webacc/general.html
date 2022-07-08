@@ -50,22 +50,30 @@
                              alt="{% trans camera.description %}">
                         <div class="card-body">
                             <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
-                            {% if camera.button %}
-                                {% for btn in camera.button.all %}
-                                    <button class="btn btn-sm btn-info run-open-gates"
-                                       type="button"
-                                       title="{% trans btn.description %}"
-                                       data-dom="{{ btn.dom }}"
-                                       data-gate="{{ btn.gate }}"
-                                       data-mode="{{ btn.mode }}"
-                                       data-nonce="{{ objects.perl_token }}"
-        {#                               data-fake="fake_push_do_not_open"#}
-        {#                               target="_blank"#}
-        {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}"#}
-                                    >{% trans btn.description %}</button>
-                                {% endfor %}
-                            {% endif %}
-                            <p class="card-text">
+                            <ul class="list-group list-group-flush">
+                                {% if camera.button %}
+                                    <li class="list-group-item"></li>
+                                    {% for btn in camera.button.all %}
+                                        <li class="list-group-item">
+                                            <div class="d-grid gap-2 col-6 mx-auto">
+                                                <button class="btn btn-sm btn-info run-open-gates"
+                                                        type="button"
+                                                        title="{% trans btn.description %}"
+                                                        data-dom="{{ btn.dom }}"
+                                                        data-gate="{{ btn.gate }}"
+                                                        data-mode="{{ btn.mode }}"
+                                                        data-nonce="{{ objects.perl_token }}"
+                                                        {#                               data-fake="fake_push_do_not_open"#}
+                                                        {#                               target="_blank"#}
+                                                        {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}"#}
+                                                >{% trans btn.description %}</button>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                                <li class="list-group-item"></li>
+                            </ul>
+                            <p class="card-text text-center">
                                 <small class="text-muted current-time"></small>
                                 <small class="text-muted">Update 2 sec</small>
                             </p>
