@@ -48,20 +48,22 @@
             {% for button in objects.buttons %}
                 <div class="card mb-3" id="{{ button.gate }}{{ button.mode }}">
                     <div class="card-body">
-                        <div class="card-body">
-                            <button class="btn btn-sm btn-info run-open-gates"
-                                    type="button"
-                                    title="{% trans button.description %}"
-                                    data-dom="{{ button.dom }}"
-                                    data-gate="{{ button.gate }}"
-                                    data-mode="{{ button.mode }}"
-                                    data-nonce="{{ objects.perl_token }}"
-                                    {# data-fake="fake_push_do_not_open"#}
-                                    {# target="_blank"#}
-                                    {# href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ button.dom }}&gate={{ button.gate }}&mode={{ button.mode }}&nonce={{ objects.perl_token }}"#}
-                            >{% trans button.description %}</button>
-                        </div>
-{#                        <p class="card-text"><small class="text-muted">{% trans button.description %}</small></p>#}
+                        <button class="btn btn-sm btn-info run-open-gates"
+                                type="button"
+                                title="{% trans button.description %}"
+                                data-dom="{{ button.dom }}"
+                                data-gate="{{ button.gate }}"
+                                data-mode="{{ button.mode }}"
+                                data-nonce="{{ objects.perl_token }}"
+                                {# data-fake="fake_push_do_not_open"#}
+                                {# target="_blank"#}
+                                {# href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ button.dom }}&gate={{ button.gate }}&mode={{ button.mode }}&nonce={{ objects.perl_token }}"#}
+                        >{% trans button.description %}</button>
+                        <ul>
+                            {% for cam in button.assigned_buttons.all %}
+                                <li>{{ cam.description }}</li>
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             {% endfor %}

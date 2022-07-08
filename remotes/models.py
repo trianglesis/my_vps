@@ -42,8 +42,11 @@ class PerlCameras(models.Model):
     type = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
 
-    button = models.ForeignKey(PerlButtons, models.CASCADE,
-                               blank=True, null=True)
+    button = models.ManyToManyField(PerlButtons,
+                                    related_name='assigned_buttons',
+                                    blank=True,
+                                    null=True
+                                    )
 
     class Meta:
         unique_together = [['dvr', 'cam']]

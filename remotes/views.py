@@ -65,6 +65,12 @@ def cam_filter(role):
         elif role == 'parking':
             cams = PerlCameras.objects.filter(type__istartswith="parking_cam").order_by('type')
             title = 'Парковка'
+    else:
+        cams = PerlCameras.objects.filter(
+            ~Q(type__istartswith='parking_cam') &
+            ~Q(type__exact='Remzona') &
+            ~Q(type__exact='STO_Zaezd')
+        )
     return cams, title
 
 

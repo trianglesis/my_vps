@@ -46,24 +46,25 @@
                 <img class="card-img-top camera-w-100-percent cam-refresh"
                      src="https://{{ objects.perl_hostname }}/app/cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
                      data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
-                     alt="{% trans camera.button.description %}">
+                     alt="{% trans camera.description %}">
 
                 <div class="card-body">
                     <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
                     {% if camera.button %}
                         <div class="card-body">
-
-                            <button class="btn btn-sm btn-info run-open-gates"
-                                    type="button"
-                                    title="{% trans camera.button.description %}"
-                                    data-dom="{{ camera.button.dom }}"
-                                    data-gate="{{ camera.button.gate }}"
-                                    data-mode="{{ camera.button.mode }}"
-                                    data-nonce="{{ objects.perl_token }}"
-                                    {# data-fake="fake_push_do_not_open"#}
-                                    {# target="_blank"#}
-                                    {# href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"#}
-                            >{% trans camera.button.description %}</button>
+                            {% for btn in camera.button.all %}
+                                <button class="btn btn-sm btn-info run-open-gates"
+                                        type="button"
+                                        title="{% trans btn.description %}"
+                                        data-dom="{{ btn.dom }}"
+                                        data-gate="{{ btn.gate }}"
+                                        data-mode="{{ btn.mode }}"
+                                        data-nonce="{{ objects.perl_token }}"
+                                        {#                               data-fake="fake_push_do_not_open"#}
+                                        {#                               target="_blank"#}
+                                        {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}"#}
+                                >{% trans btn.description %}</button>
+                            {% endfor %}
                         </div>
                     {% endif %}
                     <p class="card-text">
