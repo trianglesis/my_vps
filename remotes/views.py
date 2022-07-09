@@ -1,5 +1,6 @@
 import logging
 import socket
+from time import sleep
 
 import requests
 import PIL
@@ -22,6 +23,15 @@ from rest_framework.views import APIView
 from remotes.models import PerlCameras, Options, PerlButtons
 
 log = logging.getLogger("core")
+
+skip_words = [
+    'Forbidden',
+    'Unauthorized',
+    'HTTP/1.0 500',
+    'HTTP/1.0 404',
+    'Fatal error',
+    'HTTP request failed',
+]
 
 
 def cam_filter(role):
@@ -92,24 +102,72 @@ def buttons_filter(gate):
     return cams, title
 
 
+def request_image(cam_url, caller='nobody'):
+    log.debug(f"2.1 Requesting image content by url: {cam_url} by: {caller}")
+    r = requests.get(cam_url)
+    if r.status_code == 200:
+        if not any(elem in r.text for elem in skip_words):
+            if r.content:
+                log.debug(f"2.2 Successful request pic URL: {cam_url}")
+                return r.content
+    return b''
+
+
+def save_image(runs, cam_url, images, content, basewidth=600):
+    runs -= 1
+    log.debug(f"3.2 Save image attempt: {runs}")
+    if runs < 1:
+        log.debug(f"3.9 Save image attempt last: {runs}")
+        pass
+    else:
+        img_bytes = io.BytesIO(content)
+        try:
+            log.debug(f"3.2 Save image attempt: {runs} try save!")
+            image = PIL.Image.open(img_bytes).convert("RGB")
+            wpercent = (basewidth / float(image.width))
+            hsize = int((float(image.height) * float(wpercent)))
+            image = image.resize((basewidth, hsize), Image.ANTIALIAS)
+            images.append(image)
+        except PIL.UnidentifiedImageError as e:
+            log.debug(f"3.2 Save image attempt: {runs} got exception will retry!")
+            sleep(1)
+            log.error(f"Cannot save image: {cam_url}, Exception caught: {e}")
+            content = request_image(cam_url, caller=f'exception, run:{runs}')
+            save_image(runs, cam_url, images, content, basewidth)
+
+
 def camera_shot(button, perl_hostname, basewidth=600):
     images = []
     if button.assigned_buttons.all():
         for camera in button.assigned_buttons.all():
+            runs = 3
             cam_url = f"{perl_hostname}cam.php?dvr={camera.dvr}&cam={camera.cam}"
-            r = requests.get(cam_url)
-            if r.status_code == 200:
-                if r.content:
-                    log.debug(f"Successful request pic URL: {cam_url}")
-                    img_bytes = io.BytesIO(r.content)
-                    try:
-                        image = PIL.Image.open(img_bytes).convert("RGB")
-                        wpercent = (basewidth / float(image.width))
-                        hsize = int((float(image.height) * float(wpercent)))
-                        image = image.resize((basewidth, hsize), Image.ANTIALIAS)
-                        images.append(image)
-                    except PIL.UnidentifiedImageError as e:
-                        log.error(f"Cannot get image from URL: {cam_url}\nError: {e}")
+
+            # dvr=12 cam=47
+            # cam_url = f"{perl_hostname}cam.php?dvr=12&cam=47"
+
+            log.debug(f"1.1 Requesting camera content: {cam_url}")
+            content = request_image(cam_url, caller='initial')
+
+            log.debug(f"3.1 Save image or check if save-able content: {cam_url}")
+            save_image(runs, cam_url, images, content, basewidth)
+
+            log.debug(f"4.1 Finishing job for image and run forward! {cam_url}")
+
+            # r = requests.get(cam_url)
+            # if r.status_code == 200:
+            #     if not any(elem in r.text for elem in skip_words):
+            #         if r.content:
+            #             log.debug(f"Successful request pic URL: {cam_url}")
+            #             img_bytes = io.BytesIO(r.content)
+            #             try:
+            #                 image = PIL.Image.open(img_bytes).convert("RGB")
+            #                 wpercent = (basewidth / float(image.width))
+            #                 hsize = int((float(image.height) * float(wpercent)))
+            #                 image = image.resize((basewidth, hsize), Image.ANTIALIAS)
+            #                 images.append(image)
+            #             except PIL.UnidentifiedImageError as e:
+            #                 log.error(f"Cannot get image from URL: {cam_url}\nError: {e}")
     return images
 
 
@@ -318,13 +376,14 @@ class TestCaseRunTestREST(APIView):
                 username=self.request.user.username,
                 hostname=security.Credentials.SITE,
             ))
-            Mails().short(
-                subject=subject,
-                mail_html=mail_html,
-                images=images,
-                send_to=self.request.user.email,
-                bcc=security.mails['admin'],
-            )
+            log.debug(f"images: {images}")
+            # Mails().short(
+            #     subject=subject,
+            #     mail_html=mail_html,
+            #     images=images,
+            #     send_to=self.request.user.email,
+            #     bcc=security.mails['admin'],
+            # )
             return Response(dict(status='Smile!', response='Make a shot!'))
         else:
             URL = f'{perl_hostname}go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
