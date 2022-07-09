@@ -109,7 +109,7 @@ def camera_shot(button, perl_hostname, basewidth=600):
                         image = image.resize((basewidth, hsize), Image.ANTIALIAS)
                         images.append(image)
                     except PIL.UnidentifiedImageError as e:
-                        log.error(f"Cannot get image from URL: {cam_url}")
+                        log.error(f"Cannot get image from URL: {cam_url}\nError: {e}")
     return images
 
 
