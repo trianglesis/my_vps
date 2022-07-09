@@ -3,8 +3,9 @@ import socket
 
 import requests
 
-from PIL import Image, ImageDraw
+from PIL import Image
 from io import BytesIO
+from core import security
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -21,8 +22,6 @@ from rest_framework.views import APIView
 from remotes.models import PerlCameras, Options, PerlButtons
 
 log = logging.getLogger("core")
-
-from core import security
 
 
 def cam_filter(role):

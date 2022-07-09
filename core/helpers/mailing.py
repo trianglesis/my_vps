@@ -1,6 +1,5 @@
 import logging
 from time import sleep
-from PIL import Image
 from io import BytesIO
 
 from django.core import mail
@@ -185,7 +184,6 @@ class Mails:
                 for image in images:
                     iter_img += 1
                     stream = BytesIO()
-
                     image.save(stream, format="JPEG")
                     stream.seek(0)
                     imgObj = stream.read()
