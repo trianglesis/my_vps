@@ -4,7 +4,7 @@ import socket
 import requests
 
 from PIL import Image
-from io import BytesIO
+import io
 from core import security
 
 from django.contrib.auth.decorators import login_required
@@ -100,7 +100,7 @@ def camera_shot(button, perl_hostname, basewidth=600):
             r = requests.get(cam_url)
             if r.status_code == 200:
                 if r.content:
-                    img_bytes = BytesIO(r.content)
+                    img_bytes = io.BytesIO(r.content)
                     image = Image.open(img_bytes).convert("RGB")
                     wpercent = (basewidth / float(image.width))
                     hsize = int((float(image.height) * float(wpercent)))
@@ -288,6 +288,7 @@ class TestCaseRunTestREST(APIView):
                 subject=subject,
                 button=button,
                 username=self.request.user.username,
+                hostname=security.Credentials.SITE,
             ))
             Mails().short(
                 subject=subject,
@@ -308,6 +309,7 @@ class TestCaseRunTestREST(APIView):
                 subject=subject,
                 button=button,
                 username=self.request.user.username,
+                hostname=security.Credentials.SITE,
             ))
             Mails().short(
                 subject=subject,
