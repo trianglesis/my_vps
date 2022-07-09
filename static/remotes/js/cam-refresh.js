@@ -20,14 +20,14 @@ function runContinuously() {
 function replaceCamView(camObj) {
     let dvr = camObj.dataset.dvr
     let cam = camObj.dataset.cam
-    // camObj.src = `${perl_hostname}cam.php?dvr=${dvr}&cam=${cam}`;
     camObj.src = `${perl_hostname}cam.php?dvr=${dvr}&cam=${cam}&r=${Date.now()}`;
+
+
 }
 
 function currentDateTime(camCard) {
     let today = new Date();
     camCard.textContent = ''
     camCard.textContent = today.toLocaleTimeString();
-    // console.log("Refreshing camera views", camCard.textContent);
 
 }
