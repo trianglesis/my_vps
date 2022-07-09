@@ -96,6 +96,14 @@
                                             </li>
                                         {% endfor %}
                                     {% endif %}
+                                    <li class="list-group-item bg-dark text-center">
+                                    <button class="btn btn-sm btn-outline-success run-camera-shot" id="{{ camera.dvr }}-{{ camera.cam }}"
+                                            type="button"
+                                            title="Make snap {% trans camera.description %}"
+                                            data-dvr="{{ camera.dvr }}"
+                                            data-cam="{{ camera.cam }}"
+                                    >{% trans 'Фото' %}</button>
+                                    </li>
                                     <li class="list-group-item bg-dark"></li>
                                 </ul>
                                 <p class="card-text text-center">
@@ -112,6 +120,8 @@
             <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
             <!-- Open buttons -->
             <script src="{% static 'remotes/js/buttons.js' %}"></script>
+            <!-- Snap buttons -->
+            <script src="{% static 'remotes/js/buttons_camera_shot.js' %}"></script>
 
         {% else %}
             <div class="alert alert-dark" role="alert">

@@ -6,12 +6,8 @@ $(document).ready(function () {
 
 
 function buttonRunNowEventListenerAssign(funcToRun) {
-    // console.log("<=Run Now=> Test run now buttons assigning listener!")
-
     let openGates = document.getElementsByClassName("run-open-gates");
-
     if (openGates && openGates[0]) {
-
         for (let btn of openGates) {
             if (!btn.dataset['nonce']) {
                 throw new Error("<=Run Now=> run-open-gates buttons cannot be set without token data attribute!")
@@ -25,8 +21,6 @@ function buttonRunNowEventListenerAssign(funcToRun) {
             if (!btn.dataset['mode']) {
                 throw new Error("<=Run Now=> run-open-gates buttons cannot be set without mode data attribute!")
             }
-
-            // console.log("<=Run Now=> Assign listener for button with case id: " + btn.dataset['case_id'])
             btn.addEventListener("click", function () {
                 funcToRun(btn);
             });
@@ -36,24 +30,15 @@ function buttonRunNowEventListenerAssign(funcToRun) {
 
 
 function pushedButtonSendRequest(btn) {
-    // console.log(`<=Run Now=> btn:`,  btn)
-    // console.log(`<=Run Now=> btn.dataset:`, btn.dataset)
-    // console.log(`perl_token: `, perl_token)
-    // console.log(`perl_hostname: `, perl_hostname)
-
     btn.dataset.perl_token = perl_token
     btn.dataset.perl_hostname = perl_hostname
-
-    console.log(btn.dataset);
     new RESTPostTask(btn);
 }
-
 
 function changeButtonText(btn, result, fallbackMessage) {
     console.log(`Button pushed! Rest Sent! Now change button text with response, wait 1-2 sec and change text back to usual`)
     let status = result.status
     let previousText = btn.innerText
-
     if (!fallbackMessage) {
         btn.innerText = status
         btn.disabled = 'disabled';
@@ -61,8 +46,6 @@ function changeButtonText(btn, result, fallbackMessage) {
         btn.innerText = fallbackMessage
         btn.disabled = 'disabled';
     }
-
-
     // Wait for a few seconds, make button disabled, and then assign previous text back
     setTimeout(function () {
         new SetButtonBack(btn, previousText);

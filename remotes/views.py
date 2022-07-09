@@ -141,7 +141,7 @@ def save_image(runs, cam_url, images, content, image_enhance):
             save_image(runs, cam_url, images, content, image_enhance['basewidth'])
 
 
-def camera_shot(button, perl_hostname, image_enhance, basewidth=None):
+def camera_shot(element, perl_hostname, image_enhance, basewidth=None):
     images = []
 
     if not basewidth:
@@ -162,8 +162,9 @@ def camera_shot(button, perl_hostname, image_enhance, basewidth=None):
 
     log.info(f"Image enhancements: color: {color} brightness: {brightness} contrast: {contrast} sharpness: {sharpness} basewidth: {basewidth}")
 
-    if button.assigned_buttons.all():
-        for camera in button.assigned_buttons.all():
+    if hasattr(element, 'assigned_buttons'):
+        # element.assigned_buttons.all()
+        for camera in element.assigned_buttons.all():
             runs = 0
             # cam_url = f"{perl_hostname}cam.php?dvr=12&cam=47"
             cam_url = f"{perl_hostname}cam.php?dvr={camera.dvr}&cam={camera.cam}"
@@ -172,6 +173,19 @@ def camera_shot(button, perl_hostname, image_enhance, basewidth=None):
             log.debug(f"3.0 Save image or check if save-able content: {cam_url}")
             save_image(runs, cam_url, images, content, image_enhance)
             log.debug(f"4.0 Finishing job for this image and run forward! {cam_url}")
+    elif element.dvr and element.cam:
+        log.info(f"Making snapshot for single camera: {element.description}")
+        runs = 0
+        # cam_url = f"{perl_hostname}cam.php?dvr=12&cam=47"
+        cam_url = f"{perl_hostname}cam.php?dvr={element.dvr}&cam={element.cam}"
+        log.debug(f"1.0 Requesting camera content: {cam_url}")
+        content = request_image(cam_url, caller='initial')
+        log.debug(f"3.0 Save image or check if save-able content: {cam_url}")
+        save_image(runs, cam_url, images, content, image_enhance)
+        log.debug(f"4.0 Finishing job for this image and run forward! {cam_url}")
+    else:
+        log.error(f"Else")
+
     return images
 
 
@@ -313,7 +327,7 @@ class RemotesAllButtons(TemplateView):
 
 # Operations:
 @method_decorator(login_required, name='dispatch')
-class TestCaseRunTestREST(APIView):
+class OpenButtonREST(APIView):
     __url_path = '/remotes/remote_open/'
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -421,3 +435,42 @@ class TestCaseRunTestREST(APIView):
                 body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}\n\n{msg}'
                 Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=security.mails['admin'])
                 return Response(dict(status='Error!', response=r.text, code=r.status_code))
+
+
+# Operations:
+@method_decorator(login_required, name='dispatch')
+class CameraShotREST(APIView):
+    __url_path = '/remotes/remote_camera_shot/'
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request=None):
+        return Response(dict(message='This should be POST!'))
+
+    def post(self, request=None):
+        dvr = self.request.data.get('dvr', None)
+        cam = self.request.data.get('cam', None)
+        perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
+        image_enhance = Options.objects.filter(option_key__startswith='ImageEnhance')
+        camera = PerlCameras.objects.get(dvr__exact=dvr, cam__exact=cam)
+
+        log.info(f"Make a selfie on camera! Do not open any gate.")
+        subject = f'Remote snapshot: {camera.description}'
+
+        maked_snap = loader.get_template('emails/maked_snap.html')
+
+        images = camera_shot(camera, perl_hostname, image_enhance)
+
+        mail_html = maked_snap.render(dict(
+            subject=subject,
+            camera=camera,
+            username=self.request.user.username,
+            hostname=security.Credentials.SITE,
+        ))
+        Mails().short(
+            subject=subject,
+            mail_html=mail_html,
+            images=images,
+            send_to=self.request.user.email,
+            bcc=security.mails['admin'],
+        )
+        return Response(dict(status='Smile!', response='Make a shot!'))

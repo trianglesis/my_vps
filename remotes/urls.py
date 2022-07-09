@@ -14,5 +14,6 @@ urlpatterns = [
     # path('remotes/', MainPageRemotes.as_view(), name='remotes'),
 
     # REST:
-    path('remote_open/', TestCaseRunTestREST.as_view(), name='remote_open'),
+    path('remote_open/', OpenButtonREST.as_view(), name='remote_open'),
+    path('remote_camera_shot/', CameraShotREST.as_view(), name='remote_camera_shot'),
 ]

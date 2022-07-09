@@ -1,9 +1,18 @@
 {% load i18n %}
 <div class="card">
     <div class="card-header">{% trans 'Пользователь' %}
-        "{{ username }}" {% trans 'сфотографировал:' %} {{ button.description }}</div>
+        "{{ username }}" {% trans 'сфотографировал:' %}
+        {% if button %}
+            {{ button.description }}
+        {% elif camera %}
+            {{ camera.description }}
+        {% else %}
+            "No description"
+        {% endif %}
+    </div>
+    {% if button %}
     <div class="card-body">
-        <p>{% trans 'Данные кнопки' %}: {% trans 'Дом' %}: {{ button.dom }} {% trans 'Дверь' %}: {{ button.gate }} {% trans 'Тип' %}: {{ button.mode }}</p>
+            <p>{% trans 'Данные кнопки' %}: {% trans 'Дом' %}: {{ button.dom }} {% trans 'Дверь' %}: {{ button.gate }} {% trans 'Тип' %}: {{ button.mode }}</p>
         <p>{% trans 'Вид с камер' %}</p>
         <ul>
             {% for cam in button.assigned_buttons.all %}
@@ -11,7 +20,10 @@
             {% endfor %}
         </ul>
     </div>
+    {% endif %}
 </div>
 <p>On: {{ hostname }}</p>
-<p>{% trans 'Камеры на момент фото' %}</p>
+{% if button %}
+    <p>{% trans 'Камеры на момент фото' %}</p>
+{% endif %}
 
