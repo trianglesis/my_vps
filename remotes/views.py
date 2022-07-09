@@ -2,7 +2,7 @@ import logging
 import socket
 
 import requests
-
+import PIL
 from PIL import Image
 import io
 from core import security
@@ -100,12 +100,16 @@ def camera_shot(button, perl_hostname, basewidth=600):
             r = requests.get(cam_url)
             if r.status_code == 200:
                 if r.content:
+                    log.debug(f"Successful request pic URL: {cam_url}")
                     img_bytes = io.BytesIO(r.content)
-                    image = Image.open(img_bytes).convert("RGB")
-                    wpercent = (basewidth / float(image.width))
-                    hsize = int((float(image.height) * float(wpercent)))
-                    image = image.resize((basewidth, hsize), Image.ANTIALIAS)
-                    images.append(image)
+                    try:
+                        image = PIL.Image.open(img_bytes).convert("RGB")
+                        wpercent = (basewidth / float(image.width))
+                        hsize = int((float(image.height) * float(wpercent)))
+                        image = image.resize((basewidth, hsize), Image.ANTIALIAS)
+                        images.append(image)
+                    except PIL.UnidentifiedImageError as e:
+                        log.error(f"Cannot get image from URL: {cam_url}")
     return images
 
 
@@ -301,8 +305,11 @@ class TestCaseRunTestREST(APIView):
             return Response(dict(status='Faked!', response=j_txt))
         # Only make a camera shot
         elif snap:
-            subject = f'Remote snapshot: {button.description}'
+
             log.info(f"Make a selfie on camera! Do not open any gate.")
+            log.debug(f"View request: {self.request} data: {self.request.data}")
+
+            subject = f'Remote snapshot: {button.description}'
             maked_snap = loader.get_template('emails/maked_snap.html')
             images = camera_shot(button, perl_hostname, 1200)
             mail_html = maked_snap.render(dict(

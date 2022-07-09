@@ -45,7 +45,7 @@
             </nav>
 
             {% for camera in objects.cameras %}
-                <div class="card mb-3" id="{{ camera.dvr }}{{ camera.cam }}">
+                <div class="card text-white bg-dark mb-3" id="{{ camera.dvr }}{{ camera.cam }}">
 
                     <img class="card-img-top camera-w-100-percent cam-refresh"
                          src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
