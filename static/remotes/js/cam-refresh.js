@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // window.setInterval("runContinuously();", 100); // one second interval
     document.cookie = "Set-Cookie: widget_session=abc123; SameSite=None"
-    setInterval(runContinuously, 1000);  /* 3000 = 3 sec */
+    setInterval(runContinuously, 2000);  /* 3000 = 3 sec */
 });
 
 function runContinuously() {
