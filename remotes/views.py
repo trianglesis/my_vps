@@ -376,14 +376,14 @@ class TestCaseRunTestREST(APIView):
                 username=self.request.user.username,
                 hostname=security.Credentials.SITE,
             ))
-            log.debug(f"images: {images}")
-            # Mails().short(
-            #     subject=subject,
-            #     mail_html=mail_html,
-            #     images=images,
-            #     send_to=self.request.user.email,
-            #     bcc=security.mails['admin'],
-            # )
+            # log.debug(f"images: {images}")
+            Mails().short(
+                subject=subject,
+                mail_html=mail_html,
+                images=images,
+                send_to=self.request.user.email,
+                bcc=security.mails['admin'],
+            )
             return Response(dict(status='Smile!', response='Make a shot!'))
         else:
             URL = f'{perl_hostname}go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
