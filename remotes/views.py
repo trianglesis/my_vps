@@ -93,6 +93,24 @@ def buttons_filter(gate):
     return cams, title
 
 
+def camera_shot(button, perl_hostname):
+    basewidth = 600
+    images = []
+    if button.assigned_buttons.all():
+        for camera in button.assigned_buttons.all():
+            cam_url = f"{perl_hostname}cam.php?dvr={camera.dvr}&cam={camera.cam}"
+            r = requests.get(cam_url)
+            if r.status_code == 200:
+                if r.content:
+                    img_bytes = BytesIO(r.content)
+                    image = Image.open(img_bytes).convert("RGB")
+                    wpercent = (basewidth / float(image.width))
+                    hsize = int((float(image.height) * float(wpercent)))
+                    image = image.resize((basewidth, hsize), Image.ANTIALIAS)
+                    images.append(image)
+    return images
+
+
 @method_decorator(login_required, name='dispatch')
 class MainPageRemotes(TemplateView):
     template_name = 'remotes.html'
@@ -257,47 +275,30 @@ class TestCaseRunTestREST(APIView):
         pushed_button = loader.get_template('emails/pushed_button.html')
         button = PerlButtons.objects.get(dom__exact=dom, gate__exact=gate, mode__exact=mode)
 
-        body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}'
         subject = f'Remote open: {button.description}'
 
         if socket.getfqdn() == security.DEV_HOST:
             fake = True
 
-        images = []
         if fake:
             log.info(f"FAKE ITERATION! Do not making any requests!")
             log.info(f"self.request.user.username: {self.request.user.username}, email: {self.request.user.email}")
-            if button.assigned_buttons.all():
-
-                for camera in button.assigned_buttons.all():
-                    cam_url = f"{perl_hostname}cam.php?dvr={camera.dvr}&cam={camera.cam}"
-                    # log.debug(f"Related cameras for this button: {cam_url}")
-                    r = requests.get(cam_url)
-                    if r.status_code == 200:
-                        if r.content:
-                            img_bytes = BytesIO(r.content)
-                            image = Image.open(img_bytes).convert("RGB")
-                            images.append(image)
-                            log.debug(f"Image object: {image} {image.height} {image.width}")
-
+            images = camera_shot(button, perl_hostname)
             mail_html = pushed_button.render(dict(
                 subject=subject,
                 button=button,
                 username=self.request.user.username,
             ))
-
             Mails().short(
                 subject=subject,
                 mail_html=mail_html,
                 images=images,
                 send_to=self.request.user.email,
-                bcc=['to@trianglesis.org.ua', security.mails['admin']],
+                bcc=security.mails['admin'],
             )
-
             j_txt = dict()
             return Response(dict(status='ok', response=j_txt))
         else:
-            # URL = f'https://{perl_hostname}/app/go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
             URL = f'{perl_hostname}go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
             r = requests.get(URL)
 
@@ -305,14 +306,31 @@ class TestCaseRunTestREST(APIView):
                 j_txt = r.json()
                 server_response_status = j_txt.get("status")
                 if server_response_status == 'ok':
-                    # Send even if unsuccessfully - to show that user actually tries it:
-                    Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=['to@trianglesis.org.ua', security.mails['admin']])
+                    images = camera_shot(button, perl_hostname)
+                    mail_html = pushed_button.render(dict(
+                        subject=subject,
+                        button=button,
+                        username=self.request.user.username,
+                    ))
+                    Mails().short(
+                        subject=subject,
+                        mail_html=mail_html,
+                        images=images,
+                        send_to=self.request.user.email,
+                        bcc=security.mails['admin'],
+                    )
 
                     log.info(f"Request successfully executed for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
                     return Response(dict(status='ok', response=j_txt))
                 else:
-                    log.error(f"Request executed with some error on server side for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
+                    msg = f"Request executed with some error on server side for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}"
+                    log.error(msg)
+                    body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}\n\n{msg}'
+                    Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=security.mails['admin'])
                     return Response(dict(status='err', response=j_txt))
             else:
-                log.error(f"Something is not working on server side for: dom={dom}&gate={gate}&mode={mode},\nStatus code: {r.status_code}\nResponse: {r.text}")
+                msg = f"Something is not working on server side for: dom={dom}&gate={gate}&mode={mode},\nStatus code: {r.status_code}\nResponse: {r.text}"
+                log.error(msg)
+                body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}\n\n{msg}'
+                Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=security.mails['admin'])
                 return Response(dict(status='err', response=r.text, code=r.status_code))

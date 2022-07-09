@@ -1,14 +1,24 @@
+{% load i18n %}
 <div class="alert alert-primary" role="alert">
-    Remote open: {{ button.description }} by user {{ username }}
+    {% trans 'Открытие' %}: {{ button.description }} {% trans 'пользователь' %} "{{ username }}"
 </div>
 
 <div class="card">
-    <div class="card-header">User {{ username }} opened: {{ button.description }}</div>
+    <div class="card-header">{% trans 'Пользоваьтель' %}
+        "{{ username }}" {% trans 'открыл:' %} {{ button.description }}</div>
     <div class="card-body">
-        <blockquote class="blockquote mb-0">
-            <p>Дом: {{ button.dom }}</p>
-            <p>Дверь: {{ button.gate }}</p>
-            <p>Тип: {{ button.mode }}</p>
-        </blockquote>
+        <p>{% trans 'Данные кнопки' %}</p>
+        <ul>
+            <li>{% trans 'Дом' %}: {{ button.dom }}</li>
+            <li>{% trans 'Дверь' %}: {{ button.gate }}</li>
+            <li>{% trans 'Тип' %}: {{ button.mode }}</li>
+        </ul>
+        <p>{% trans 'Вид камер' %}</p>
+        <ul>
+            {% for cam in button.assigned_buttons.all %}
+                <li>{{ cam.description }}</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
+{% trans 'Камеры на момент открытия' %}
