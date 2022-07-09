@@ -6,6 +6,7 @@
     {{ title }}
 {% endblock %}
 {% block content %}
+    <div class="p-3 mb-2 bg-dark text-white">
     {% is_member 'family' as family_user %}
     {% if family_user %}
         <script type="text/javascript" data-model-name="branchWorkers">
@@ -16,7 +17,7 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for camera in objects.cameras %}
                 <div class="col">
-                    <div class="card h-100" id="{{ camera.dvr }}{{ camera.cam }}">
+                    <div class="card text-white bg-dark h-100" id="{{ camera.dvr }}{{ camera.cam }}">
                         <img class="card-img-top camera-w-100-percent cam-refresh"
                              src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
                              data-dvr="{{ camera.dvr }}"
@@ -25,8 +26,8 @@
                         <div class="card-body">
                             <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
                             <p class="card-text">
-                                <small class="text-muted current-time"></small>
-                                <small class="text-muted">Update 2 sec</small>
+                                <small class="text-light current-time"></small>
+                                <small class="text-light">Update 2 sec</small>
                             </p>
                         </div>
                     </div>
@@ -42,4 +43,5 @@
             Nothing here.
         </div>
     {% endif %}
+    </div>
 {% endblock %}
