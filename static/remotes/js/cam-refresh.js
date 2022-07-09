@@ -1,6 +1,7 @@
 $(document).ready(function () {
-    console.log("Main page ready");
-    setInterval(runContinuously, 2000);  /* 3000 = 3 sec */
+    // window.setInterval("runContinuously();", 100); // one second interval
+    document.cookie = "Set-Cookie: widget_session=abc123; SameSite=None"
+    setInterval(runContinuously, 1000);  /* 3000 = 3 sec */
 });
 
 function runContinuously() {
@@ -15,18 +16,18 @@ function runContinuously() {
     }
 }
 
+
 function replaceCamView(camObj) {
-    // console.log(`camObj.src:`, camObj.src)
-    // camObj.src = camObj.src + "&" + Date.now();
-    // Hmmmmmm, there is no need to add some fake data to request?
-    // Should I try then move it to django?
-    camObj.src = camObj.src;
+    let dvr = camObj.dataset.dvr
+    let cam = camObj.dataset.cam
+    // camObj.src = `${perl_hostname}cam.php?dvr=${dvr}&cam=${cam}`;
+    camObj.src = `${perl_hostname}cam.php?dvr=${dvr}&cam=${cam}&r=${Date.now()}`;
 }
 
 function currentDateTime(camCard) {
     let today = new Date();
     camCard.textContent = ''
     camCard.textContent = today.toLocaleTimeString();
-    console.log("Refreshing camera views", camCard.textContent);
+    // console.log("Refreshing camera views", camCard.textContent);
 
 }

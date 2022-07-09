@@ -1,4 +1,5 @@
 import logging
+import socket
 
 import requests
 from django.contrib.auth.decorators import login_required
@@ -15,6 +16,8 @@ from rest_framework.views import APIView
 from remotes.models import PerlCameras, Options, PerlButtons
 
 log = logging.getLogger("core")
+
+from core import security
 
 
 def cam_filter(role):
@@ -250,16 +253,20 @@ class TestCaseRunTestREST(APIView):
         subject = f'Remote open: {button.description}'
         body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}'
 
+        if socket.getfqdn() == security.DEV_HOST:
+            fake = True
+
         if fake:
             log.info(f"FAKE ITERATION! Do not making any requests!")
             log.info(f"self.request.user.username: {self.request.user.username}, email: {self.request.user.email}")
 
-            Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc='to@trianglesis.org.ua')
+            # Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=['to@trianglesis.org.ua', security.mails['admin']])
 
             j_txt = dict()
             return Response(dict(status='ok', response=j_txt))
         else:
-            URL = f'https://{perl_hostname}/app/go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
+            # URL = f'https://{perl_hostname}/app/go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
+            URL = f'{perl_hostname}go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
             r = requests.get(URL)
 
             if r.status_code == 200:
@@ -267,7 +274,7 @@ class TestCaseRunTestREST(APIView):
                 server_response_status = j_txt.get("status")
                 if server_response_status == 'ok':
                     # Send even if unsuccessfully - to show that user actually tries it:
-                    Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc='to@trianglesis.org.ua')
+                    Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=['to@trianglesis.org.ua', security.mails['admin']])
 
                     log.info(f"Request successfully executed for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
                     return Response(dict(status='ok', response=j_txt))

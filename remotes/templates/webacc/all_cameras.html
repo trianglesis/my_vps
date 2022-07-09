@@ -18,8 +18,9 @@
                 <div class="col">
                     <div class="card h-100" id="{{ camera.dvr }}{{ camera.cam }}">
                         <img class="card-img-top camera-w-100-percent cam-refresh"
-                             src="https://{{ objects.perl_hostname }}/app/cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
-                             data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
+                             src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
+                             data-dvr="{{ camera.dvr }}"
+                             data-cam="{{ camera.cam }}"
                              alt="{% trans camera.description %}">
                         <div class="card-body">
                             <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
