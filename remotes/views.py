@@ -377,7 +377,6 @@ class TestCaseRunTestREST(APIView):
                 username=self.request.user.username,
                 hostname=security.Credentials.SITE,
             ))
-            log.debug(f"images: {images}")
             Mails().short(
                 subject=subject,
                 mail_html=mail_html,
