@@ -1,9 +1,12 @@
 import logging
 from time import sleep
+from PIL import Image
+from io import BytesIO
 
 from django.core import mail
 from django.core.mail import EmailMessage
 from django.core.mail import EmailMultiAlternatives
+from email.mime.image import MIMEImage
 
 from django.conf import settings
 
@@ -100,6 +103,7 @@ class Mails:
         send_cc = self.get_group_or_user_recipients(send_cc)
         bcc = self.get_group_or_user_recipients(bcc)
 
+        images = mail_args.get('images', [])
         attach_file = mail_args.get('attach_file', '')
         attach_content = mail_args.get('attach_content', '')
         attach_content_name = mail_args.get('attach_content_name', 'draft.html')
@@ -175,6 +179,18 @@ class Mails:
                 email.attach_file(attach_file)
             if attach_content:
                 email.attach(attach_content_name, attach_content, "text/html")
+
+            iter_img = 0
+            if images:
+                for image in images:
+                    iter_img += 1
+                    stream = BytesIO()
+                    image.save(stream, format="JPEG")
+                    stream.seek(0)
+                    imgObj = stream.read()
+                    img = MIMEImage(imgObj)
+                    img.add_header('Content-ID', '<image>')
+                    email.attach(img)
             email.send()
         else:
             email = EmailMessage(**email_args)

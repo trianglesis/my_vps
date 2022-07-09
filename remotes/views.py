@@ -2,10 +2,15 @@ import logging
 import socket
 
 import requests
+
+from PIL import Image, ImageDraw
+from io import BytesIO
+
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.db.models import Q
+from django.template import loader
 
 from core.helpers.mailing import Mails
 
@@ -249,18 +254,45 @@ class TestCaseRunTestREST(APIView):
         # perl_token = self.request.data.get('perl_token', None)
         perl_hostname = self.request.data.get('perl_hostname', None)
 
+        pushed_button = loader.get_template('emails/pushed_button.html')
         button = PerlButtons.objects.get(dom__exact=dom, gate__exact=gate, mode__exact=mode)
-        subject = f'Remote open: {button.description}'
+
         body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}'
+        subject = f'Remote open: {button.description}'
 
         if socket.getfqdn() == security.DEV_HOST:
             fake = True
 
+        images = []
         if fake:
             log.info(f"FAKE ITERATION! Do not making any requests!")
             log.info(f"self.request.user.username: {self.request.user.username}, email: {self.request.user.email}")
+            if button.assigned_buttons.all():
 
-            # Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=['to@trianglesis.org.ua', security.mails['admin']])
+                for camera in button.assigned_buttons.all():
+                    cam_url = f"{perl_hostname}cam.php?dvr={camera.dvr}&cam={camera.cam}"
+                    # log.debug(f"Related cameras for this button: {cam_url}")
+                    r = requests.get(cam_url)
+                    if r.status_code == 200:
+                        if r.content:
+                            img_bytes = BytesIO(r.content)
+                            image = Image.open(img_bytes).convert("RGB")
+                            images.append(image)
+                            log.debug(f"Image object: {image} {image.height} {image.width}")
+
+            mail_html = pushed_button.render(dict(
+                subject=subject,
+                button=button,
+                username=self.request.user.username,
+            ))
+
+            Mails().short(
+                subject=subject,
+                mail_html=mail_html,
+                images=images,
+                send_to=self.request.user.email,
+                bcc=['to@trianglesis.org.ua', security.mails['admin']],
+            )
 
             j_txt = dict()
             return Response(dict(status='ok', response=j_txt))

@@ -30,8 +30,8 @@ PATH = os.path.abspath('D:\\Projects\\PycharmProjects\\my_vps\\y_devel\\CAM')
 ANSWERS_LOG = os.path.join(PATH, 'answer_log.txt')
 log.info(f'Save to: {PATH}')
 
-for dvr in range(14, 30):
-    for cam in range(1, 20):
+for dvr in range(1, 50):
+    for cam in range(1, 50):
         URL = f'{perl_hostname}cam.php?dvr={dvr}&cam={cam}'
         r = requests.get(URL)
         if r.status_code == 200:
@@ -47,6 +47,6 @@ for dvr in range(14, 30):
                         save_to = os.path.join(PATH, file_name)
                         image.save(fp=save_to, format='JPEG')
             else:
-                print(f"Skipping: dvr={dvr} cam={cam}, answer: {r.text}")
-                with open(ANSWERS_LOG, 'w', encoding='utf-8') as f:
-                    f.write(f'{r.text}\n')
+                print(f"Skipping: dvr={dvr} cam={cam}")
+                with open(ANSWERS_LOG, 'a', encoding='utf-8') as f:
+                    f.write(f'Skipped: dvr={dvr} cam={cam} - {r.text}\n')
