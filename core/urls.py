@@ -39,3 +39,9 @@ urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
 
 ]
+
+
+handler404 = 'core.views.page_not_found_view'
+handler500 = 'core.views.response_error_handler'
+handler403 = 'core.views.permission_denied_view'
+handler400 = 'core.views.bad_request_view'
