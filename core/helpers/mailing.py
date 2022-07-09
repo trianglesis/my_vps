@@ -184,7 +184,7 @@ class Mails:
                 for image in images:
                     iter_img += 1
                     stream = BytesIO()
-                    image.save(stream, format="JPEG")
+                    image.save(stream, format="PNG", quality=100)
                     stream.seek(0)
                     imgObj = stream.read()
                     img = MIMEImage(imgObj)

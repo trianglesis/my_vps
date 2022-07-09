@@ -4,7 +4,7 @@ from time import sleep
 
 import requests
 import PIL
-from PIL import Image
+from PIL import Image, ImageEnhance
 import io
 from core import security
 
@@ -114,7 +114,7 @@ def request_image(cam_url, caller='nobody'):
     return b''
 
 
-def save_image(runs, cam_url, images, content, basewidth=600):
+def save_image(runs, cam_url, images, content, image_enhance):
     stop = 3
     runs += 1
     log.debug(f"3.1 Save image attempt: {runs}")
@@ -126,19 +126,42 @@ def save_image(runs, cam_url, images, content, basewidth=600):
         try:
             log.debug(f"3.2 Save image attempt: {runs} try save!")
             image = PIL.Image.open(img_bytes).convert("RGB")
-            wpercent = (basewidth / float(image.width))
+            wpercent = (image_enhance['basewidth'] / float(image.width))
             hsize = int((float(image.height) * float(wpercent)))
-            image = image.resize((basewidth, hsize), Image.ANTIALIAS)
+            image = image.resize((image_enhance['basewidth'], hsize), Image.ANTIALIAS)
+            image = ImageEnhance.Color(image).enhance(image_enhance['color'])
+            image = ImageEnhance.Brightness(image).enhance(image_enhance['brightness'])
+            image = ImageEnhance.Contrast(image).enhance(image_enhance['contrast'])
+            image = ImageEnhance.Sharpness(image).enhance(image_enhance['sharpness'])
             images.append(image)
         except PIL.UnidentifiedImageError as e:
             sleep(0.5)
             log.error(f"3.3 Cannot save image: {cam_url}, attempt: {runs}, Exception caught: {e}")
             content = request_image(cam_url, caller=f'exception, run:{runs}')
-            save_image(runs, cam_url, images, content, basewidth)
+            save_image(runs, cam_url, images, content, image_enhance['basewidth'])
 
 
-def camera_shot(button, perl_hostname, basewidth=600):
+def camera_shot(button, perl_hostname, image_enhance, basewidth=None):
     images = []
+
+    if not basewidth:
+        basewidth = image_enhance.get(option_key__exact='ImageEnhance.image.basewidth').option_value
+
+    color = image_enhance.get(option_key__exact='ImageEnhance.Color').option_value
+    brightness = image_enhance.get(option_key__exact='ImageEnhance.Brightness').option_value
+    contrast = image_enhance.get(option_key__exact='ImageEnhance.Contrast').option_value
+    sharpness = image_enhance.get(option_key__exact='ImageEnhance.Sharpness').option_value
+
+    image_enhance = dict(
+        basewidth=int(basewidth),
+        color=float(color),
+        brightness=float(brightness),
+        contrast=float(contrast),
+        sharpness=float(sharpness),
+    )
+
+    log.info(f"Image enhancements: color: {color} brightness: {brightness} contrast: {contrast} sharpness: {sharpness} basewidth: {basewidth}")
+
     if button.assigned_buttons.all():
         for camera in button.assigned_buttons.all():
             runs = 0
@@ -147,7 +170,7 @@ def camera_shot(button, perl_hostname, basewidth=600):
             log.debug(f"1.0 Requesting camera content: {cam_url}")
             content = request_image(cam_url, caller='initial')
             log.debug(f"3.0 Save image or check if save-able content: {cam_url}")
-            save_image(runs, cam_url, images, content, basewidth)
+            save_image(runs, cam_url, images, content, image_enhance)
             log.debug(f"4.0 Finishing job for this image and run forward! {cam_url}")
     return images
 
@@ -313,20 +336,20 @@ class TestCaseRunTestREST(APIView):
         snap = self.request.data.get('snap', None)
         # perl_token = self.request.data.get('perl_token', None)
         perl_hostname = self.request.data.get('perl_hostname', None)
-
         pushed_button = loader.get_template('emails/pushed_button.html')
         button = PerlButtons.objects.get(dom__exact=dom, gate__exact=gate, mode__exact=mode)
+        image_enhance = Options.objects.filter(option_key__startswith='ImageEnhance')
 
         subject = f'Remote open: {button.description}'
-
         if socket.getfqdn() == security.DEV_HOST:
             fake = False
 
         if fake:
             subject = f'Fake open: {button.description}'
+            log.debug(f"View request: {self.request} data: {self.request.data}")
             log.info(f"FAKE ITERATION! Do not making any requests!")
             log.info(f"self.request.user.username: {self.request.user.username}, email: {self.request.user.email}")
-            images = camera_shot(button, perl_hostname)
+            images = camera_shot(button, perl_hostname, image_enhance)
             mail_html = pushed_button.render(dict(
                 subject=subject,
                 button=button,
@@ -344,20 +367,17 @@ class TestCaseRunTestREST(APIView):
             return Response(dict(status='Faked!', response=j_txt))
         # Only make a camera shot
         elif snap:
-
             log.info(f"Make a selfie on camera! Do not open any gate.")
-            log.debug(f"View request: {self.request} data: {self.request.data}")
-
             subject = f'Remote snapshot: {button.description}'
             maked_snap = loader.get_template('emails/maked_snap.html')
-            images = camera_shot(button, perl_hostname, 1200)
+            images = camera_shot(button, perl_hostname, image_enhance)
             mail_html = maked_snap.render(dict(
                 subject=subject,
                 button=button,
                 username=self.request.user.username,
                 hostname=security.Credentials.SITE,
             ))
-            # log.debug(f"images: {images}")
+            log.debug(f"images: {images}")
             Mails().short(
                 subject=subject,
                 mail_html=mail_html,
