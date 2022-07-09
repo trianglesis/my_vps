@@ -1,12 +1,12 @@
 // Run now - button listeners add when page is loaded.
 $(document).ready(function () {
-    console.log("<=Run Now=> Init event listener assign for test run now buttons")
+    // console.log("<=Run Now=> Init event listener assign for test run now buttons")
     buttonRunNowEventListenerAssign(pushedButtonSendRequest);
 });
 
 
 function buttonRunNowEventListenerAssign(funcToRun) {
-    console.log("<=Run Now=> Test run now buttons assigning listener!")
+    // console.log("<=Run Now=> Test run now buttons assigning listener!")
 
     let openGates = document.getElementsByClassName("run-open-gates");
 
@@ -38,8 +38,8 @@ function buttonRunNowEventListenerAssign(funcToRun) {
 function pushedButtonSendRequest(btn) {
     // console.log(`<=Run Now=> btn:`,  btn)
     // console.log(`<=Run Now=> btn.dataset:`, btn.dataset)
-    console.log(`perl_token: `, perl_token)
-    console.log(`perl_hostname: `, perl_hostname)
+    // console.log(`perl_token: `, perl_token)
+    // console.log(`perl_hostname: `, perl_hostname)
 
     btn.dataset.perl_token = perl_token
     btn.dataset.perl_hostname = perl_hostname
@@ -55,7 +55,7 @@ function changeButtonText(btn, result, fallbackMessage) {
     let previousText = btn.innerText
 
     if (!fallbackMessage) {
-        btn.innerText = 'Opened! - ' + status
+        btn.innerText = status
         btn.disabled = 'disabled';
     } else {
         btn.innerText = fallbackMessage

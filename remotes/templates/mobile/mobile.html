@@ -7,88 +7,113 @@
     {{ objects.title }}
 {% endblock %}
 {% block content %}
-    {% is_member 'family' as family_user %}
-    {% if family_user %}
-        <script type="text/javascript" data-model-name="branchWorkers">
-            let perl_token = "{{ objects.perl_token }}";
-            let perl_hostname = "{{ objects.perl_hostname }}";
-        </script>
+    <div class="p-3 mb-2 bg-dark text-white">
+        {% is_member 'family' as family_user %}
+        {% if family_user %}
+            <script type="text/javascript" data-model-name="branchWorkers">
+                let perl_token = "{{ objects.perl_token }}";
+                let perl_hostname = "{{ objects.perl_hostname }}";
+            </script>
 
-        {% comment %} I am so NOT WANT to make it with JS so I have to make it like this! {% endcomment %}
-        {% tab_active 'role' 'all' as tab_active_all %}
-        {% tab_active 'role' 'candle_lo' as candle_lo %}
-        {% tab_active 'role' 'candle_up' as candle_up %}
-        {% tab_active 'role' 'sport' as sport %}
-        {% tab_active 'role' 'inner' as inner %}
-        {% tab_active 'role' 'outer' as outer %}
-        {% tab_active 'role' 'parking' as parking %}
+            {% comment %} I am so NOT WANT to make it with JS so I have to make it like this! {% endcomment %}
+            {% tab_active 'role' 'all' as tab_active_all %}
+            {% tab_active 'role' 'candle_lo' as candle_lo %}
+            {% tab_active 'role' 'candle_up' as candle_up %}
+            {% tab_active 'role' 'sport' as sport %}
+            {% tab_active 'role' 'inner' as inner %}
+            {% tab_active 'role' 'outer' as outer %}
+            {% tab_active 'role' 'parking' as parking %}
 
-        <nav class="nav nav-pills nav-justified" style="padding-bottom: 20px">
-            <a {% if tab_active_all %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=all"><i class="fa-solid fa-video"></i></a>
-            <a {% if candle_lo %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=candle_lo"><i class="fa-solid fa-tower-observation"></i><i class="fa-solid fa-0"></i></a>
-            <a {% if candle_up %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=candle_up"><i class="fa-solid fa-tower-observation"></i><i class="fa-solid fa-1"></i></a>
-            <a {% if sport %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=sport"><i class="fa-solid fa-bars"></i></a>
-            <a {% if inner %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=inner"><i class="fa-solid fa-person-shelter"></i></a>
-            <a {% if outer %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_mobile' %}?role=outer"><i class="fa-solid fa-road"></i></a>
-            <a {% if parking %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_web' %}?role=parking"><i class="fa-solid fa-square-parking"></i></a>
-        </nav>
+            <nav class="nav nav-pills nav-justified" style="padding-bottom: 20px">
+                <a {% if tab_active_all %}class="nav-link active" aria-current="page"
+                   {% else %}class="nav-link"{% endif %}
+                   href="{% url 'remotes_mobile' %}?role=all"><i class="fa-solid fa-video"></i></a>
+                <a {% if candle_lo %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+                   href="{% url 'remotes_mobile' %}?role=candle_lo"><i class="fa-solid fa-tower-observation"></i><i
+                        class="fa-solid fa-0"></i></a>
+                <a {% if candle_up %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+                   href="{% url 'remotes_mobile' %}?role=candle_up"><i class="fa-solid fa-tower-observation"></i><i
+                        class="fa-solid fa-1"></i></a>
+                <a {% if sport %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+                   href="{% url 'remotes_mobile' %}?role=sport"><i class="fa-solid fa-bars"></i></a>
+                <a {% if inner %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+                   href="{% url 'remotes_mobile' %}?role=inner"><i class="fa-solid fa-person-shelter"></i></a>
+                <a {% if outer %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+                   href="{% url 'remotes_mobile' %}?role=outer"><i class="fa-solid fa-road"></i></a>
+                <a {% if parking %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
+                   href="{% url 'remotes_web' %}?role=parking"><i class="fa-solid fa-square-parking"></i></a>
+            </nav>
 
-        {% for camera in objects.cameras %}
-            <div class="card mb-3" id="{{ camera.dvr }}{{ camera.cam }}">
+            {% for camera in objects.cameras %}
+                <div class="card mb-3" id="{{ camera.dvr }}{{ camera.cam }}">
 
-                <img class="card-img-top camera-w-100-percent cam-refresh"
-                     src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
-                     data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
-                     alt="{% trans camera.description %}">
+                    <img class="card-img-top camera-w-100-percent cam-refresh"
+                         src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
+                         data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
+                         alt="{% trans camera.description %}">
 
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
-                    <ul class="list-group list-group-flush">
-                        {% if camera.button %}
-                            <li class="list-group-item"></li>
-                            {% for btn in camera.button.all %}
-                                <li class="list-group-item">
-                                    <div class="d-grid gap-2 mx-auto">
-                                        <button class="btn btn-lg btn-info run-open-gates"
-                                                type="button"
-                                                title="{% trans btn.description %}"
-                                                data-dom="{{ btn.dom }}"
-                                                data-gate="{{ btn.gate }}"
-                                                data-mode="{{ btn.mode }}"
-                                                data-nonce="{{ objects.perl_token }}"
-                                                {#                               data-fake="fake_push_do_not_open"#}
-                                                {#                               target="_blank"#}
-                                                {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}"#}
-                                        >{% trans btn.description %}</button>
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        {% endif %}
-                        <li class="list-group-item"></li>
-                    </ul>
-                    <p class="card-text">
-                        <small class="text-muted current-time"></small>
-                        <small class="text-muted">Update 2 sec</small>
-                    </p>
+                    <div class="card-body bg-dark">
+                        <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
+                        <ul class="list-group list-group-flush">
+                            {% if camera.button %}
+                                <li class="list-group-item bg-dark"></li>
+                                {% for btn in camera.button.all %}
+                                    <li class="list-group-item bg-dark">
+                                        {% comment %}
+                                    Button group: Open gates and make photo, and just make photo
+                                    {% endcomment %}
+                                        <div class="btn-toolbar justify-content-between" role="toolbar"
+                                             aria-label="Toolbar with button groups">
+                                            <div class="btn-group" role="group" aria-label="First group">
+                                                <button class="btn btn-lg btn-light run-open-gates"
+                                                        type="button"
+                                                        title="{% trans btn.description %}"
+                                                        data-dom="{{ btn.dom }}"
+                                                        data-gate="{{ btn.gate }}"
+                                                        data-mode="{{ btn.mode }}"
+                                                        data-nonce="{{ objects.perl_token }}"
+                                                        {#                               data-fake="fake_push_do_not_open"#}
+                                                        {#                               target="_blank"#}
+                                                        {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}"#}
+                                                >{% trans btn.description %}</button>
+                                            </div>
+                                            <div class="input-group">
+                                                <button class="btn btn-lg btn-light run-open-gates"
+                                                        type="button"
+                                                        title="Make snap {% trans btn.description %}"
+                                                        data-dom="{{ btn.dom }}"
+                                                        data-gate="{{ btn.gate }}"
+                                                        data-mode="{{ btn.mode }}"
+                                                        data-nonce="{{ objects.perl_token }}"
+                                                        data-snap="true"
+                                                >{% trans 'Фото' %}</button>
+                                            </div>
+                                        </div>
+                                        {% comment %}
+                                    Button group.
+                                    {% endcomment %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                            <li class="list-group-item bg-dark"></li>
+                        </ul>
+                        <p class="card-text">
+                            <small class="text-muted current-time"></small>
+                            <small class="text-muted">Update 2 sec</small>
+                        </p>
+                    </div>
                 </div>
+            {% endfor %}
+
+            <!-- Cam refresh -->
+            <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
+            <!-- Open buttons -->
+            <script src="{% static 'remotes/js/buttons.js' %}"></script>
+
+        {% else %}
+            <div class="alert alert-dark" role="alert">
+                Nothing here.
             </div>
-        {% endfor %}
-
-        <!-- Cam refresh -->
-        <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
-        <!-- Open buttons -->
-        <script src="{% static 'remotes/js/buttons.js' %}"></script>
-
-    {% else %}
-        <div class="alert alert-dark" role="alert">
-            Nothing here.
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 {% endblock %}

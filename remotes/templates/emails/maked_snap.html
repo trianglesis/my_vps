@@ -1,10 +1,10 @@
 {% load i18n %}
 <div class="card">
     <div class="card-header">{% trans 'Пользователь' %}
-        "{{ username }}" {% trans 'открыл:' %} {{ button.description }}</div>
+        "{{ username }}" {% trans 'сфотографировал:' %} {{ button.description }}</div>
     <div class="card-body">
         <p>{% trans 'Данные кнопки' %}: {% trans 'Дом' %}: {{ button.dom }} {% trans 'Дверь' %}: {{ button.gate }} {% trans 'Тип' %}: {{ button.mode }}</p>
-        <p>{% trans 'Вид камер' %}</p>
+        <p>{% trans 'Вид с камер' %}</p>
         <ul>
             {% for cam in button.assigned_buttons.all %}
                 <li>{{ cam.description }}</li>
@@ -12,4 +12,4 @@
         </ul>
     </div>
 </div>
-{% trans 'Камеры на момент открытия' %}
+{% trans 'Камеры на момент фото' %}

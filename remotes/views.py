@@ -93,8 +93,7 @@ def buttons_filter(gate):
     return cams, title
 
 
-def camera_shot(button, perl_hostname):
-    basewidth = 600
+def camera_shot(button, perl_hostname, basewidth=600):
     images = []
     if button.assigned_buttons.all():
         for camera in button.assigned_buttons.all():
@@ -269,6 +268,7 @@ class TestCaseRunTestREST(APIView):
         mode = self.request.data.get('mode', None)
         nonce = self.request.data.get('nonce', None)
         fake = self.request.data.get('fake', None)
+        snap = self.request.data.get('snap', None)
         # perl_token = self.request.data.get('perl_token', None)
         perl_hostname = self.request.data.get('perl_hostname', None)
 
@@ -278,9 +278,10 @@ class TestCaseRunTestREST(APIView):
         subject = f'Remote open: {button.description}'
 
         if socket.getfqdn() == security.DEV_HOST:
-            fake = True
+            fake = False
 
         if fake:
+            subject = f'Fake open: {button.description}'
             log.info(f"FAKE ITERATION! Do not making any requests!")
             log.info(f"self.request.user.username: {self.request.user.username}, email: {self.request.user.email}")
             images = camera_shot(button, perl_hostname)
@@ -297,7 +298,26 @@ class TestCaseRunTestREST(APIView):
                 bcc=security.mails['admin'],
             )
             j_txt = dict()
-            return Response(dict(status='ok', response=j_txt))
+            return Response(dict(status='Faked!', response=j_txt))
+        # Only make a camera shot
+        elif snap:
+            subject = f'Remote snapshot: {button.description}'
+            log.info(f"Make a selfie on camera! Do not open any gate.")
+            maked_snap = loader.get_template('emails/maked_snap.html')
+            images = camera_shot(button, perl_hostname, 1200)
+            mail_html = maked_snap.render(dict(
+                subject=subject,
+                button=button,
+                username=self.request.user.username,
+            ))
+            Mails().short(
+                subject=subject,
+                mail_html=mail_html,
+                images=images,
+                send_to=self.request.user.email,
+                bcc=security.mails['admin'],
+            )
+            return Response(dict(status='Smile!', response='Make a shot!'))
         else:
             URL = f'{perl_hostname}go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
             r = requests.get(URL)
@@ -321,16 +341,16 @@ class TestCaseRunTestREST(APIView):
                     )
 
                     log.info(f"Request successfully executed for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
-                    return Response(dict(status='ok', response=j_txt))
+                    return Response(dict(status='Open!', response=j_txt))
                 else:
                     msg = f"Request executed with some error on server side for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}"
                     log.error(msg)
                     body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}\n\n{msg}'
                     Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=security.mails['admin'])
-                    return Response(dict(status='err', response=j_txt))
+                    return Response(dict(status='Error!', response=j_txt))
             else:
                 msg = f"Something is not working on server side for: dom={dom}&gate={gate}&mode={mode},\nStatus code: {r.status_code}\nResponse: {r.text}"
                 log.error(msg)
                 body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}\n\n{msg}'
                 Mails().short(subject=subject, body=body, send_to=self.request.user.email, bcc=security.mails['admin'])
-                return Response(dict(status='err', response=r.text, code=r.status_code))
+                return Response(dict(status='Error!', response=r.text, code=r.status_code))

@@ -27,9 +27,11 @@
             <a {% if tab_active_all %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
                href="{% url 'remotes_web' %}?role=all"><i class="fa-solid fa-video"></i></a>
             <a {% if candle_lo %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_web' %}?role=candle_lo"><i class="fa-solid fa-0"></i> <i class="fa-solid fa-tower-observation"></i></a>
+               href="{% url 'remotes_web' %}?role=candle_lo"><i class="fa-solid fa-0"></i> <i
+                    class="fa-solid fa-tower-observation"></i></a>
             <a {% if candle_up %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
-               href="{% url 'remotes_web' %}?role=candle_up"><i class="fa-solid fa-1"></i> <i class="fa-solid fa-tower-observation"></i></a>
+               href="{% url 'remotes_web' %}?role=candle_up"><i class="fa-solid fa-1"></i> <i
+                    class="fa-solid fa-tower-observation"></i></a>
             <a {% if sport %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
                href="{% url 'remotes_web' %}?role=sport"><i class="fa-solid fa-bars"></i></a>
             <a {% if inner %}class="nav-link active" aria-current="page" {% else %}class="nav-link"{% endif %}
@@ -55,19 +57,39 @@
                                     <li class="list-group-item"></li>
                                     {% for btn in camera.button.all %}
                                         <li class="list-group-item">
-                                            <div class="d-grid gap-2 col-6 mx-auto">
-                                                <button class="btn btn-sm btn-info run-open-gates"
-                                                        type="button"
-                                                        title="{% trans btn.description %}"
-                                                        data-dom="{{ btn.dom }}"
-                                                        data-gate="{{ btn.gate }}"
-                                                        data-mode="{{ btn.mode }}"
-                                                        data-nonce="{{ objects.perl_token }}"
-                                                        {#                               data-fake="fake_push_do_not_open"#}
-                                                        {#                               target="_blank"#}
-                                                        {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}"#}
-                                                >{% trans btn.description %}</button>
+                                            {% comment %}
+                                            Button group: Open gates and make photo, and just make photo
+                                            {% endcomment %}
+                                            <div class="btn-toolbar justify-content-between" role="toolbar"
+                                                 aria-label="Toolbar with button groups">
+                                                <div class="btn-group" role="group" aria-label="First group">
+                                                    <button class="btn btn-sm btn-dark run-open-gates"
+                                                            type="button"
+                                                            title="{% trans btn.description %}"
+                                                            data-dom="{{ btn.dom }}"
+                                                            data-gate="{{ btn.gate }}"
+                                                            data-mode="{{ btn.mode }}"
+                                                            data-nonce="{{ objects.perl_token }}"
+                                                            {#                               data-fake="fake_push_do_not_open"#}
+                                                            {#                               target="_blank"#}
+                                                            {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}"#}
+                                                    >{% trans btn.description %}</button>
+                                                </div>
+                                                <div class="input-group">
+                                                    <button class="btn btn-sm btn-outline-dark run-open-gates"
+                                                            type="button"
+                                                            title="Make snap {% trans btn.description %}"
+                                                            data-dom="{{ btn.dom }}"
+                                                            data-gate="{{ btn.gate }}"
+                                                            data-mode="{{ btn.mode }}"
+                                                            data-nonce="{{ objects.perl_token }}"
+                                                            data-snap="true"
+                                                    >{% trans 'Фото' %}</button>
+                                                </div>
                                             </div>
+                                            {% comment %}
+                                            Button group.
+                                            {% endcomment %}
                                         </li>
                                     {% endfor %}
                                 {% endif %}
