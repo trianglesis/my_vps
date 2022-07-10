@@ -1,0 +1,49 @@
+## NOT CREATE LOG FILE NEW, COPY CURRENT TO BACKUP AND FLUSH CURRENT!
+## "/etc/logrotate.conf"
+## "/etc/logrotate.d/my_vps.conf"
+## logrotate -f /etc/logrotate.d/my_vps.conf
+## logrotate -d /etc/logrotate.d/my_vps.conf
+/var/log/my_vps/*@layer.log {
+    weekly
+    missingok
+    notifempty
+    copytruncate
+    rotate 5
+    size 1M
+    su root sanek
+    dateext
+    dateformat -%d_%m_%Y
+    postrotate
+       chmod -R g+rw /var/log/my_vps/
+    endscript
+}
+
+/var/log/my_vps/core.log {
+    weekly
+    missingok
+    notifempty
+    create 0644 sanek apache
+    rotate 5
+    size 5M
+    su root sanek
+    dateext
+    dateformat -%d_%m_%Y
+    postrotate
+       /bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true; chmod -R g+rw /var/log/my_vps/
+    endscript
+}
+
+/var/log/my_vps/dev.log {
+    weekly
+    missingok
+    notifempty
+    create 0644 sanek apache
+    rotate 5
+    size 10M
+    su root sanek
+    dateext
+    dateformat -%d_%m_%Y
+    postrotate
+       /bin/systemctl reload httpd.service > /dev/null 2>/dev/null || true; chmod -R g+rw /var/log/my_vps/
+    endscript
+}
