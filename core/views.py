@@ -53,6 +53,17 @@ def permission_denied_view(request, exception=None):
 
 
 def save_visit(ip, is_routable, request):
+    """
+    Save each visit if user got errors or tried to access some places.
+    Later
+        - add here check for length of request string and drop request if string is too long?
+        - add IP check - if user happens to be mentioned in this table more that N times - ban.
+
+    :param ip:
+    :param is_routable:
+    :param request:
+    :return:
+    """
     # Making unique hash for ip + user agent + path requested
     u_agent = request.META['HTTP_USER_AGENT']
     ip_agent_path = f"{ip}-{u_agent}-{request.path}-{request.GET.dict()}-{request.POST.dict()}"
