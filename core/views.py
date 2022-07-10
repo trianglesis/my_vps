@@ -24,15 +24,15 @@ def response_error_handler(request, exception=None):
     # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
     save_visit(client_ip, is_routable, request)
-    resp = f'{"Nope<br>" * 9000}'
-    return HttpResponse(resp, status=404)
+    resp = 'I dont want to.\n500 Internal Server Error'
+    return HttpResponse(resp, status=500)
 
 
 def page_not_found_view(request, exception=None):
     # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
     save_visit(client_ip, is_routable, request)
-    resp = f'{"Nope<br>" * 9000}'
+    resp = f'404 Not Found'
     return HttpResponse(resp, status=404)
 
 
@@ -40,16 +40,16 @@ def bad_request_view(request, exception=None):
     # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
     save_visit(client_ip, is_routable, request)
-    resp = f'{"Nope<br>" * 9000}'
-    return HttpResponse(resp, status=404)
+    resp = "Bad request: 400"
+    return HttpResponse(resp, status=400)
 
 
 def permission_denied_view(request, exception=None):
     # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
     save_visit(client_ip, is_routable, request)
-    resp = f'{"Nope<br>" * 9000}'
-    return HttpResponse(resp, status=404)
+    resp = "HTTP/9.99 403 Forbidden"
+    return HttpResponse(resp, status=403)
 
 
 def save_visit(ip, is_routable, request):
