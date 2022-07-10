@@ -406,7 +406,7 @@ class OpenButtonREST(LoginRequiredMixin, APIView):
                 j_txt = r.json()
                 server_response_status = j_txt.get("status")
                 if server_response_status == 'ok':
-                    images = camera_shot(button, perl_hostname, 1200)
+                    images = camera_shot(button, perl_hostname, image_enhance)
                     mail_html = pushed_button.render(dict(
                         subject=subject,
                         button=button,
