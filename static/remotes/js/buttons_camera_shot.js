@@ -15,8 +15,6 @@ function buttonSnapShot(funcToRun) {
             if (!button.dataset['cam']) {
                 throw new Error("<=Run Now=> run-camera-shot buttons cannot be set without camera cam data attribute!")
             }
-            console.log("Adding listener for button: ")
-            console.log(button)
             button.addEventListener("click", function () {
                 funcToRun(button);
             });
@@ -29,7 +27,7 @@ function pushedSnapShot(button) {
 }
 
 function changeButtonSnapShotText(button, result, fallbackMessage) {
-    console.log(`Button pushed! Rest Sent! Now change button text with response, wait 1-2 sec and change text back to usual`)
+    // console.log(`Button pushed! Rest Sent! Now change button text with response, wait 1-2 sec and change text back to usual`)
     let cameraShot = document.getElementById(`${button.dataset['dvr']}-${button.dataset['cam']}`);
     let status = result.status
     let previousText = cameraShot.innerText
@@ -48,14 +46,14 @@ function changeButtonSnapShotText(button, result, fallbackMessage) {
 }
 
 function SetBackSnapshotButton(cameraShot, previousText) {
-    console.log("Set back previous text")
+    // console.log("Set back previous text")
     cameraShot.innerText = previousText;
     cameraShot.disabled = '';
 }
 
 
 function RESTPostMakeShot(button) {
-    console.log("Sending request:" + button)
+    // console.log("Sending request:" + button)
     $.ajax({
         type: "POST",
         dataType: "json",
