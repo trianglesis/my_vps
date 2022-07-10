@@ -13,6 +13,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.db.models import Q
 from django.template import loader
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core.helpers.mailing import Mails
 
@@ -189,8 +190,9 @@ def camera_shot(element, perl_hostname, image_enhance, basewidth=None):
     return images
 
 
-@method_decorator(login_required, name='dispatch')
-class MainPageRemotes(TemplateView):
+class MainPageRemotes(LoginRequiredMixin, TemplateView):
+    login_url = '/404'
+    __url = '/remotes/'
     template_name = 'remotes.html'
     context_object_name = 'objects'
 
@@ -204,8 +206,7 @@ class MainPageRemotes(TemplateView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
-class RemotesMobile(TemplateView):
+class RemotesMobile(LoginRequiredMixin, TemplateView):
     template_name = 'mobile/mobile.html'
     context_object_name = 'objects'
 
@@ -234,8 +235,8 @@ class RemotesMobile(TemplateView):
         return queryset
 
 
-@method_decorator(login_required, name='dispatch')
-class RemotesWeb(TemplateView):
+class RemotesWeb(LoginRequiredMixin, TemplateView):
+    login_url = '/404'
     __url = '/remotes/web/'
     template_name = 'webacc/general.html'
     context_object_name = 'objects'
@@ -267,8 +268,8 @@ class RemotesWeb(TemplateView):
         return queryset
 
 
-@method_decorator(login_required, name='dispatch')
-class RemotesAllCameras(TemplateView):
+class RemotesAllCameras(LoginRequiredMixin, TemplateView):
+    login_url = '/404'
     __url_path = '/remotes/cams/'
     template_name = 'webacc/all_cameras.html'
     context_object_name = 'objects'
@@ -294,8 +295,8 @@ class RemotesAllCameras(TemplateView):
         return queryset
 
 
-@method_decorator(login_required, name='dispatch')
-class RemotesAllButtons(TemplateView):
+class RemotesAllButtons(LoginRequiredMixin, TemplateView):
+    login_url = '/404'
     __url_path = '/remotes/btns/'
     template_name = 'webacc/all_buttons.html'
     context_object_name = 'objects'
@@ -326,8 +327,8 @@ class RemotesAllButtons(TemplateView):
 
 
 # Operations:
-@method_decorator(login_required, name='dispatch')
-class OpenButtonREST(APIView):
+class OpenButtonREST(LoginRequiredMixin, APIView):
+    login_url = '/404'
     __url_path = '/remotes/remote_open/'
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -438,8 +439,8 @@ class OpenButtonREST(APIView):
 
 
 # Operations:
-@method_decorator(login_required, name='dispatch')
-class CameraShotREST(APIView):
+class CameraShotREST(LoginRequiredMixin, APIView):
+    login_url = '/404'
     __url_path = '/remotes/remote_camera_shot/'
     permission_classes = [IsAuthenticatedOrReadOnly]
 

@@ -21,32 +21,32 @@ Conf https://github.com/un33k/django-ipware
 
 
 def response_error_handler(request, exception=None):
-    # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
+    log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
     save_visit(client_ip, is_routable, request)
     resp = 'I dont want to.\n500 Internal Server Error'
     return HttpResponse(resp, status=500)
 
 
 def page_not_found_view(request, exception=None):
-    # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
+    log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
     save_visit(client_ip, is_routable, request)
     resp = f'404 Not Found'
     return HttpResponse(resp, status=404)
 
 
 def bad_request_view(request, exception=None):
-    # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
+    log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
     save_visit(client_ip, is_routable, request)
     resp = "Bad request: 400"
     return HttpResponse(resp, status=400)
 
 
 def permission_denied_view(request, exception=None):
-    # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
+    log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
     save_visit(client_ip, is_routable, request)
     resp = "HTTP/9.99 403 Forbidden"
     return HttpResponse(resp, status=403)
