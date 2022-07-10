@@ -1,6 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.models import User
-from main.models import *
+from main.models import NetworkVisitorsAddresses
 
 # Register your models here.
 # admin.site.unregister(User)
@@ -17,3 +16,24 @@ from main.models import *
 # admin.site.register(DjangoContentType)
 # admin.site.register(DjangoMigrations)
 # admin.site.register(DjangoSession)
+
+
+@admin.register(NetworkVisitorsAddresses)
+class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
+    list_display = (
+        'ip',
+        'is_routable',
+        'user_agent',
+    )
+    list_filter = (
+        'ip',
+        'is_routable',
+        'user_agent',
+    )
+    ordering = ('ip',)
+
+    search_fields = (
+        'ip',
+        'is_routable',
+        'user_agent',
+    )

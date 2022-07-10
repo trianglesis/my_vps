@@ -113,3 +113,21 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+class NetworkVisitorsAddresses(models.Model):
+    ip = models.GenericIPAddressField(protocol='both', unpack_ipv4=True)
+    is_routable = models.BooleanField(null=True)
+    user_agent = models.TextField(null=True, blank=True)
+    url_path = models.TextField(null=True, blank=True)
+
+    hashed_ip_agent_path = models.CharField(max_length=255)
+
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        managed = True
+        db_table = 'visitors_agents'
+        ordering = ['updated_at']
+        unique_together = (('ip', 'hashed_ip_agent_path'),)
