@@ -137,7 +137,7 @@ def save_image(runs, cam_url, images, content, image_enhance):
             sleep(0.5)
             log.error(f"3.3 Cannot save image: {cam_url}, attempt: {runs}, Exception caught: {e}")
             content = request_image(cam_url, caller=f'exception, run:{runs}')
-            save_image(runs, cam_url, images, content, image_enhance['basewidth'])
+            save_image(runs, cam_url, images, content, image_enhance)
 
 
 def camera_shot(element, perl_hostname, image_enhance, basewidth=None):
