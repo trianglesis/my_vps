@@ -224,9 +224,10 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
                         {% if user.is_anonymous %}
-                            <a class="dropdown-item" href="{% url 'login' %}">Log in</a>
-                            <a class="dropdown-item" href="{% url 'password_reset' %}">Reset password</a>
-                            <a class="dropdown-item" href="{% url 'django_registration_register' %}">Register</a>
+                            <a class="dropdown-item" href="#">You don't really need to login here.</a>
+{#                            <a class="dropdown-item" href="{% url 'login' %}">Log in</a>#}
+{#                            <a class="dropdown-item" href="{% url 'password_reset' %}">Reset password</a>#}
+{#                            <a class="dropdown-item" href="{% url 'django_registration_register' %}">Register</a>#}
                         {% else %}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
