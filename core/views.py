@@ -55,10 +55,11 @@ def permission_denied_view(request, exception=None):
 def save_visit(ip, is_routable, request):
     # Making unique hash for ip + user agent + path requested
     u_agent = request.META['HTTP_USER_AGENT']
-    hashed_agent_path = f"{ip}-{u_agent}-{request.path}"
+    ip_agent_path = f"{ip}-{u_agent}-{request.path}-{request.GET.dict()}-{request.POST.dict()}"
     h = blake2b(digest_size=64)
-    h.update(hashed_agent_path.encode('utf-8'))
+    h.update(ip_agent_path.encode('utf-8'))
     hashed = h.hexdigest()
+    log.debug(f"Making hash: \n\t{ip_agent_path} \n\thashed: {hashed}")
 
     guests = dict(
         ip=ip,
