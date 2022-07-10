@@ -121,6 +121,9 @@ class NetworkVisitorsAddresses(models.Model):
     user_agent = models.TextField(null=True, blank=True)
     url_path = models.TextField(null=True, blank=True)
 
+    request_get_args = models.TextField(null=True, blank=True)
+    request_post_args = models.TextField(null=True, blank=True)
+
     hashed_ip_agent_path = models.CharField(max_length=255)
 
     created_at = models.DateTimeField(auto_now=True)

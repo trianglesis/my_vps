@@ -21,44 +21,41 @@ Conf https://github.com/un33k/django-ipware
 
 
 def response_error_handler(request, exception=None):
-    # log.debug(f"request: \n{request.headers}, \n{request.user} \n{request.path}, \n{request.get_full_path}, \n{request.path_info}")
-    u_agent = request.META['HTTP_USER_AGENT']
+    # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
-    save_visit(client_ip, is_routable, u_agent, request.path)
+    save_visit(client_ip, is_routable, request)
     resp = f'{"Nope<br>" * 9000}'
     return HttpResponse(resp, status=404)
 
 
 def page_not_found_view(request, exception=None):
-    # log.debug(f"request: \n{request.headers}, \n{request.user} \n{request.path}, \n{request.get_full_path}, \n{request.path_info}")
-    u_agent = request.META['HTTP_USER_AGENT']
+    # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
-    save_visit(client_ip, is_routable, u_agent, request.path)
+    save_visit(client_ip, is_routable, request)
     resp = f'{"Nope<br>" * 9000}'
     return HttpResponse(resp, status=404)
 
 
 def bad_request_view(request, exception=None):
-    # log.debug(f"request: \n{request.headers}, \n{request.user} \n{request.path}, \n{request.get_full_path}, \n{request.path_info}")
-    u_agent = request.META['HTTP_USER_AGENT']
+    # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
-    save_visit(client_ip, is_routable, u_agent, request.path)
+    save_visit(client_ip, is_routable, request)
     resp = f'{"Nope<br>" * 9000}'
     return HttpResponse(resp, status=404)
 
 
 def permission_denied_view(request, exception=None):
-    # log.debug(f"request: \n{request.headers}, \n{request.user} \n{request.path}, \n{request.get_full_path}, \n{request.path_info}")
-    u_agent = request.META['HTTP_USER_AGENT']
+    # log.debug(f"request: {request.GET.dict()} {request.POST.dict()}")
     client_ip, is_routable = get_client_ip(request)
-    save_visit(client_ip, is_routable, u_agent, request.path)
+    save_visit(client_ip, is_routable, request)
     resp = f'{"Nope<br>" * 9000}'
     return HttpResponse(resp, status=404)
 
 
-def save_visit(ip, is_routable, user_agent, url_path):
+def save_visit(ip, is_routable, request):
     # Making unique hash for ip + user agent + path requested
-    hashed_agent_path = f"{ip}-{user_agent}-{url_path}"
+    u_agent = request.META['HTTP_USER_AGENT']
+    hashed_agent_path = f"{ip}-{u_agent}-{request.path}"
     h = blake2b(digest_size=64)
     h.update(hashed_agent_path.encode('utf-8'))
     hashed = h.hexdigest()
@@ -66,9 +63,11 @@ def save_visit(ip, is_routable, user_agent, url_path):
     guests = dict(
         ip=ip,
         is_routable=is_routable,
-        user_agent=user_agent,
+        user_agent=u_agent,
         updated_at=datetime.datetime.now(tz=timezone.utc),
-        url_path=url_path,
+        url_path=request.path,
+        request_get_args=request.GET.dict(),
+        request_post_args=request.POST.dict(),
         hashed_ip_agent_path=hashed,
     )
     NetworkVisitorsAddresses.objects.update_or_create(

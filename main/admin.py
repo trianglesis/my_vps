@@ -25,6 +25,8 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         'is_routable',
         'user_agent',
         'url_path',
+        'request_get_args',
+        'request_post_args',
         'updated_at',
         'created_at',
     )
