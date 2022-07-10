@@ -24,11 +24,17 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         'ip',
         'is_routable',
         'user_agent',
+        'url_path',
+        'updated_at',
+        'created_at',
     )
     list_filter = (
         'ip',
         'is_routable',
+        'created_at',
+        'updated_at',
         'user_agent',
+        'url_path',
     )
     ordering = ('ip',)
 
@@ -36,4 +42,5 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         'ip',
         'is_routable',
         'user_agent',
+        'url_path',
     )
