@@ -8,8 +8,6 @@ from PIL import Image, ImageEnhance
 import io
 from core import security
 
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.db.models import Q
 from django.template import loader

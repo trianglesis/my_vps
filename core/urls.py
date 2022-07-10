@@ -34,14 +34,14 @@ urlpatterns = [
 
     # Built-ins
 
-    path('accounts/', include('django_registration.backends.activation.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('blah-blah-blah/a-a-accounts/', include('django_registration.backends.activation.urls')),
+    path('blah-blah-blah/a-a-accounts/', include('django.contrib.auth.urls')),
 
-    path('rest-auth/', include('dj_rest_auth.urls')),
-    path('api-auth/', include('rest_framework.urls')),
+    path('blah-blah-blah/re-re-rest-auth/', include('dj_rest_auth.urls')),
+    path('blah-blah-blah/a-a-a-api-auth/', include('rest_framework.urls')),
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
 
-    path('admin/', admin.site.urls),
+    path('blah-blah-blah/a-a-a-admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
 
 ]
