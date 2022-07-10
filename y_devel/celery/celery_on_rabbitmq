@@ -1,0 +1,56 @@
+## primary RabbitMQ signing key
+rpm --import https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+## modern Erlang repository
+rpm --import https://packagecloud.io/rabbitmq/erlang/gpgkey
+## RabbitMQ server repository
+rpm --import https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
+
+https://www.rabbitmq.com/install-rpm.html
+# !!!
+https://www.rabbitmq.com/install-rpm.html#package-dependencies
+
+yum update -y
+
+yum install socat logrotate -y
+
+yum install erlang rabbitmq-server -y
+
+
+chkconfig rabbitmq-server on
+
+/sbin/service rabbitmq-server start
+
+/sbin/service rabbitmq-server status
+
+/sbin/service rabbitmq-server stop
+
+
+
+#================== RABBIT MQ: ================== ================== ==================
+rabbitmqctl add_vhost layer
+rabbitmqctl add_user USER PASSWORD
+rabbitmqctl set_user_tags USER administrator
+rabbitmqctl set_permissions -p layer USER ".*" ".*" ".*"
+
+chkconfig rabbitmq-server on
+systemctl start rabbitmq-server
+systemctl restart rabbitmq-server
+
+rabbitmqctl stop
+rabbitmq-server start
+
+############### DELETE\CHANGE
+rabbitmqctl delete_vhost localhost
+rabbitmqctl change_password USER (PASSWORD)
+
+tail -f -n 100 /var/log/rabbitmq/rabbit@!!!
+rabbitmq-server
+rabbitmqctl stop
+
+rabbitmqctl start_app
+
+# Start from clean:
+
+rabbitmqctl stop_app
+rabbitmqctl reset
+rabbitmqctl start_app

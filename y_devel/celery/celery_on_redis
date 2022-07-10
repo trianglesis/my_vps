@@ -1,0 +1,14 @@
+# https://docs.celeryq.dev/en/stable/getting-started/backends-and-brokers/redis.html#broker-redis
+# https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-centos-8
+
+
+dnf install redis nano
+pip install -U "celery[redis]"
+
+vi /etc/redis.conf
+systemctl start redis.service
+systemctl enable redis
+systemctl status redis
+redis-cli ping
+
+app.conf.broker_url = 'redis://localhost:6379/0'
