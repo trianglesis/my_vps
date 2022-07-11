@@ -54,7 +54,15 @@ LOGGING = {
             'filename': LOG_DIR + 'core.log',
             'formatter': 'verbose',
             'maxBytes': 1024 * 1024 * 50,
-            'backupCount': 5,
+            'backupCount': 2,
+        },
+        'celery_log': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_DIR + 'celery.log',
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 20,
+            'backupCount': 2,
         },
         'dev_log': {
             'level': 'DEBUG',
@@ -80,6 +88,11 @@ LOGGING = {
             'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
+        },
+        'celery': {
+            'handlers': ['celery_log'],
+            'level': 'DEBUG',
+            'propagate': True
         },
         'dev': {
             'handlers': ['dev_log'],

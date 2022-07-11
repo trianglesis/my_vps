@@ -9,6 +9,8 @@ from kombu import Exchange
 from core.security import Credentials
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+backend = Credentials.backend
+result_backend = Credentials.result_backend
 
 # Setup django project
 django.setup()
