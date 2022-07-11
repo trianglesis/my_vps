@@ -71,9 +71,8 @@
                                                             data-gate="{{ btn.gate }}"
                                                             data-mode="{{ btn.mode }}"
                                                             data-nonce="{{ objects.perl_token }}"
-                                                            {# data-fake="fake_push_do_not_open"#}
-                                                            {# target="_blank"#}
-                                                            {# href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}"#}
+                                                            {% comment %} data-fake="fake_push_do_not_open" {% endcomment %}
+                                                            {% comment %} target="_blank" href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ btn.dom }}&gate={{ btn.gate }}&mode={{ btn.mode }}&nonce={{ objects.perl_token }}" {% endcomment %}
                                                     >{% trans btn.description %}</button>
                                                 </div>
                                                 {% comment %}
