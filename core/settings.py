@@ -159,6 +159,7 @@ INSTALLED_APPS = [
     'django_celery_beat.apps.BeatConfig',
     'dj_rest_auth',
     'django_registration',
+    'core',
     'main.apps.CoreConfig',
     'blog.apps.BlogConfig',
     'remotes.apps.RemotesConfig',
