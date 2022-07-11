@@ -16,14 +16,14 @@ pip3 install virtualenv
 virtualenv --python=/usr/local/python3.10.5/bin/python3.10 venv
 OR (from added symlink)
 
-cd /var/www/o
-virtualenv --python=/usr/local/python3.10.5/bin/python3.10 venv --system-site-packages
-virtualenv --python=/usr/local/python3.10.5/bin/python3.10 venv --clear --upgrade-deps
+cd /var/www/my_vps
+virtualenv --python=/usr/local/bin/python3.10 venv --system-site-packages
+virtualenv --python=/usr/local/bin/python3.10 venv --clear --upgrade-deps
 source venv/bin/activate
 source venv/bin/deactivate
 
 OR:0
-cd /var/www/triangle/ && source core/bin/activate
+cd /var/www/my_vps && source core/bin/activate
 deactivate
 
 pip install -r "" --ignore-installed

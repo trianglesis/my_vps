@@ -6,6 +6,7 @@ yum install perl-IPC-Cmd
 
 
 ### https://docs.python.org/3.10/using/unix.html
+### https://www.workaround.cz/howto-build-compile-install-latest-python-310-39-38-37-centos-7-8-9/
 
 
 ### Install OPEN SSL
@@ -22,10 +23,28 @@ popd
 # Install python with SSL Option
 curl -O https://www.python.org/ftp/python/3.10.5/Python-3.10.5.tgz
 # Centos8 system py
-curl -O https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
 tar -xzf Python-3.10.5.tgz
 cd Python-3.10.5
 
+######################### Retry with new approach: #########################
+./configure \
+    --prefix=/usr/local \
+    --enable-optimizations \
+    --enable-shared \
+    --enable-loadable-sqlite-extensions \
+    --with-openssl=/usr/local/bin/custom-openssl \
+    --with-openssl-rpath=auto LDFLAGS="-Wl,-rpath /usr/local/lib"
+
+###  --with-lto \
+###  --with-system-ffi \
+###  --with-computed-gotos \
+###  --prefix=/usr/local
+###  LDFLAGS="-Wl,-rpath /usr/lib"
+
+make -j "$(nproc)"
+make altinstall
+
+#################### Prev approach #########################
 CFLAGS="-I/usr/local/include" \
 
 ./configure \
@@ -45,32 +64,36 @@ make altinstall
 ### INSTALL AS SYSTEM DEFAULT!!!!
 make install
 
+
+#################### LD_CONFIG #########################
+
 # Linking
-from /usr/local/python3.10.5/bin/ to /usr/bin/
+ln -s /usr/local/bin/python3.10 /usr/bin/python3.10
+ln -s /usr/local/bin/python3.10-config /usr/bin/python3.10-config
+ln -s /usr/local/bin/pydoc3.10 /usr/bin/pydoc3.10
+ln -s /usr/local/bin/idle3.10 /usr/bin/idle3.10
+ln -s /usr/local/bin/pip3.10 /usr/bin/pip3.10
 
-ln -s /usr/local/python3.10.5/bin/pip3.10 /usr/bin/
-ln -s /usr/local/python3.10.5/bin/python3.10 /usr/bin/
-ln -s /usr/local/python3.10.5/bin/python3.10-config /usr/bin/
+ldconfig
 
-ln -s /usr/local/python3.10.5/bin/pip3.10 /usr/local/bin/
-ln -s /usr/local/python3.10.5/bin/python3.10 /usr/local/bin/
-ln -s /usr/local/python3.10.5/bin/python3.10-config /usr/local/bin/
+/usr/local/lib/libpython3.10.so.1.0
+/usr/local/lib/libpython3.10.so
+/usr/local/lib/libpython3.so
 
-ln -s /usr/local/python3.10.5/bin/python3.10 /usr/local/sbin/
+
+# Run and collect system path to imitate them for new python 3.10
+whereis python3
 
 # maybe add:
-export CPATH=/usr/local/include
-export LIBRARY_PATH=/usr/local/lib
-export LD_LIBRARY_PATH=/usr/local/lib
-
-export LIBRARY_PATH=LIBRARY_PATH:/usr/local/python3.10.5/lib/ && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/python3.10.5/lib/
+export CPATH=/usr/local/include && export LIBRARY_PATH=/usr/local/lib && export LD_LIBRARY_PATH=/usr/local/lib
+export LIBRARY_PATH=LIBRARY_PATH:/usr/local/lib && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
 # Probable fix
 # error while loading shared libraries: libpython3.10.so.1.0: cannot open shared object file: No such file or directory
-ldconfig /usr/local/python3.10.5/lib/
+ldconfig /usr/local/lib/
 
-vi /etc/ld.so.conf.d/python3.10.5.conf
-include /usr/local/python3.10.5/lib/
+vi /etc/ld.so.conf.d/python310.conf
+include /usr/local/lib/
 
 
 ####### REPEATEDLY failing with python shared libs:
@@ -85,5 +108,4 @@ sudo /sbin/ldconfig -v
 
 
 rm -rf /usr/local/bin/2to3-3.10 && rm -rf /usr/local/bin/idle3.10 && rm -rf /usr/local/bin/pip3.10 && rm -rf /usr/local/bin/pydoc3.10 && rm -rf /usr/local/bin/python3.10 && rm -rf /usr/local/bin/python3.10-config
-
 rm -rf /usr/local/lib/libpython3.10.so -> libpython3.10.so.1.0 && rm -rf /usr/local/lib/libpython3.10.so.1.0 && rm -rf /usr/local/lib/python3.10
