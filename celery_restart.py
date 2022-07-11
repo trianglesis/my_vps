@@ -140,3 +140,11 @@ python3 /var/www/my_vps/venv/bin/celery --app=core.core_celery:app worker core -
 
 celery -A core.core_celery:app worker --loglevel=INFO
 """
+
+"""
+celery multi start remotes@layer -A core.core_celery:app --pidfile=remotes@layer.pid --logfile=remotes@layer.log --loglevel=INFO --concurrency=1 -E
+
+Windows workaround:
+# Only working:
+celery -A core.core_celery:app worker --logfile=remotes@layer.log --loglevel=INFO --concurrency=1 -E -P eventlet
+"""

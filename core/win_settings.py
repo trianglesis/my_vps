@@ -21,6 +21,9 @@ import core.security
 
 LOG_DIR = 'D:\\Projects\\PycharmProjects\\my_vps\\'
 
+CURR_HOSTNAME = socket.getfqdn()
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -125,7 +128,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'core'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = core.security.Credentials.SECRET_KEY
-CURR_HOSTNAME = socket.getfqdn()
+
 
 ALLOWED_HOSTS = ['localhost',
                  '127.0.0.1',

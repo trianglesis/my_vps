@@ -1,6 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import os
+import socket
 
 import django
 from celery import Celery
@@ -8,7 +9,13 @@ from kombu import Exchange
 
 from core.security import Credentials
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+print(socket.getfqdn())
+
+if not socket.getfqdn() == Credentials.DEV_HOST:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.win_settings')
+
 backend = Credentials.backend
 result_backend = Credentials.result_backend
 
