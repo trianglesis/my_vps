@@ -13,10 +13,9 @@ class RemotesTasks:
 
     @staticmethod
     @app.task(
-        queue=QueuesCelery.QUEUE_MAIN,
+        queue=QueuesCelery.QUEUE_REMOTES,
         routing_key='routines.RemotesTasks.make_snap',
-        soft_time_limit=const.MIN_5,
-        task_time_limit=const.MIN_5)
+        soft_time_limit=const.MIN_5, task_time_limit=const.MIN_5)
     @exception
     def make_snap(t_tag, **kwargs):
         log.info(f"This is my first task! {t_tag}, {kwargs}")
