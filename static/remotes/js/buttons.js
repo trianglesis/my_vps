@@ -37,13 +37,19 @@ function pushedButtonSendRequest(btn) {
 
 function changeButtonText(btn, result, fallbackMessage) {
     console.log(`Button pushed! Rest Sent! Now change button text with response, wait 1-2 sec and change text back to usual`)
-    let status = result.status
     let previousText = btn.innerText
+    let status = result.status
+
+    let server_msg = ""
+    if (result.response.text) {
+        server_msg = result.response.text
+    }
+
     if (!fallbackMessage) {
-        btn.innerText = status
+        btn.innerText = status + " -> " + server_msg
         btn.disabled = 'disabled';
     } else {
-        btn.innerText = fallbackMessage
+        btn.innerText = fallbackMessage + " -> " + server_msg
         btn.disabled = 'disabled';
     }
     // Wait for a few seconds, make button disabled, and then assign previous text back
@@ -73,7 +79,7 @@ function RESTPostTask(btn) {
             $.ajaxSettings.beforeSend(xhr, settings)
         },
         "success": function (result) {
-            console.log(`Request sent!`, result)
+            // console.log(`Request sent!`, result)
             if (result && result.status) {
                 // On success - run get task status:
                 console.log(`Success`, result)

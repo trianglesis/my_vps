@@ -64,7 +64,7 @@ function RESTPostMakeShot(button) {
             $.ajaxSettings.beforeSend(xhr, settings)
         },
         "success": function (result) {
-            console.log(`Request sent!`, result)
+            // console.log(`Request sent!`, result)
             if (result && result.status) {
                 // On success - run get task status:
                 console.log(`Success`, result)

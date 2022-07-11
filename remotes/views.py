@@ -272,7 +272,7 @@ class OpenButtonREST(LoginRequiredMixin, APIView):
                 args=[t_tag],
                 kwargs=kwargs_d,
             )
-            j_txt = dict()
+            j_txt = {"color": '#00FF00', "status": 'ok', "text": '*Выполняется*', "new_nonce": '00000000000000000000'}
             return Response(dict(status='Faked!', response=j_txt, task_id=task_added.id))
         # Only make a camera shot - DEPRECATED
         elif snap:
