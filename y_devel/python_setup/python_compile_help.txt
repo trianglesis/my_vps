@@ -21,6 +21,8 @@ popd
 
 # Install python with SSL Option
 curl -O https://www.python.org/ftp/python/3.10.5/Python-3.10.5.tgz
+# Centos8 system py
+curl -O https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz
 tar -xzf Python-3.10.5.tgz
 cd Python-3.10.5
 
@@ -39,6 +41,9 @@ CFLAGS="-I/usr/local/include" \
 
 make -j8
 make altinstall
+
+### INSTALL AS SYSTEM DEFAULT!!!!
+make install
 
 # Linking
 from /usr/local/python3.10.5/bin/ to /usr/bin/

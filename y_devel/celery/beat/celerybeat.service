@@ -1,0 +1,29 @@
+# ========================================
+# vi /etc/default/celeryd.conf
+# vi /etc/systemd/system/celerybeat.service
+# systemctl daemon-reload
+# systemctl restart celerybeat.service
+# No longer required (beat -A ${CELERY_APP}) in:
+#   /var/www/my_vps/venv/bin/celery beat -A ${CELERY_APP} --detach
+# ========================================
+
+[Unit]
+Description=Celery beat
+After=network.target
+
+[Service]
+Type=forking
+User=sanek
+Group=apache
+EnvironmentFile=-/etc/default/celeryd.conf
+WorkingDirectory=/var/www/my_vps
+ExecStart=/bin/sh -c '/var/www/my_vps/venv/bin/celery beat --detach \
+ --pidfile=${CELERYBEAT_PID_FILE} \
+ --logfile=${CELERYBEAT_LOG_FILE} \
+ --loglevel=${CELERYBEAT_LOG_LEVEL} \
+ --schedule=${CELERYBEATD_SHEDULE_FILE} ${CELERYBEAT_OPTS}'
+ExecStop=/bin/systemctl kill celerybeat.service
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -108,6 +108,7 @@ ALLOWED_HOSTS = ['localhost',
                  core.security.Credentials.SITE,
                  core.security.Credentials.SITE_IP,
                  core.security.Credentials.FQDN,
+                 core.security.Credentials.WEB,
                  socket.getfqdn(),
                  socket.gethostname()
                  ]
