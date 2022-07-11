@@ -181,7 +181,7 @@ MIDDLEWARE = [
 #         'LOCATION': 'o_cache_table',
 #         'TIMEOUT': 60 * 5,
 #         'MAX_ENTRIES': 1000,
-#         # 'KEY_FUNCTION': 'octo.helpers.cache_key.make_key',
+#         # 'KEY_FUNCTION': 'core.helpers.cache_key.make_key',
 #         # 'KEY_PREFIX': 'dev_o',
 #     }
 #     # 'default': {

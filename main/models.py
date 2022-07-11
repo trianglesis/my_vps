@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class AuthGroup(models.Model):
@@ -113,6 +114,23 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+class MailsTexts(models.Model):
+    mail_key = models.CharField(_('key unique'), max_length=120, unique=True)
+    subject = models.CharField(_('subject'), max_length=255, unique=True)
+    body = models.TextField(_('body'), blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now=True)
+    private = models.BooleanField(_('private value'), null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'core_mail_texts'
+
+    def __str__(self):
+        return f'{self.id} - {self.mail_key}'
 
 
 class NetworkVisitorsAddresses(models.Model):

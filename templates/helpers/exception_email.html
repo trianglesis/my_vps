@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    {% load tz %}
+    {% load i18n static %}
+{#    {% load template_simplify %}#}
+    {% load humanize %}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>{{ subject }}</title>
+    <style type="text/css">
+
+        tr {
+            font-size: 1em;
+            font-family: 'Maven Pro', sans-serif;
+        }
+
+        a {
+            color: black;
+        }
+
+        table {
+            display: table;
+            border-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        td {
+            height: 1.4em;
+        }
+    </style>
+</head>
+{% block content %}
+    <body>
+    <table>
+        <tbody>
+        {% if mails_txt.body %}
+            <tr>
+                <td>{{ mails_txt.body }}</td>
+            </tr>
+        {% endif %}
+        {% if mails_txt.description %}
+            <tr>
+                <td>{{ mails_txt.description }}</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <table>
+        <tbody>
+        <tr>
+            <th><span style="color: #843534">Exception:</span></th>
+            <th><span style="font-weight: bold;color: #843534">{{ exception }}</span></th>
+        </tr>
+        </tbody>
+    </table>
+    <table>
+        <tbody>
+        <tr>
+            <td>Exception in:</td>
+            <td><span style="font-weight: bold">{{ function_module }}.{{ function_name }}</span></td>
+        </tr>
+        {% if function_args %}
+            <tr>
+                <td>Args</td>
+                <td><span>{{ function_args }}</span></td>
+            </tr>
+        {% endif %}
+        {% if function_kwargs %}
+            <tr>
+                <td>K-w args</td>
+                <td><span>{{ function_kwargs }}</span></td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <table>
+        <thead>
+        <tr>
+            <th><span style="font-weight: bold;color: cornflowerblue">Details:</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in exception_sam %}
+            <tr>
+                <td>
+                    <span>{{ item }}</span>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <span style="font-weight: bold">Mail key: </span>
+                <span style="font-style: italic">{{ mails_txt.mail_key }}</span>
+            </td>
+        </tr>
+    </table>
+    </body>
+{% endblock %}
+</html>
