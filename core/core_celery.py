@@ -22,7 +22,6 @@ result_backend = Credentials.result_backend
 # Setup django project
 django.setup()
 
-
 app = Celery('core',
              # http://docs.celeryproject.org/en/latest/userguide/optimizing.html
              broker=Credentials.broker,
@@ -31,12 +30,10 @@ app = Celery('core',
              backend=Credentials.backend,
              )
 
-
 app.conf.timezone = 'UTC'
 app.conf.enable_utc = True
 app.autodiscover_tasks()  # Load task modules from all registered Django app configs.
 default_exchange = Exchange('default', type='direct', durable=False)
-
 
 app.conf.update(
     accept_content=['pickle', ],
@@ -106,6 +103,6 @@ app.conf.update(
 app.control.cancel_consumer(
     'default',
     destination=[
-            "core@layer",
-            "remotes@layer",
+        "core@layer",
+        "remotes@layer",
     ])

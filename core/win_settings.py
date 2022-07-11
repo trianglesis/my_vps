@@ -168,6 +168,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
     'rest_framework.authtoken',
+    # 'django_celery_beat',
     'django_celery_beat.apps.BeatConfig',
     'dj_rest_auth',
     'django_registration',
