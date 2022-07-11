@@ -20,3 +20,5 @@ db.sqlite3
 /dev.log
 /celery.log
 /y_devel/exclude_from_sharing/
+/beat@layer.log
+/remotes@layer.log

@@ -14,6 +14,7 @@ from django.template import loader
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core.helpers.mailing import Mails
+from remotes.tasks import RemotesTasks
 
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -355,49 +356,58 @@ class OpenButtonREST(LoginRequiredMixin, APIView):
 
         subject = f'Remote open: {button.description}'
         if socket.getfqdn() == security.DEV_HOST:
-            fake = False
+            fake = True
+
+        kwargs_d = dict(
+            username=self.request.user.username,
+            subject=subject,
+            send_to=self.request.user.email,
+            camera_shot=camera_shot,
+            button=button,
+            perl_hostname=perl_hostname,
+            image_enhance=image_enhance,
+        )
 
         if fake:
-            subject = f'Fake open: {button.description}'
             log.debug(f"View request: {self.request} data: {self.request.data}")
             log.info(f"FAKE ITERATION! Do not making any requests!")
             log.info(f"self.request.user.username: {self.request.user.username}, email: {self.request.user.email}")
-            images = camera_shot(button, perl_hostname, image_enhance)
+
             mail_html = pushed_button.render(dict(
                 subject=subject,
                 button=button,
                 username=self.request.user.username,
                 hostname=security.Credentials.SITE,
             ))
-            Mails().short(
-                subject=subject,
-                mail_html=mail_html,
-                images=images,
-                send_to=self.request.user.email,
-                bcc=security.mails['admin'],
+
+            kwargs_d.update(subject=f'Fake open: {button.description}')
+            kwargs_d.update(mail_html=mail_html)
+
+            t_tag = f'tag=SnapOnOpening;user_name={self.request.user.username};fake_run=True'
+            task_added = RemotesTasks.t_make_snap_on_open.apply_async(
+                args=[t_tag],
+                kwargs=kwargs_d,
             )
+
             j_txt = dict()
-            return Response(dict(status='Faked!', response=j_txt))
-        # Only make a camera shot
+            return Response(dict(status='Faked!', response=j_txt, task_id=task_added.id))
+        # Only make a camera shot - DEPRECATED
         elif snap:
             log.info(f"Make a selfie on camera! Do not open any gate.")
-            subject = f'Remote snapshot: {button.description}'
             maked_snap = loader.get_template('emails/maked_snap.html')
-            images = camera_shot(button, perl_hostname, image_enhance)
             mail_html = maked_snap.render(dict(
                 subject=subject,
                 button=button,
                 username=self.request.user.username,
                 hostname=security.Credentials.SITE,
             ))
-            Mails().short(
-                subject=subject,
-                mail_html=mail_html,
-                images=images,
-                send_to=self.request.user.email,
-                bcc=security.mails['admin'],
+            kwargs_d.update(mail_html=mail_html)
+            t_tag = f'tag=SnapOnOpening;user_name={self.request.user.username};snap=True;DEPRECATED'
+            task_added = RemotesTasks.t_make_snap_on_open.apply_async(
+                args=[t_tag],
+                kwargs=kwargs_d,
             )
-            return Response(dict(status='Smile!', response='Make a shot!'))
+            return Response(dict(status='Smile!', response='Make a shot!', task_id=task_added.id))
         else:
             URL = f'{perl_hostname}go.php?dom={dom}&gate={gate}&mode={mode}&nonce={nonce}'
             r = requests.get(URL)
@@ -406,22 +416,22 @@ class OpenButtonREST(LoginRequiredMixin, APIView):
                 j_txt = r.json()
                 server_response_status = j_txt.get("status")
                 if server_response_status == 'ok':
-                    images = camera_shot(button, perl_hostname, image_enhance)
+
+                    # Here the task to make a snap during doors opening.
                     mail_html = pushed_button.render(dict(
                         subject=subject,
                         button=button,
                         username=self.request.user.username,
                     ))
-                    Mails().short(
-                        subject=subject,
-                        mail_html=mail_html,
-                        images=images,
-                        send_to=self.request.user.email,
-                        bcc=security.mails['admin'],
+                    kwargs_d.update(mail_html=mail_html)
+                    t_tag = f'tag=SnapOnOpening;user_name={self.request.user.username};'
+                    task_added = RemotesTasks.t_make_snap_on_open.apply_async(
+                        args=[t_tag],
+                        kwargs=kwargs_d,
                     )
 
                     log.info(f"Request successfully executed for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}")
-                    return Response(dict(status='Open!', response=j_txt))
+                    return Response(dict(status='Open!', response=j_txt, task_id=task_added.id))
                 else:
                     msg = f"Request executed with some error on server side for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}"
                     log.error(msg)
