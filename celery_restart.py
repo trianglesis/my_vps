@@ -5,14 +5,13 @@ from queue import Queue
 from threading import Thread
 from time import time
 
+
 CELERY_BIN = "/var/www/my_vps/venv/bin/celery"
 CELERY_APP = "core.core_celery:app"
 CELERYD_PID_FILE = "/opt/celery/{PID}.pid"
-
 CELERY_LOG_PATH = '/var/log/my_vps'
 CELERYD_LOG_FILE = "{PATH}/{LOG}.log"
 CELERYD_LOG_LEVEL = "INFO"
-
 CELERYD_OPTS = "--concurrency=1 -E"
 
 CELERYD_NODES = [
@@ -30,8 +29,9 @@ commands_list_kill = "pkill -9 -f 'core.core_celery:app worker --pidfile=/opt/ce
 # Do not want to work as expected!
 # python celery_restart_DEV.py --mode=kill; python celery_restart_DEV.py --mode=start
 # python celery_restart.py --mode=kill --worker=golf; python celery_restart.py --mode=start --worker=golf
-commands_list_restart = "python3 {CELERY_BIN} multi restart {celery_node} -A {CELERY_APP} --pidfile={CELERYD_PID_FILE} " \
-                        "--logfile={CELERYD_LOG_FILE} --loglevel={CELERYD_LOG_LEVEL} {CELERYD_OPTS}"
+# commands_list_restart = "python3 {CELERY_BIN} multi restart {celery_node} -A {CELERY_APP} --pidfile={CELERYD_PID_FILE} " \
+#                         "--logfile={CELERYD_LOG_FILE} --loglevel={CELERYD_LOG_LEVEL} {CELERYD_OPTS}"
+commands_list_restart = f"{commands_list_kill} ; {commands_list_start}"
 
 
 def th_run(args):
@@ -53,7 +53,7 @@ def th_run(args):
     test_q = Queue()
 
     if worker_list:
-        workers = [worker + "@tentacle" for worker in worker_list]
+        workers = [worker + "@layer" for worker in worker_list]
     else:
         workers = CELERYD_NODES
 

@@ -10,20 +10,14 @@ https://www.rabbitmq.com/install-rpm.html
 https://www.rabbitmq.com/install-rpm.html#package-dependencies
 
 yum update -y
-
 yum install socat logrotate -y
-
 yum install erlang rabbitmq-server -y
-
 
 chkconfig rabbitmq-server on
 
 /sbin/service rabbitmq-server start
-
 /sbin/service rabbitmq-server status
-
 /sbin/service rabbitmq-server stop
-
 
 
 #================== RABBIT MQ: ================== ================== ==================
