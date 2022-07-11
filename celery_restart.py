@@ -119,6 +119,7 @@ th_run(parser.parse_args())
 
 """
 Usage:
+python celery_restart.py --mode=start
 python celery_restart.py --mode=kill --worker=core; python celery_restart.py --mode=start --worker=core
 python celery_restart.py --mode=kill
 python celery_restart.py --mode=restart

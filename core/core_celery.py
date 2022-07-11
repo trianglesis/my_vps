@@ -6,7 +6,7 @@ import django
 from celery import Celery
 from kombu import Exchange
 
-from security import Credentials
+from core.security import Credentials
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
