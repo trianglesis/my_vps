@@ -92,7 +92,7 @@ LOGGING = {
         'celery': {
             'handlers': ['celery_log'],
             'level': 'DEBUG',
-            'propagate': True
+            'propagate': False
         },
         'dev': {
             'handlers': ['dev_log'],
