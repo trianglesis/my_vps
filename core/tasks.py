@@ -10,6 +10,11 @@ from core.security import QueuesCelery
 log = logging.getLogger("core")
 
 
+@app.task
+def amount_counting():
+    log.info(f"Simple core task!")
+
+
 class CoreTasks:
 
     @staticmethod
