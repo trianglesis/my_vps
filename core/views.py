@@ -65,7 +65,7 @@ def save_visit(ip, is_routable, request):
     :return:
     """
     # Making unique hash for ip + user agent + path requested
-    u_agent = request.META['HTTP_USER_AGENT']
+    u_agent = request.META.get('HTTP_USER_AGENT', None)
     ip_agent_path = f"{ip}-{u_agent}-{request.path}-{request.GET.dict()}-{request.POST.dict()}"
     h = blake2b(digest_size=64)
     h.update(ip_agent_path.encode('utf-8'))
