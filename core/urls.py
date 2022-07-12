@@ -42,6 +42,8 @@ urlpatterns = [
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
 
     path('blah-blah-blah/a-a-a-admin/', admin.site.urls),
-    path('__debug__/', include('debug_toolbar.urls')),
+
+    # Only load on local dev system when needed
+    # path('__debug__/', include('debug_toolbar.urls')),
 
 ]

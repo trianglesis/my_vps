@@ -15,8 +15,8 @@ from remotes.models import Options
 
 log = logging.getLogger("dev")
 
-perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
-print(f"Using: {perl_hostname}")
+hostname = Options.objects.get(option_key__exact='ozerne_system_hostname').option_value
+print(f"Using: {hostname}")
 
 skip_words = [
     'Forbidden',
@@ -32,7 +32,7 @@ log.info(f'Save to: {PATH}')
 
 for dvr in range(1, 50):
     for cam in range(1, 50):
-        URL = f'{perl_hostname}cam.php?dvr={dvr}&cam={cam}'
+        URL = f'{hostname}cam.php?dvr={dvr}&cam={cam}'
         r = requests.get(URL)
         if r.status_code == 200:
             if not any(elem in r.text for elem in skip_words):
@@ -50,3 +50,5 @@ for dvr in range(1, 50):
                 print(f"Skipping: dvr={dvr} cam={cam}")
                 with open(ANSWERS_LOG, 'a', encoding='utf-8') as f:
                     f.write(f'Skipped: dvr={dvr} cam={cam} - {r.text}\n')
+        else:
+            print(f"Skipping: dvr={dvr} cam={cam} answ: {r.status_code}")
