@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from core import constants as const
+
 
 from main.views import *
 
@@ -22,7 +24,6 @@ handler404 = 'core.views.page_not_found_view'
 handler500 = 'core.views.response_error_handler'
 handler403 = 'core.views.permission_denied_view'
 handler400 = 'core.views.bad_request_view'
-
 
 urlpatterns = [
     path('', MainPage.as_view(), name='home'),
@@ -44,6 +45,8 @@ urlpatterns = [
     path('blah-blah-blah/a-a-a-admin/', admin.site.urls),
 
     # Only load on local dev system when needed
-    # path('__debug__/', include('debug_toolbar.urls')),
 
 ]
+
+if const.is_dev():
+    urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))

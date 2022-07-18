@@ -37,6 +37,7 @@ COMMON_SLASHED_y = '%m/%d/%y %H:%M:%S',  # '10/25/06 14:30:59'
 def is_dev():
     """If current host is a local DEV machine return True"""
     if core.security.Credentials.HOSTNAME == core.security.Credentials.DEV_HOST:
+        print('THIS IS DEV SERVER!')
         return True
     return False
 

@@ -311,7 +311,7 @@ REGISTRATION_OPEN = True
 
 # https://github.com/maxtepkeev/architect/issues/38
 # https://github.com/celery/django-celery/issues/359
-CONN_MAX_AGE = 8000
+CONN_MAX_AGE = 300
 
 ADMINS = core.security.ADMINS
 

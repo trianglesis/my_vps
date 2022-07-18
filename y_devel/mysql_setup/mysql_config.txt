@@ -1,0 +1,38 @@
+##### My config experiments:
+open_files_limit = 200
+
+wait_timeout = 300
+connect_timeout = 300
+interactive_timeout = 300
+net_read_timeout = 300
+table_open_cache = 50
+max_allowed_packet = 10M
+thread_cache_size = 8
+innodb_buffer_pool_instances = 4
+
+
+#### Calculator ####
+# https://dannyda.com/mysql-memory-calculator/
+# Recommended to change
+# key_buffer_size=64M
+
+# Unsupported
+# query_cache_size=64M
+# innodb_additional_mem_pool_size=1M
+
+tmp_table_size=16M
+innodb_buffer_pool_size=128M
+innodb_log_buffer_size=1M
+max_connections=50
+sort_buffer_size=512K
+read_buffer_size=512K
+read_rnd_buffer_size=512K
+join_buffer_size=512K
+binlog_cache_size=512K
+thread_stack=287K
+
+
+##### TUNER RECOMMENDATIONS:
+skip-name-resolve=1
+innodb_log_file_size = 16M
+key_buffer_size=0
