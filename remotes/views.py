@@ -38,13 +38,13 @@ def cam_filter(role):
                 'candle_2',
                 'candle_3',
                 'candle_4',
-                'candle_5',
             ]).order_by('type')
             title = 'Свеча нижний ур'
         elif role == 'candle_up':
             cams = PerlCameras.objects.filter(type__in=[
                 'candle_5',
                 'candle_6',
+                'candle_7',
             ]).order_by('type')
             title = 'Свеча верхний ур'
         elif role == 'sport':
