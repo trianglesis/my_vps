@@ -38,6 +38,7 @@ def cam_filter(role):
                 'candle_2',
                 'candle_3',
                 'candle_4',
+                'candle_5',
             ]).order_by('type')
             title = 'Свеча нижний ур'
         elif role == 'candle_up':
