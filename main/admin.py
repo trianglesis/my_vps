@@ -17,12 +17,12 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         'created_at',
     )
     list_filter = (
-        'ip',
+        # 'ip',
         'is_routable',
         'created_at',
         'updated_at',
-        'user_agent',
-        'url_path',
+        # 'user_agent',
+        # 'url_path',
     )
     ordering = ('ip',)
 
