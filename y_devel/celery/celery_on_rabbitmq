@@ -43,6 +43,9 @@ rabbitmqctl stop
 
 rabbitmqctl start_app
 
+rabbitmq-plugins enable rabbitmq_management
+
+
 # Start from clean:
 
 rabbitmqctl stop_app

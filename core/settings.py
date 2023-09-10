@@ -37,10 +37,10 @@ LOGGING = {
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue'
         },
-        'django_dbug':
-            {
-                '()': 'core.helpers.log_filters.DebugDjangoFilters'
-            },
+        # 'django_dbug':
+        #     {
+        #         '()': 'core.helpers.log_filters.DebugDjangoFilters'
+        #     },
     },
     'handlers': {
         'mail_admins': {
