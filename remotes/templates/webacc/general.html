@@ -48,13 +48,20 @@
                 {% for camera in objects.cameras %}
                     <div class="col">
                         <div class="card text-white bg-dark h-100" id="{{ camera.dvr }}{{ camera.cam }}">
-                            <img class="card-img-top camera-w-100-percent cam-refresh"
-                                 src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
-                                 data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
-                                 alt="{% trans camera.description %}">
+                            {% comment %}Do not load cams if initial cameras are 404{% endcomment %}
+                            {% if not objects.cameras_off %}
+                                <img class="card-img-top camera-w-100-percent cam-refresh"
+                                     src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
+                                     data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
+                                     alt="{% trans camera.description %}">
+                            {% endif %}
                             <div class="card-body">
-                                <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}
-                                </h5>
+                                {% comment %}Do not load cams if initial cameras are 404{% endcomment %}
+                                {% if not objects.cameras_off %}
+                                    <h5 class="card-title"><i class="fa-solid fa-video"></i>
+                                        {% trans camera.description %}
+                                    </h5>
+                                {% endif %}
                                 <ul class="list-group list-group-flush bg-dark">
                                     {% if camera.button %}
                                         <li class="list-group-item bg-dark"></li>
@@ -81,6 +88,8 @@
                                             </li>
                                         {% endfor %}
                                     {% endif %}
+                                    {% comment %}Do not load cams if initial cameras are 404{% endcomment %}
+                                    {% if not objects.cameras_off %}
                                     <li class="list-group-item bg-dark text-center">
                                         <button class="btn btn-sm btn-outline-success run-camera-shot"
                                                 id="{{ camera.dvr }}-{{ camera.cam }}"
@@ -91,11 +100,15 @@
                                         >{% trans 'Фото' %}</button>
                                     </li>
                                     <li class="list-group-item bg-dark"></li>
+                                    {% endif %}
                                 </ul>
+                                {% comment %}Do not load cams if initial cameras are 404{% endcomment %}
+                                {% if not objects.cameras_off %}
                                 <p class="card-text text-center">
                                     <small class="text-light current-time"></small>
                                     <small class="text-light">Update 2 sec</small>
                                 </p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -103,7 +116,10 @@
             </div>
 
             <!-- Cam refresh -->
-            <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
+            {% comment %}Do not refresh cams if initial cameras are 404{% endcomment %}
+            {% if not objects.cameras_off %}
+                <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
+            {% endif %}
             <!-- Open buttons -->
             <script src="{% static 'remotes/js/buttons.js' %}"></script>
             <!-- Snap buttons -->

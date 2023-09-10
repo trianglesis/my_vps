@@ -110,6 +110,7 @@ class MainPageRemotes(LoginRequiredMixin, TemplateView):
 class RemotesMobile(LoginRequiredMixin, TemplateView):
     template_name = 'mobile/mobile.html'
     context_object_name = 'objects'
+    __url = 'remotes/mobile'
 
     def get_context_data(self, **kwargs):
         context = super(RemotesMobile, self).get_context_data(**kwargs)
@@ -126,19 +127,31 @@ class RemotesMobile(LoginRequiredMixin, TemplateView):
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
 
+        # Check if cameras are ON:
+        cameras_off = False
+        perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
+        URL = f'{perl_hostname}/app/cam.php?dvr=1&cam=1'
+        r = requests.get(URL)
+        if r.status_code == 404:
+            log.error(f"Cams are offline: {r}")
+            cameras_off = True
+
+
         queryset = dict(
             title=title,
             role=role,
             cameras=cams,
             perl_hostname=perl_hostname,
             perl_token=perl_token,
+            cameras_off=cameras_off,
+
         )
         return queryset
 
 
 class RemotesWeb(LoginRequiredMixin, TemplateView):
     login_url = '/404'
-    __url = '/remotes/web/'
+    __url = 'remotes/web'
     template_name = 'webacc/general.html'
     context_object_name = 'objects'
 
@@ -159,12 +172,23 @@ class RemotesWeb(LoginRequiredMixin, TemplateView):
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
 
+        # Check if cameras are ON:
+        cameras_off = False
+        perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
+        URL = f'{perl_hostname}/app/cam.php?dvr=1&cam=1'
+        r = requests.get(URL)
+        if r.status_code == 404:
+            log.error(f"Cams are offline: {r}")
+            cameras_off = True
+
+
         queryset = dict(
             title=title,
             role=role,
             cameras=cams,
             perl_hostname=perl_hostname,
             perl_token=perl_token,
+            cameras_off=cameras_off,
         )
         return queryset
 

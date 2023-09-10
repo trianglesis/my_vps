@@ -46,12 +46,13 @@
 
             {% for camera in objects.cameras %}
                 <div class="card text-white bg-dark mb-3" id="{{ camera.dvr }}{{ camera.cam }}">
-
-                    <img class="card-img-top camera-w-100-percent cam-refresh"
-                         src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
-                         data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
-                         alt="{% trans camera.description %}">
-
+                    {% comment %}Do not load cams if initial cameras are 404{% endcomment %}
+                    {% if not objects.cameras_off %}
+                        <img class="card-img-top camera-w-100-percent cam-refresh"
+                             src="{{ objects.perl_hostname }}cam.php?dvr={{ camera.dvr }}&cam={{ camera.cam }}"
+                             data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
+                             alt="{% trans camera.description %}">
+                    {% endif %}
                     <div class="card-body bg-dark">
                         <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
                         <ul class="list-group list-group-flush">
@@ -81,29 +82,38 @@
                                     </li>
                                 {% endfor %}
                             {% endif %}
-                            <li class="list-group-item bg-dark">
-                                <div class="d-grid gap-2 col-4 mx-auto">
-                                    <button class="btn btn-outline-success run-camera-shot"
-                                            id="{{ camera.dvr }}-{{ camera.cam }}"
-                                            type="button"
-                                            title="Make snap {% trans camera.description %}"
-                                            data-dvr="{{ camera.dvr }}"
-                                            data-cam="{{ camera.cam }}"
-                                    >{% trans 'Фото' %}</button>
-                                </div>
-                            </li>
-                            <li class="list-group-item bg-dark"></li>
+                            {% comment %}Do not load cams if initial cameras are 404{% endcomment %}
+                            {% if not objects.cameras_off %}
+                                <li class="list-group-item bg-dark">
+                                    <div class="d-grid gap-2 col-4 mx-auto">
+                                        <button class="btn btn-outline-success run-camera-shot"
+                                                id="{{ camera.dvr }}-{{ camera.cam }}"
+                                                type="button"
+                                                title="Make snap {% trans camera.description %}"
+                                                data-dvr="{{ camera.dvr }}"
+                                                data-cam="{{ camera.cam }}"
+                                        >{% trans 'Фото' %}</button>
+                                    </div>
+                                </li>
+                                <li class="list-group-item bg-dark"></li>
+                            {% endif %}
                         </ul>
-                        <p class="card-text">
-                            <small class="text-light current-time"></small>
-                            <small class="text-light">Update 2 sec</small>
-                        </p>
+                        {% comment %}Do not load cams if initial cameras are 404{% endcomment %}
+                        {% if not objects.cameras_off %}
+                            <p class="card-text">
+                                <small class="text-light current-time"></small>
+                                <small class="text-light">Update 2 sec</small>
+                            </p>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
 
             <!-- Cam refresh -->
-            <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
+            {% comment %}Do not refresh cams if initial cameras are 404{% endcomment %}
+            {% if not objects.cameras_off %}
+                <script src="{% static 'remotes/js/cam-refresh.js' %}"></script>
+            {% endif %}
             <!-- Open buttons -->
             <script src="{% static 'remotes/js/buttons.js' %}"></script>
             <!-- Snap buttons -->
