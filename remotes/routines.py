@@ -34,6 +34,9 @@ def request_image(cam_url, caller='nobody'):
             if r.content:
                 log.debug(f"2.1 Successful request pic URL: {cam_url}")
                 return r.content
+    elif r.status_code == 404:
+        log.error(f"2.1 Unsuccessful request pic URL: {cam_url} - 404! Exit")
+        return b''
     log.debug(f"2.2 Unsuccessful request pic URL: {cam_url}, will return empty bytecode and retry")
     return b''
 
