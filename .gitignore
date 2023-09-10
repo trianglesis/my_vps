@@ -22,3 +22,8 @@ db.sqlite3
 /y_devel/exclude_from_sharing/
 /beat@layer.log
 /remotes@layer.log
+
+y_devel/CAM
+y_devel/dump
+
+*/migrations/
