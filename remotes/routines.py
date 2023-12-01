@@ -176,6 +176,7 @@ def make_snap_send_email_routine(**kwargs):
         button=button,
         camera=camera,
         username=username,
+        images=images,
         hostname=Credentials.SITE,
     ))
 
