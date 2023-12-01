@@ -173,6 +173,8 @@ def make_snap_send_email_routine(**kwargs):
         hostname=Credentials.SITE,
     ))
 
+    log.debug(f"subject: {subject}, bcc: {DjangoCreds.mails['admin']}, send_to: {send_to}")
+
     Mails().short(
         subject=subject,
         mail_html=mail_html,

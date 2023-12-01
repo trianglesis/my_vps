@@ -5,7 +5,7 @@ import logging
 from core.core_celery import app
 from core import constants as const
 from core.helpers.tasks_helpers import exception
-from core.security import QueuesCelery
+from core.security import CeleryCreds
 
 log = logging.getLogger("core")
 
@@ -14,7 +14,7 @@ class CoreTasks:
 
     @staticmethod
     @app.task(
-        queue=QueuesCelery.QUEUE_CORE,
+        queue=CeleryCreds.QUEUE_CORE,
         routing_key='routines.CoreTasks.core_task',
         soft_time_limit=const.MIN_5, task_time_limit=const.MIN_5)
     @exception
