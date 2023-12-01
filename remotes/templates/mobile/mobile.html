@@ -54,7 +54,13 @@
                              alt="{% trans camera.description %}">
                     {% endif %}
                     <div class="card-body bg-dark">
-                        <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
+                        <h5 class="card-title">
+                            {% if objects.cameras_off %}
+                                <span><img src="/static/octicons/icons/skip-fill-24.svg" alt="skip"></span>
+                            {% else %}
+                                <i class="fa-solid fa-video"></i>
+                            {% endif %}&nbsp;{% trans camera.description %}
+                        </h5>
                         <ul class="list-group list-group-flush">
                             {% if camera.button %}
                                 <li class="list-group-item bg-dark"></li>

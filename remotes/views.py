@@ -19,7 +19,7 @@ log = logging.getLogger("core")
 
 def cam_filter(role):
     cams = PerlCameras.objects.all()
-    title = 'Камеры'
+    title = 'Камери'
     if role:
         if role == 'all':
             cams = PerlCameras.objects.filter(
@@ -34,14 +34,14 @@ def cam_filter(role):
                 'candle_3',
                 'candle_4',
             ]).order_by('type')
-            title = 'Свеча нижний ур'
+            title = 'Свічка [нижній]'
         elif role == 'candle_up':
             cams = PerlCameras.objects.filter(type__in=[
                 'candle_5',
                 'candle_6',
                 'candle_7',
             ]).order_by('type')
-            title = 'Свеча верхний ур'
+            title = 'Свічка [верхній]'
         elif role == 'sport':
             cams = PerlCameras.objects.filter(type__in=[
                 'sport_1',
@@ -49,20 +49,20 @@ def cam_filter(role):
                 'sport_3',
                 'sport_4',
             ]).order_by('type')
-            title = 'Спортплощадка'
+            title = 'Спортмайданчик, переробка'
         elif role == 'inner':
             cams = PerlCameras.objects.filter(type__in=[
                 'inner_1',
                 'inner_2',
                 'inner_3',
             ]).order_by('type')
-            title = 'Внутренний двор'
+            title = 'Внутрішній двір'
         elif role == 'outer':
             cams = PerlCameras.objects.filter(type__in=[
                 'outer_1',
                 'outer_2',
             ]).order_by('type')
-            title = 'Внешний двор'
+            title = 'Зовнішній двір'
         elif role == 'parking':
             cams = PerlCameras.objects.filter(type__istartswith="parking_cam").order_by('type')
             title = 'Парковка'
@@ -85,6 +85,16 @@ def buttons_filter(gate):
             cams = PerlButtons.objects.filter(gate__exact=gate)
     return cams, title
 
+
+def check_cameras_status(perl_hostname):
+    # Check if cameras are ON:
+    cameras_off = False
+    URL = f'{perl_hostname}/app/cam.php?dvr=1&cam=1'
+    r = requests.get(URL)
+    if r.status_code == 404:
+        log.error(f"Cams are offline: {r}")
+        cameras_off = True
+    return cameras_off
 
 class MainPageRemotes(LoginRequiredMixin, TemplateView):
     login_url = '/404'
@@ -120,17 +130,8 @@ class RemotesMobile(LoginRequiredMixin, TemplateView):
 
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
-
         # Check if cameras are ON:
-        cameras_off = False
-        perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
-        URL = f'{perl_hostname}/app/cam.php?dvr=1&cam=1'
-        r = requests.get(URL)
-        if r.status_code == 404:
-            log.error(f"Cams are offline: {r}")
-            cameras_off = True
-
-
+        cameras_off = check_cameras_status(perl_hostname)
         queryset = dict(
             title=title,
             role=role,
@@ -162,20 +163,10 @@ class RemotesWeb(LoginRequiredMixin, TemplateView):
     def get_queryset(self):
         role = self.request.GET.get('role', None)
         cams, title = cam_filter(role)
-
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
-
         # Check if cameras are ON:
-        cameras_off = False
-        perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
-        URL = f'{perl_hostname}/app/cam.php?dvr=1&cam=1'
-        r = requests.get(URL)
-        if r.status_code == 404:
-            log.error(f"Cams are offline: {r}")
-            cameras_off = True
-
-
+        cameras_off = check_cameras_status(perl_hostname)
         queryset = dict(
             title=title,
             role=role,
@@ -206,10 +197,12 @@ class RemotesAllCameras(LoginRequiredMixin, TemplateView):
     def get_queryset(self):
         cams = PerlCameras.objects.all()
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
-
+        # Check if cameras are ON:
+        cameras_off = check_cameras_status(perl_hostname)
         queryset = dict(
             cameras=cams,
             perl_hostname=perl_hostname,
+            cameras_off=cameras_off,
         )
         return queryset
 
@@ -235,12 +228,15 @@ class RemotesAllButtons(LoginRequiredMixin, TemplateView):
         btns, title = buttons_filter(gate)
         perl_hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
         perl_token = Options.objects.get(option_key__exact='bearer_token').option_value
+        # Check if cameras are ON:
+        cameras_off = check_cameras_status(perl_hostname)
         queryset = dict(
             buttons=btns,
             title=title,
             gate=gate,
             perl_hostname=perl_hostname,
             perl_token=perl_token,
+            cameras_off=cameras_off,
         )
         return queryset
 
