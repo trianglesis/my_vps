@@ -373,6 +373,7 @@ else:
     STATICFILES_DIRS = (
         os.path.join(STATIC_ROOT, 'admin'),
     )
+    STATIC_URL = '/static/'
     print(f"Settings: Live: STATICFILES_DIRS: {STATICFILES_DIRS}")
 
 # Password validation
