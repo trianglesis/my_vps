@@ -3,7 +3,7 @@
     <div class="card-header">{% trans 'Користувач' %}
         "{{ username }}" {% trans 'відчинив:' %} {{ button.description }}</div>
     <div class="card-body">
-        <p>{% trans 'Дані кнопки' %}: {% trans 'Дім' %}: {{ button.dom }} {% trans 'Двері' %}: {{ button.gate }} {% trans 'Тип' %}: {{ button.mode }}</p>
+        <p>{% trans 'Дані кнопки' %}: {% trans 'Дім' %}: "{{ button.dom }}" {% trans 'Двері' %}: "{{ button.gate }}" {% trans 'Тип' %}: "{{ button.mode }}"</p>
         {% if images %}
             <p>{% trans 'Камери' %}</p>
             <ul>
