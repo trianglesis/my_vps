@@ -94,9 +94,8 @@ class MainPageRemotes(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MainPageRemotes, self).get_context_data(**kwargs)
-        title = 'Remote'
         context.update(
-            title=title,
+            title='Remote',
             content='Here show and choose some modules'
         )
         return context

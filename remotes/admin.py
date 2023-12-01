@@ -47,6 +47,8 @@ class PerlCamerasAdmin(admin.ModelAdmin):
     #     'description',
     #     'button',
     # ]
+    filter_horizontal = ('button',)
+
     list_display = (
         'dvr',
         'cam',
@@ -67,8 +69,17 @@ class PerlCamerasAdmin(admin.ModelAdmin):
         return ",".join([p.description for p in obj.button.all()])
 
 
+class PerlCamerasInline(admin.TabularInline):
+    model = PerlCameras.button.through
+    extra = 1
+    # max_num = 2
+    can_delete = False
+
+
 @admin.register(PerlButtons)
 class PerlButtonsAdmin(admin.ModelAdmin):
+    inlines = [PerlCamerasInline]
+
     list_display = (
         'dom',
         'gate',
@@ -82,12 +93,20 @@ class PerlButtonsAdmin(admin.ModelAdmin):
         'mode',
     )
 
+    fieldsets = (
+        ('Buttons', {
+            'description': "Button with assigned cameras",
+            'fields':
+                (
+                    'dom',
+                    'gate',
+                    'mode',
+                    'description',
+                )
+        }),
+    )
+
     @admin.display(description='Assigned camera')
     def camera(self, obj):
-        # Get related button if any:
-        cams = PerlCameras.objects.filter(button=obj).values_list(
-            'type',
-            'description',
-        )
-        if cams:
-            return list(cams)
+        if obj.assigned_buttons.all():
+            return list(obj.assigned_buttons.all().values_list('type', 'description', ))

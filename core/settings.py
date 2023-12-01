@@ -149,13 +149,22 @@ if DEBUG:
 if ENV == 0:
     print(f"Settings: WSL: Redirect all logs to console output with simple format.")
     LOGGING['disable_existing_loggers'] = False
+    # Add console:
     LOGGING['handlers']['console']['formatter'] = 'console_view'
-    LOGGING['loggers']['django']['handlers'].append('console')
+    # All levels to debug:
+    LOGGING['handlers']['console']['level'] = 'DEBUG'
+    # All handlers to console:
     LOGGING['loggers']['django']['handlers'].append('console')
     LOGGING['loggers']['celery']['handlers'].append('console')
     LOGGING['loggers']['mail']['handlers'].append('console')
     LOGGING['loggers']['core']['handlers'].append('console')
     LOGGING['loggers']['dev']['handlers'].append('console')
+    # All to debug:
+    LOGGING['loggers']['django']['level'] = "INFO"
+    LOGGING['loggers']['celery']['level'] = "DEBUG"
+    LOGGING['loggers']['mail']['level'] = "DEBUG"
+    LOGGING['loggers']['core']['level'] = "DEBUG"
+    LOGGING['loggers']['dev']['level'] = "DEBUG"
 
 dictConfig(LOGGING)
 log = logging.getLogger("core")

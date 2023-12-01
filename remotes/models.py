@@ -45,7 +45,6 @@ class PerlCameras(models.Model):
     button = models.ManyToManyField(PerlButtons,
                                     related_name='assigned_buttons',
                                     blank=True,
-                                    null=True
                                     )
 
     class Meta:
