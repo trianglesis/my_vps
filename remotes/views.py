@@ -96,6 +96,7 @@ def check_cameras_status(perl_hostname):
         cameras_off = True
     return cameras_off
 
+
 class MainPageRemotes(LoginRequiredMixin, TemplateView):
     login_url = '/404'
     __url = '/remotes/'

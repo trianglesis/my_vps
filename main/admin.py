@@ -57,6 +57,7 @@ class NetworkVisitorsAddressesAgentProxyAdmin(admin.ModelAdmin):
         'created_at',
     )
 
+
 @admin.register(NetworkVisitorsAddressesUrlPathProxy)
 class NetworkVisitorsAddressesUrlPathProxyAdmin(admin.ModelAdmin):
     ordering = ('-updated_at',)

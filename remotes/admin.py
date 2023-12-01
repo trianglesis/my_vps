@@ -6,6 +6,7 @@ from remotes.models import *
 
 log = logging.getLogger("core")
 
+
 @admin.register(Options)
 class OptionsAdmin(admin.ModelAdmin):
     list_display = (
