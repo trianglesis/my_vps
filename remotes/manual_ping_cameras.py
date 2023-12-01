@@ -26,7 +26,7 @@ skip_words = [
     'Fatal error',
     'HTTP request failed',
 ]
-PATH = os.path.abspath('D:\\Projects\\PycharmProjects\\my_vps\\y_devel\\CAM')
+PATH = os.path.abspath('D:\\Projects\\PycharmProjects\\my_vps\\y_devel\\CAM\\New')
 ANSWERS_LOG = os.path.join(PATH, 'answer_log.txt')
 log.info(f'Save to: {PATH}')
 
