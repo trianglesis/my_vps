@@ -1,8 +1,6 @@
-
 ## NEVER TRACK THIS FILE, ONLY CREATE ONCE
 core/security.py
 *security.py
-
 
 .idea/
 *.pyc
