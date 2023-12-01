@@ -38,7 +38,7 @@ def request_image(cam_url, caller='nobody'):
                 return r.content
     elif r.status_code == 404:
         log.error(f"2.1 Unsuccessful request pic URL: {cam_url} - 404! Exit")
-        return b''
+        return None
     log.debug(f"2.2 Unsuccessful request pic URL: {cam_url}, will return empty bytecode and retry")
     return b''
 
@@ -99,9 +99,12 @@ def camera_shot(element, perl_hostname, image_enhance, basewidth=None):
             cam_url = f"{perl_hostname}cam.php?dvr={camera.dvr}&cam={camera.cam}"
             log.debug(f"1.0 Requesting camera content: {cam_url}")
             content = request_image(cam_url, caller='initial')
-            log.debug(f"3.0 Save image or check if save-able content: {cam_url}")
-            save_image(runs, cam_url, images, content, image_enhance)
-            log.debug(f"4.0 Finishing job for this image and run forward! {cam_url}")
+            if content is not None:
+                log.debug(f"3.0 Save image or check if save-able content: {cam_url}")
+                save_image(runs, cam_url, images, content, image_enhance)
+                log.debug(f"4.0 Finishing job for this image and run forward! {cam_url}")
+            else:
+                log.warning(f"Camera response 404 - no pictures.")
     elif element.dvr and element.cam:
         log.info(f"Making snapshot for single camera: {element.description}")
         runs = 0
@@ -109,9 +112,12 @@ def camera_shot(element, perl_hostname, image_enhance, basewidth=None):
         cam_url = f"{perl_hostname}cam.php?dvr={element.dvr}&cam={element.cam}"
         log.debug(f"1.0 Requesting camera content: {cam_url}")
         content = request_image(cam_url, caller='initial')
-        log.debug(f"3.0 Save image or check if save-able content: {cam_url}")
-        save_image(runs, cam_url, images, content, image_enhance)
-        log.debug(f"4.0 Finishing job for this image and run forward! {cam_url}")
+        if content is not None:
+            log.debug(f"3.0 Save image or check if save-able content: {cam_url}")
+            save_image(runs, cam_url, images, content, image_enhance)
+            log.debug(f"4.0 Finishing job for this image and run forward! {cam_url}")
+        else:
+            log.warning(f"Camera response 404 - no pictures.")
     else:
         log.error(f"Else")
 
