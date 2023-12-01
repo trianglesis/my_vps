@@ -1,23 +1,18 @@
 import logging
-import socket
 
 import requests
-
-from core import security
-
-from django.views.generic import TemplateView
-from django.db.models import Q
-from django.template import loader
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-from core.helpers.mailing import Mails
-from remotes.tasks import RemotesTasks
-
+from django.db.models import Q
+from django.views.generic import TemplateView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.constants import is_dev
+from core.helpers.mailing import Mails
+from core.security import DjangoCreds
 from remotes.models import PerlCameras, Options, PerlButtons
+from remotes.tasks import RemotesTasks
 
 log = logging.getLogger("core")
 
@@ -275,7 +270,7 @@ class OpenButtonREST(LoginRequiredMixin, APIView):
         fake = self.request.data.get('fake', False)
         snap = self.request.data.get('snap', False)
 
-        if socket.getfqdn() == security.DEV_HOST:
+        if is_dev():
             fake = True
 
         kwargs_d = dict(
@@ -335,13 +330,13 @@ class OpenButtonREST(LoginRequiredMixin, APIView):
                     msg = f"Request executed with some error on server side for: dom={dom}&gate={gate}&mode={mode},\nResponse: {r.text}"
                     log.error(msg)
                     body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}\n\n{msg}'
-                    Mails().short(subject=body, body=body, send_to=self.request.user.email, bcc=security.mails['admin'])
+                    Mails().short(subject=body, body=body, send_to=self.request.user.email, bcc=DjangoCreds.mails['admin'])
                     return Response(dict(status='Error!', response=j_txt))
             else:
                 msg = f"Something is not working on server side for: dom={dom}&gate={gate}&mode={mode},\nStatus code: {r.status_code}\nResponse: {r.text}"
                 log.error(msg)
                 body = f'User "{self.request.user.username}" open: "{button.description}"\ndom - {dom}\ngate - {gate}\nmode - {mode}\n\n{msg}'
-                Mails().short(subject=body, body=body, send_to=self.request.user.email, bcc=security.mails['admin'])
+                Mails().short(subject=body, body=body, send_to=self.request.user.email, bcc=DjangoCreds.mails['admin'])
                 return Response(dict(status='Error!', response=r.text, code=r.status_code))
 
 
