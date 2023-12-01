@@ -10,7 +10,9 @@ from time import sleep
 from django.template import loader
 
 from core.helpers.mailing import Mails
-from core.security import Credentials, mails
+
+from core.setup_logic import Credentials
+from core.security import DjangoCreds
 
 from remotes.models import PerlCameras, Options, PerlButtons
 
@@ -176,6 +178,6 @@ def make_snap_send_email_routine(**kwargs):
         mail_html=mail_html,
         images=images,
         send_to=send_to,
-        bcc=mails['admin'],
+        bcc=DjangoCreds.mails['admin'],
     )
     return True

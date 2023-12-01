@@ -1,0 +1,20 @@
+############ Network ############
+## Allow system VPN use network:
+https://github.com/sakai135/wsl-vpnkit
+
+wsl --import wsl-vpnkit --version 2 $env:USERPROFILE\wsl-vpnkit wsl-vpnkit.tar.gz
+wsl.exe -d wsl-vpnkit --cd /app wsl-vpnkit
+
+############ RabbitMQ ############
+- Install RabbitMQ on WSL2 and run from CMD
+- Start WSL2 RabbitMQ:
+
+sudo rabbitmq-server start
+
+
+############ VENV #################
+
+source /home/user/projects/my_vps/venv/bin/activate
+
+But the project is here:
+/mnt/d/Projects/PycharmProjects/my_vps

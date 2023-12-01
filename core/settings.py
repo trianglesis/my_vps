@@ -11,14 +11,36 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import logging
-import os
+import os, sys
 from pathlib import Path
 import socket
 
 from logging.config import dictConfig
-import core.security
 
-LOG_DIR = '/var/log/my_vps/'
+from core.setup_logic import Credentials, MySQLCredentials
+from core.security import DjangoCreds, HostnamesSupported
+
+hostname = socket.gethostname()
+
+ENV = 0
+print("Settings: Setup settings environment.")
+if hostname == HostnamesSupported.DEV_HOSTNAME:
+    ENV = 0
+    LOG_DIR = ''
+    DEBUG = True
+    DEV = True
+    THIS_IS_DEV = True
+    print(f"Settings: Development: {hostname} ENV={ENV}")
+elif hostname == HostnamesSupported.LIVE_HOSTNAME:
+    ENV = 1
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEV = False
+    DEBUG = False
+    LOG_DIR = '/var/log/my_vps/'
+    print(f"Settings: Live: {hostname} ENV={ENV}")
+else:
+    print(f"ERROR: Settings Unexpected: {hostname} ENV={ENV}")
+    sys.exit(f"ERROR: Settings Unexpected: {hostname} ENV={ENV}")
 
 LOGGING = {
     'version': 1,
@@ -27,6 +49,10 @@ LOGGING = {
         'verbose': {
             'format': '{asctime:<24}{levelname:<8}{filename:<20}{funcName:<22}L:{lineno:<6}{message:8s}',
             'style': '{',
+        },
+        'console_view': {
+            'format': '[%(asctime)s] [%(levelname)8s] (%(filename)s %(funcName)s:%(lineno)s) --- %(message)s',
+            'style': '%',
         },
         'simple': {
             'format': '{levelname} {message}',
@@ -43,41 +69,53 @@ LOGGING = {
         #     },
     },
     'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true', ],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
         'mail_admins': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
-            'formatter': 'verbose'
+            # the email message it sends will contain a full traceback, with names and values of local variables at each level
+            'include_html': False,
+            # 'formatter': 'verbose'
         },
         'file': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOG_DIR + 'core.log',
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'core.log'),
             'formatter': 'verbose',
-            'maxBytes': 1024 * 1024 * 50,
-            'backupCount': 2,
         },
-        'celery_log': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOG_DIR + 'celery.log',
+        'celery': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'celery.log'),
             'formatter': 'verbose',
-            'maxBytes': 1024 * 1024 * 20,
-            'backupCount': 2,
         },
         'dev_log': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': LOG_DIR + 'dev.log',
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'dev.log'),
             'formatter': 'verbose',
-            'maxBytes': 1024 * 1024 * 1,
-            'backupCount': 1,
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['file', 'mail_admins'],
             'level': 'INFO',
             'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['file', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'celery': {
+            'handlers': ['celery'],
+            'level': 'INFO',
+            'propagate': False
         },
         'mail': {
             'handlers': ['file', 'mail_admins'],
@@ -86,24 +124,40 @@ LOGGING = {
         },
         'core': {
             'handlers': ['file'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
-        },
-        'celery': {
-            'handlers': ['celery_log'],
-            'level': 'DEBUG',
-            'propagate': False
         },
         'dev': {
             'handlers': ['dev_log'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False,
         },
     },
 }
 
-dictConfig(LOGGING)
+# If debug
+if DEBUG:
+    print(f"Settings: WSL: Use email logs for errors.")
+    LOGGING['handlers']['mail_admins'] = {
+        'level': 'ERROR',
+        'class': 'django.utils.log.AdminEmailHandler',
+        # the email message it sends will contain a full traceback, with names and values of local variables at each level
+        'include_html': True
+    }
 
+# For local development
+if ENV == 0:
+    print(f"Settings: WSL: Redirect all logs to console output with simple format.")
+    LOGGING['disable_existing_loggers'] = False
+    LOGGING['handlers']['console']['formatter'] = 'console_view'
+    LOGGING['loggers']['django']['handlers'].append('console')
+    LOGGING['loggers']['django']['handlers'].append('console')
+    LOGGING['loggers']['celery']['handlers'].append('console')
+    LOGGING['loggers']['mail']['handlers'].append('console')
+    LOGGING['loggers']['core']['handlers'].append('console')
+    LOGGING['loggers']['dev']['handlers'].append('console')
+
+dictConfig(LOGGING)
 log = logging.getLogger("core")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -113,15 +167,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = core.security.Credentials.SECRET_KEY
+SECRET_KEY = DjangoCreds.SECRET_KEY
 CURR_HOSTNAME = socket.getfqdn()
 
 ALLOWED_HOSTS = ['localhost',
                  '127.0.0.1',
-                 core.security.Credentials.SITE,
-                 core.security.Credentials.SITE_IP,
-                 core.security.Credentials.FQDN,
-                 core.security.Credentials.WEB,
+                 Credentials.FQDN,
+                 Credentials.IP,
+                 Credentials.HOSTNAME,
+                 HostnamesSupported.LIVE_WEB,
                  socket.getfqdn(),
                  socket.gethostname()
                  ]
@@ -129,16 +183,32 @@ ALLOWED_HOSTS = ['localhost',
 CSRF_TRUSTED_ORIGINS = [
     "https://127.0.0.1",
     "https://localhost",
-    f"https://{core.security.Credentials.FQDN}",
+    f"https://{Credentials.FQDN}",
+    f"https://{Credentials.IP}",
+    f"https://{HostnamesSupported.LIVE_WEB}",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://127.0.0.1",
+    "https://localhost",
+    f"https://{Credentials.FQDN}",
+    f"https://{Credentials.IP}",
+    f"https://{HostnamesSupported.LIVE_WEB}",
 ]
 
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-DEV = False
+# In local dev
+if ENV == 0:
+    CSRF_TRUSTED_ORIGINS.extend([
+        "http://127.0.0.1",
+        "http://127.0.0.1:8000",
+        "http://localhost",
+        "http://localhost:8000",
+    ])
+    INTERNAL_IPS.extend(ALLOWED_HOSTS)
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
@@ -163,8 +233,16 @@ INSTALLED_APPS = [
     'remotes.apps.RemotesConfig',
 ]
 
+# In local dev
+if ENV == 0:
+    INSTALLED_APPS.extend([
+        # 'channels',
+        # 'corsheaders',
+        'debug_toolbar',
+    ])
+
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -174,6 +252,35 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
+
+# Local DEV and Lobster and New Octopus?
+if ENV == 0:
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+
+    CORS_ORIGIN_ALLOW_ALL = True
+    CORS_ALLOWED_ORIGINS = [
+        f"http://{Credentials.FQDN}",
+        "http://localhost",
+        "http://localhost:80",
+        "http://localhost:8080",
+        "http://localhost:8000",
+    ]
+
+    DEBUG_TOOLBAR_PANELS = [
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.timer.TimerPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.headers.HeadersPanel',
+        'debug_toolbar.panels.request.RequestPanel',
+        'debug_toolbar.panels.sql.SQLPanel',
+        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.cache.CachePanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.logging.LoggingPanel',
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+        'debug_toolbar.panels.profiling.ProfilingPanel',
+    ]
 
 # CACHES = {
 #     'default': {
@@ -230,12 +337,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Later ADD Mysql to:
 DATABASES = {
     'default': {
-        'ENGINE': core.security.Credentials.ENGINE,
-        'NAME': core.security.Credentials.NAME,
-        'USER': core.security.Credentials.USER,
-        'PASSWORD': core.security.Credentials.PASSWORD,
-        'HOST': core.security.Credentials.HOST,
-        'PORT': core.security.Credentials.PORT,
+        'ENGINE': MySQLCredentials.ENGINE,
+        'NAME': MySQLCredentials.DB_NAME,
+        'USER': MySQLCredentials.USER,
+        'PASSWORD': MySQLCredentials.PASSWORD,
+        'HOST': MySQLCredentials.HOST,
+        'PORT': MySQLCredentials.PORT,
         'CONN_MAX_AGE': 8000,
         'OPTIONS': {
             'read_default_file': '/etc/my.cnf',
@@ -247,11 +354,26 @@ DATABASES = {
     }
 }
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-STATICFILES_DIRS = (
-    os.path.join(STATIC_ROOT, 'admin'),
-)
+if ENV == 0:
+    # noinspection PyUnresolvedReferences
+    STATIC_ROOT = '//mnt//d//Projects//PycharmProjects//my_vps//static'
+    # Win have different static logic
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'static'),  # AT WSL2 this should be active
+        os.path.join(os.path.join(BASE_DIR, 'static'), 'octicons'),
+        os.path.join(os.path.join(BASE_DIR, 'static'), 'favicon'),
+        os.path.join(os.path.join(BASE_DIR, 'static'), 'admin'),
+        os.path.join(os.path.join(BASE_DIR, 'static'), 'core'),
+        os.path.join(os.path.join(BASE_DIR, 'static'), 'remotes'),
+    )
+    STATIC_URL = '/static/'
+    print(f"Settings: WSL: STATICFILES_DIRS: {STATICFILES_DIRS}")
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATICFILES_DIRS = (
+        os.path.join(STATIC_ROOT, 'admin'),
+    )
+    print(f"Settings: Live: STATICFILES_DIRS: {STATICFILES_DIRS}")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -275,40 +397,31 @@ SESSION_COOKIE_AGE = 60 * 60 * 24 * 120  # 4 months
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Europe/Kiev'
-
 USE_I18N = True
-
 USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
-
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # https://docs.djangoproject.com/en/2.0/topics/email/
-EMAIL_HOST = core.security.Credentials.EMAIL_HOST
-EMAIL_PORT = core.security.Credentials.EMAIL_PORT
-EMAIL_HOST_USER = core.security.Credentials.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = core.security.Credentials.EMAIL_HOST_PASSWORD
-EMAIL_SUBJECT_PREFIX = core.security.Credentials.EMAIL_SUBJECT_PREFIX
-DEFAULT_FROM_EMAIL = core.security.Credentials.DEFAULT_FROM_EMAIL
+EMAIL_HOST = DjangoCreds.EMAIL_HOST
+EMAIL_PORT = DjangoCreds.EMAIL_PORT
+EMAIL_HOST_USER = DjangoCreds.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = DjangoCreds.EMAIL_HOST_PASSWORD
+EMAIL_SUBJECT_PREFIX = DjangoCreds.EMAIL_SUBJECT_PREFIX
+DEFAULT_FROM_EMAIL = DjangoCreds.DEFAULT_FROM_EMAIL
 
 # Mail addr:
-EMAIL_ADDR = core.security.Credentials.HOSTEMAIL
-SITE_DOMAIN = core.security.Credentials.FQDN
-SITE_SHORT_NAME = core.security.Credentials.SITE_SHORT_NAME
+EMAIL_ADDR = Credentials.HOSTEMAIL
+SITE_DOMAIN = Credentials.FQDN
+SITE_SHORT_NAME = Credentials.SITE_SHORT_NAME
 
 # Django registration:
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -318,6 +431,6 @@ REGISTRATION_OPEN = True
 # https://github.com/celery/django-celery/issues/359
 CONN_MAX_AGE = 300
 
-ADMINS = core.security.ADMINS
+ADMINS = DjangoCreds.ADMINS
 
 # ASGI_APPLICATION = "core.asgi.application"

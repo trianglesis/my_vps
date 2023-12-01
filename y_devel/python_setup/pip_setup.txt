@@ -17,10 +17,17 @@ virtualenv --python=/usr/local/python3.10.5/bin/python3.10 venv
 OR (from added symlink)
 
 cd /var/www/my_vps
-virtualenv --python=/usr/local/bin/python3.10 venv --system-site-packages
-virtualenv --python=/usr/local/bin/python3.10 venv --clear --upgrade-deps
+or
+cd /home/user/projects/my_vps
+virtualenv --python=/usr/local/bin/python3.11 venv --system-site-packages
+virtualenv --python=/usr/local/bin/python3.11 venv --clear --upgrade-deps
+
+
 source venv/bin/activate
 source venv/bin/deactivate
+
+or
+source /home/user/projects/my_vps/venv/bin/activate
 
 OR:0
 cd /var/www/my_vps && source core/bin/activate

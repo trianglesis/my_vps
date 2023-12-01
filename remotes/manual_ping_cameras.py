@@ -15,7 +15,7 @@ from remotes.models import Options
 
 log = logging.getLogger("dev")
 
-hostname = Options.objects.get(option_key__exact='ozerne_system_hostname').option_value
+hostname = Options.objects.get(option_key__exact='perl_system_hostname').option_value
 print(f"Using: {hostname}")
 
 skip_words = [

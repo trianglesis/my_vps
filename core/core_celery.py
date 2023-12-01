@@ -2,32 +2,75 @@ from __future__ import absolute_import, unicode_literals
 
 import os
 import socket
+import sys
 
 import django
 from celery import Celery
 from kombu import Exchange
 
-from core.security import Credentials
+from core.security import CeleryCreds, HostnamesSupported, RabbitMQCreds, MySQLDatabase
 
-print(socket.getfqdn())
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 
-if not socket.getfqdn() == Credentials.DEV_HOST:
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+hostname = socket.gethostname()
+
+# 0 is DEV
+# 1 is Live
+ENV = 0
+print("Celery initialization.")
+if hostname == HostnamesSupported.DEV_HOSTNAME:
+    ENV = 0
+    DB_NAME = MySQLDatabase.DB_NAME
+    workers = CeleryCreds.WORKERS
+    print(f"Celery Development: {hostname} ENV={ENV}")
+elif hostname == HostnamesSupported.LIVE_HOSTNAME:
+    ENV = 1
+    DB_NAME = MySQLDatabase.DB_NAME
+    workers = CeleryCreds.WORKERS
+    print(f"Celery Live: {hostname} ENV={ENV}")
 else:
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.win_settings')
+    print(f"ERROR: Celery Unexpected: {hostname} ENV={ENV}")
+    sys.exit(f"ERROR: Celery Unexpected: {hostname} ENV={ENV}")
 
-backend = Credentials.backend
-result_backend = Credentials.result_backend
+# WSL Options only
+if ENV == 0:
+    backend = CeleryCreds.BACKEND.format(
+        DB_USER=CeleryCreds.DB_USER,
+        DB_PASSWORD=CeleryCreds.DB_PASSWORD,
+        DB_HOST=CeleryCreds.DB_HOST_WSL,
+        DB_NAME=DB_NAME,
+    )
+    result_backend = CeleryCreds.RESULT_BACKEND.format(
+        DB_USER=CeleryCreds.DB_USER,
+        DB_PASSWORD=CeleryCreds.DB_PASSWORD,
+        DB_HOST=CeleryCreds.DB_HOST_WSL,
+        DB_NAME=DB_NAME,
+    )
+    print(f"Celery WSL: {CeleryCreds.DB_HOST_WSL}")
+    print(f"Celery WSL backend: {backend}")
+    print(f"Celery WSL result_backend: {result_backend}")
+else:
+    backend = CeleryCreds.BACKEND.format(
+        DB_USER=CeleryCreds.DB_USER,
+        DB_PASSWORD=CeleryCreds.DB_PASSWORD,
+        DB_HOST=CeleryCreds.DB_HOST,
+        DB_NAME=DB_NAME,
+    )
+    result_backend = CeleryCreds.RESULT_BACKEND.format(
+        DB_USER=CeleryCreds.DB_USER,
+        DB_PASSWORD=CeleryCreds.DB_PASSWORD,
+        DB_HOST=CeleryCreds.DB_HOST,
+        DB_NAME=DB_NAME,
+    )
 
 # Setup django project
 django.setup()
-
+#  The backend is specified via the backend argument to Celery
 app = Celery('core',
              # http://docs.celeryproject.org/en/latest/userguide/optimizing.html
-             broker=Credentials.broker,
-
+             broker=RabbitMQCreds.BROKER,
              # http://docs.celeryproject.org/en/latest/userguide/configuration.html#result-backend
-             backend=Credentials.backend,
+             backend=backend,
              )
 
 app.conf.timezone = 'UTC'
@@ -47,7 +90,7 @@ app.conf.update(
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#database-url-examples
     # https://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html#keeping-results
     # 1406, "Data too long for column 'result' at row 1" - it's not so important to keep it in DB
-    result_backend=Credentials.result_backend,
+    result_backend=result_backend,
     # result_backend='django-db',
     database_engine_options={'pool_timeout': 90},
 
@@ -100,9 +143,9 @@ app.conf.update(
 
 )
 
-app.control.cancel_consumer(
-    'default',
-    destination=[
-        "core@layer",
-        "remotes@layer",
-    ])
+# app.control.cancel_consumer(
+#     'default',
+#     destination=[
+#         "core@layer",
+#         "remotes@layer",
+#     ])

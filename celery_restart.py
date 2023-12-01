@@ -1,37 +1,69 @@
 import argparse
 import os
+import socket
 import subprocess
+import sys
 from queue import Queue
 from threading import Thread
 from time import time
 
 
-CELERY_BIN = "/var/www/my_vps/venv/bin/celery"
+from core.security import CeleryCreds, HostnamesSupported
+
+hostname = socket.gethostname()
+
+
+ENV = 0
+print("Setup celery environment.")
+# LOCAL DEV
+if hostname == HostnamesSupported.DEV_HOSTNAME:
+    ENV = 0
+    CELERY_BIN = "/home/user/projects/my_vps/venv/bin/celery"
+    cwd = "/mnt/d/Projects/PycharmProjects/my_vps/"
+    CELERYD_PID_FILE = "/home/user/{PID}.pid"
+    CELERY_LOG_PATH = '/mnt/d/Projects/PycharmProjects/my_vps/'
+    workers = CeleryCreds.WSL_WORKERS
+    CELERYD_LOG_LEVEL = "INFO"
+    print(f"Celery ENV LOCAL: {hostname} ENV={ENV} CELERY_BIN:{CELERY_BIN} workers: {workers}")
+# LIVE
+elif hostname == HostnamesSupported.LIVE_HOSTNAME:
+    ENV = 1
+    CELERY_BIN = "/var/www/my_vps/venv/bin/celery"
+    cwd = "/var/www/my_vps/"
+    CELERYD_PID_FILE = "/opt/celery/{PID}.pid"
+    CELERY_LOG_PATH = '/var/log/octopus/celery'
+    workers = CeleryCreds.WORKERS
+    CELERYD_LOG_LEVEL = "INFO"
+    print(f"Celery ENV Live: {hostname} ENV={ENV} CELERY_BIN:{CELERY_BIN} workers: {workers}")
+else:
+    print(f"ERROR: Celery ENV UNSUPPORTED: {hostname} ENV={ENV}")
+    sys.exit(f"ERROR: Celery ENV UNSUPPORTED: {hostname} ENV={ENV}")
+
+
 CELERY_APP = "core.core_celery:app"
-CELERYD_PID_FILE = "/opt/celery/{PID}.pid"
-CELERY_LOG_PATH = '/var/log/my_vps'
 CELERYD_LOG_FILE = "{PATH}/{LOG}.log"
-CELERYD_LOG_LEVEL = "INFO"
 CELERYD_OPTS = "--concurrency=1 -E"
+CELERYD_NODES = workers
 
-CELERYD_NODES = [
-    "core@layer",
-    "remotes@layer",
-]
 
-commands_list_start = "python3 {CELERY_BIN} multi start {celery_node} -A {CELERY_APP} --pidfile={CELERYD_PID_FILE} " \
-                      "--logfile={CELERYD_LOG_FILE} --loglevel={CELERYD_LOG_LEVEL} {CELERYD_OPTS}"
-commands_list_stop = "python3 {CELERY_BIN} multi kill {celery_node} -A {CELERY_APP} --pidfile={CELERYD_PID_FILE} " \
-                     "--logfile={CELERYD_LOG_FILE} --loglevel={CELERYD_LOG_LEVEL} {CELERYD_OPTS}"
+commands_list_start = "python3 {CELERY_BIN} multi start " \
+                      "{celery_node} -A {CELERY_APP} " \
+                      "--pidfile={CELERYD_PID_FILE} " \
+                      "--logfile={CELERYD_LOG_FILE} " \
+                      "--loglevel={CELERYD_LOG_LEVEL} --concurrency=1 -E"
 
-commands_list_kill = "pkill -9 -f 'core.core_celery:app worker --pidfile=/opt/celery/{celery_node}.pid'"
+commands_list_stop = "python3 {CELERY_BIN} multi kill " \
+                     "{celery_node} -A {CELERY_APP} " \
+                     "--pidfile={CELERYD_PID_FILE} " \
+                     "--logfile={CELERYD_LOG_FILE} " \
+                     "--loglevel={CELERYD_LOG_LEVEL}"
 
-# Do not want to work as expected!
-# python celery_restart_DEV.py --mode=kill; python celery_restart_DEV.py --mode=start
-# python celery_restart.py --mode=kill --worker=golf; python celery_restart.py --mode=start --worker=golf
-# commands_list_restart = "python3 {CELERY_BIN} multi restart {celery_node} -A {CELERY_APP} --pidfile={CELERYD_PID_FILE} " \
-#                         "--logfile={CELERYD_LOG_FILE} --loglevel={CELERYD_LOG_LEVEL} {CELERYD_OPTS}"
-commands_list_restart = f"{commands_list_kill} ; {commands_list_start}"
+commands_list_restart = "python3 {CELERY_BIN} multi restart " \
+                        "{celery_node} -A {CELERY_APP} " \
+                        "--pidfile={CELERYD_PID_FILE}"
+
+commands_list_kill = "pkill -9 -f 'octo.octo_celery:app worker " \
+                     "--pidfile={CELERYD_PID_FILE}'"
 
 
 def th_run(args):
@@ -148,3 +180,5 @@ Windows workaround:
 # Only working:
 celery -A core.core_celery:app worker --logfile=remotes@layer.log --loglevel=INFO --concurrency=1 -E -P eventlet
 """
+
+

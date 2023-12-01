@@ -1,7 +1,7 @@
 """
 Celery tasks and related cont variables.
 """
-import core.security
+import core.setup_logic
 
 DAY_LIMIT = 172800
 
@@ -35,17 +35,21 @@ COMMON_SLASHED_y = '%m/%d/%y %H:%M:%S',  # '10/25/06 14:30:59'
 
 
 def is_dev():
-    """If current host is a local DEV machine return True"""
-    if core.security.Credentials.HOSTNAME == core.security.Credentials.DEV_HOST:
-        print('THIS IS DEV SERVER!')
+    """
+    Check for local ENV exclusively
+    """
+    if core.setup_logic.ENV == 0:
         return True
     return False
 
 
 def is_test():
-    """If current host is a local DEV machine OR if this is remove test machine, return True"""
-    if core.security.Credentials.HOSTNAME == core.security.DEV_HOST:
+    """
+    Understand the ENV we are working on.
+    If this is a local ENV or Lobster Dev env.
+    """
+    if core.setup_logic.ENV == 0:
         return True
-    elif core.security.Credentials.HOSTNAME == core.security.Credentials.DEV_HOST:
+    elif core.setup_logic.ENV == 1:
         return True
     return False

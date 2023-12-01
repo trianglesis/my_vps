@@ -5,7 +5,7 @@ import logging
 from core import constants as const
 from core.core_celery import app
 from core.helpers.tasks_helpers import exception
-from core.security import QueuesCelery
+from core.security import CeleryCreds
 from remotes.routines import make_snap_send_email_routine
 
 log = logging.getLogger("core")
@@ -15,7 +15,7 @@ class RemotesTasks:
 
     @staticmethod
     @app.task(
-        queue=QueuesCelery.QUEUE_REMOTES,
+        queue=CeleryCreds.QUEUE_REMOTES,
         routing_key='routines.RemotesTasks.make_snap',
         soft_time_limit=const.MIN_5, task_time_limit=const.MIN_5)
     @exception
