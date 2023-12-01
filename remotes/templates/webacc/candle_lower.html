@@ -22,18 +22,24 @@
                              data-dvr="{{ camera.dvr }}" data-cam="{{ camera.cam }}"
                              alt="{% trans camera.description %}">
                         <div class="card-body">
-                            <h5 class="card-title"><i class="fa-solid fa-video"></i> {% trans camera.description %}</h5>
+                            <h5 class="card-title">
+                                {% if objects.cameras_off %}
+                                    <span><img src="/static/octicons/icons/skip-fill-24.svg" alt="skip"></span>
+                                {% else %}
+                                    <i class="fa-solid fa-video"></i>
+                                {% endif %}&nbsp;{% trans camera.description %}
+                            </h5>
                             {% if camera.button %}
                                 <button class="btn btn-sm btn-info run-open-gates"
-                                   type="button"
-                                   title="{% trans camera.button.description %}"
-                                   data-dom="{{ camera.button.dom }}"
-                                   data-gate="{{ camera.button.gate }}"
-                                   data-mode="{{ camera.button.mode }}"
-                                   data-nonce="{{ objects.perl_token }}"
-    {#                               data-fake="fake_push_do_not_open"#}
-    {#                               target="_blank"#}
-    {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"#}
+                                        type="button"
+                                        title="{% trans camera.button.description %}"
+                                        data-dom="{{ camera.button.dom }}"
+                                        data-gate="{{ camera.button.gate }}"
+                                        data-mode="{{ camera.button.mode }}"
+                                        data-nonce="{{ objects.perl_token }}"
+                                        {#                               data-fake="fake_push_do_not_open"#}
+                                        {#                               target="_blank"#}
+                                        {#                               href="https://{{ objects.perl_hostname }}/app/go.php?dom={{ camera.button.dom }}&gate={{ camera.button.gate }}&mode={{ camera.button.mode }}&nonce={{ objects.perl_token }}"#}
                                 >{% trans camera.button.description %}</button>
                             {% endif %}
                             <p class="card-text">

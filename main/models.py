@@ -38,3 +38,19 @@ class NetworkVisitorsAddresses(models.Model):
         db_table = 'visitors_agents'
         ordering = ['updated_at']
         unique_together = (('ip', 'hashed_ip_agent_path'),)
+
+
+
+class NetworkVisitorsAddressesAgentProxy(NetworkVisitorsAddresses):
+    class Meta:
+        proxy = True
+        verbose_name = '[ Visitors ] User agent'
+        verbose_name_plural = '[ Visitors ] User agents'
+
+
+
+class NetworkVisitorsAddressesUrlPathProxy(NetworkVisitorsAddresses):
+    class Meta:
+        proxy = True
+        verbose_name = '[ Visitors ] Request path'
+        verbose_name_plural = '[ Visitors ] Request path'
