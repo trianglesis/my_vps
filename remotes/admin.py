@@ -6,16 +6,6 @@ from remotes.models import *
 
 log = logging.getLogger("core")
 
-
-# admin.site.register(Options)
-
-class PerlCamerasAdminInline(admin.TabularInline):
-    model = PerlCameras
-
-
-# admin.site.register(Class, ClassAdmin)
-
-
 @admin.register(Options)
 class OptionsAdmin(admin.ModelAdmin):
     list_display = (
@@ -69,7 +59,7 @@ class PerlCamerasAdmin(admin.ModelAdmin):
         return ",".join([p.description for p in obj.button.all()])
 
 
-class PerlCamerasInline(admin.TabularInline):
+class PerlCamerasInlineThrough(admin.TabularInline):
     model = PerlCameras.button.through
     extra = 1
     # max_num = 2
@@ -78,7 +68,8 @@ class PerlCamerasInline(admin.TabularInline):
 
 @admin.register(PerlButtons)
 class PerlButtonsAdmin(admin.ModelAdmin):
-    inlines = [PerlCamerasInline]
+    inlines = [PerlCamerasInlineThrough]
+    # exclude = ('button',)
 
     list_display = (
         'dom',

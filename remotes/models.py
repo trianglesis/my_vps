@@ -51,5 +51,5 @@ class PerlCameras(models.Model):
         unique_together = [['dvr', 'cam']]
 
     def __str__(self):
-        t = f'{self.id} - {self.dvr}:{self.cam}:{self.type}'
+        t = f'{self.id}: dvr:{self.dvr} cam:{self.cam} type:{self.type} - {self.description}'
         return t
