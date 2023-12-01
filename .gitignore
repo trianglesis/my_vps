@@ -7,15 +7,13 @@ core/security.py
 .idea/
 *.pyc
 
-/static/admin
 db.sqlite3
-/static/css/
-/static/fonts/
-/static/img/
-/static/js/
-/static/octicons/
+
+/static/
+!/static/core/*
+!/static/remotes/*
+
 /templates/Django-and-registration/
-/static/debug_toolbar/
 /core.log
 /dev.log
 /celery.log
