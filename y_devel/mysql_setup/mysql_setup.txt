@@ -8,3 +8,12 @@ yum install mysql-server
 # Use in venv:
 yum install python3-devel mysql-devel
 /var/www/my_vps/venv/bin/pip3 install mysqlclient
+
+
+# Dumps and migrations:
+mysqldump --all-databases > my_VPS_ALL_DB.sql -p
+
+mysqldump my_vps auth_user > my_vps_AuthUser.sql -u root -p
+
+
+mysqldump my_vps blog_post blog_post_tags blog_tag celery_taskmeta celery_tasksetmeta core_mail_texts django_celery_beat_solarschedule django_celery_beat_periodictasks django_celery_beat_periodictask django_celery_beat_intervalschedule django_celery_beat_crontabschedule django_celery_beat_clockedschedule remotes_options remotes_perlbuttons remotes_perlcameras remotes_perlcameras_button visitors_agents > site_tables_non_service.sql -u root -p

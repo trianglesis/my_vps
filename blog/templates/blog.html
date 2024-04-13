@@ -1,7 +1,62 @@
 {% extends "main/main.html" %}
+{% load static %}
+{% load humanize %}
+{% load tz %}
+
 {% block page_title %}
     {{ title }}
 {% endblock %}
 {% block content %}
-    {{ content }}
+    <div class="blog-content" style="padding-top: 30px">
+        <div class="grid-col-1 blog-page-widgets-sides">
+            <div class="card" style="width: 18rem;">
+                <img src="/static/favicon/android-chrome-192x192.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">An item</li>
+                    <li class="list-group-item">A second item</li>
+                    <li class="list-group-item">A third item</li>
+                </ul>
+                <div class="card-body">
+                    <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+
+        </div>
+        <div class="grid-col-center blog-post-column">
+            <div class="paginator-any">{% include 'utils/pagination.html' %}</div>
+            {% for post in object_list %}
+                <div class="card">
+                    <div class="card-header">
+                        {{ post.title }}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.subtitle }}</h5>
+                        <p class="card-text">
+                            {{ post.body|slice:500 }}
+                        </p>
+                        <a href="#{{ post.slug }}" class="btn btn-primary">Read</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <span title="raw time: {{ post.date_created }}">Posted: {{ post.date_created|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="paginator-any">{% include 'utils/pagination.html' %}</div>
+        </div>
+        <div class="grid-col-2 blog-page-widgets-sides">
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">Featured</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">An item</li>
+                    <li class="list-group-item">A second item</li>
+                    <li class="list-group-item">A third item</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}

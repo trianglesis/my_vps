@@ -47,12 +47,12 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '{asctime:<24}{levelname:<8}{filename:<20}{funcName:<22}L:{lineno:<6}{message:8s}',
+            'format': '{asctime:<24s}[{levelname:-<7s}{name:->7s}]{module:>30s}:{funcName:<30s}:{lineno:<5d}{message}',
             'style': '{',
         },
         'console_view': {
-            'format': '[%(asctime)s] [%(levelname)8s] (%(filename)s %(funcName)s:%(lineno)s) --- %(message)s',
-            'style': '%',
+            'format': '{asctime:<24s}[{levelname:-<7s}{name:->7s}]{module:>30s}:{funcName:<30s}:{lineno:<5d}{message}',
+            'style': '{',
         },
         'simple': {
             'format': '{levelname} {message}',

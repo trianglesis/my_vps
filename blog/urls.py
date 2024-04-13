@@ -4,6 +4,6 @@ from blog.views import *
 
 urlpatterns = [
     # Home
-    path('', MainPageBlog.as_view(), name='blog'),
-    # path('blog/', MainPageBlog.as_view(), name='blog'),
+    path('', MainPageBlogListView.as_view(), name='blog'),
+    # path('blog/', MainPageBlogListView.as_view(), name='blog'),
 ]

@@ -103,7 +103,9 @@
         Custom
     {% endcomment %}
     <link rel="stylesheet" type="text/css" href="{% static 'core/main.css' %}"/>
-
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/general.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/tables/common-tables.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/utils/utils_styles.css' %}"/>
     {% comment %}
         TITLE:
     {% endcomment %}
@@ -126,16 +128,13 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-
         {# Branding #}
         <a class="navbar-brand" href="#"><img src="/static/favicon/favicon-32x32.png" alt="trianglesis"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
             {# NAVIGATION: #}
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
@@ -146,25 +145,27 @@
 
                 {# BLOG and categories #}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                    <a class="nav-link dropdown-toggle" href="{% url 'blog' %}" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">Blog</a>
-
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Category</a></li>
-                        <li><a class="dropdown-item" href="#">Category</a></li>
+                        <li><a class="dropdown-item" href="{% url 'blog' %}">All</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Category</a></li>
+                        <li><a class="dropdown-item" href="#">Tech</a></li>
+                        <li><a class="dropdown-item" href="#">Photo</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Different</a></li>
                     </ul>
-
                 </li>
 
                 {# DRAFT Dropdown and categories #}
+                {% comment %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
-
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="#">Action</a></li>
                         <li><a class="dropdown-item" href="#">Another action</a></li>
@@ -174,27 +175,27 @@
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
-
-                {# Disabled Dropdown and categories #}
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disable</a>
-                </li>
-
+                {% endcomment %}
                 {# Only visible for family group: #}
                 {% if family_user %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="nav-link dropdown-toggle text-warning" href="#" id="navbarDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">Remotes</a>
-
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="{% url 'remotes_mobile' %}">Mobile All</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="{% url 'remotes_web' %}">Web access</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="{% url 'remotes_cams' %}">All cameras</a></li>
                             <li><a class="dropdown-item" href="{% url 'remotes_buttons' %}">All buttons</a></li>
                             <li><a class="dropdown-item disabled" href="#">Home cameras</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item disabled" href="#">Home controls</a></li>
                             <li><a class="dropdown-item" href="{% url 'remotes' %}">Remotes main page</a></li>
                         </ul>
@@ -206,13 +207,13 @@
             {# Search and login MB? #}
             <div class="search-blog">
                 <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control me-2" type="search" placeholder="Search (not yet)" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
             {# AUTH: DJANGO_REGISTRATION  #}
             <div class="site-login">
-                <li class="nav-item dropdown">
+                <div class="nav-item dropdown">
                     <a type="button" class="btn btn-sm btn-light dropdown-toggle align-right"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="float: right;">
                         {% spaceless %}
@@ -225,9 +226,9 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
                         {% if user.is_anonymous %}
                             <a class="dropdown-item" href="#">You don't really need to login here.</a>
-{#                            <a class="dropdown-item" href="{% url 'login' %}">Log in</a>#}
-{#                            <a class="dropdown-item" href="{% url 'password_reset' %}">Reset password</a>#}
-{#                            <a class="dropdown-item" href="{% url 'django_registration_register' %}">Register</a>#}
+                            {# <a class="dropdown-item" href="{% url 'login' %}">Log in</a>#}
+                            {# <a class="dropdown-item" href="{% url 'password_reset' %}">Reset password</a>#}
+                            {# <a class="dropdown-item" href="{% url 'django_registration_register' %}">Register</a>#}
                         {% else %}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
@@ -239,20 +240,17 @@
                             {% endif %}
                         {% endif %}
                     </ul>
-                </li>
+                </div>
             </div>
         </div>
     </div>
 </nav>
-
-
 {% comment %}
     Extend this for each another page
 {% endcomment %}
 <div id="content">
     {% block content %}{% endblock %}
 </div>
-
 <!-- Load JS  manual -->
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -268,6 +266,5 @@
 {% endcomment %}
 <script type="text/javascript">
 </script>
-
 </body>
 </html>

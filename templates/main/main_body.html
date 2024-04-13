@@ -1,24 +1,23 @@
 {% extends "main/main.html" %}
+{% load static %}
 {% block page_title %}
     Main page Trianglesis's
 {% endblock %}
-
 {% block content %}
-    {#            <img src="/static/favicon/android-chrome-192x192.png" style="height: 50%; width: 50%" class="card-img-top" alt="...">#}
-
-{% comment %}
+    {# <img src="/static/favicon/android-chrome-192x192.png" style="height: 50%; width: 50%" class="card-img-top" alt="...">#}
+    {% comment %}
      <div class="alert alert-dark" role="alert">
         A simple dark alert—check it out!
     </div>
 {% endcomment %}
-
-    <div style="padding-left: 10%; padding-right: 10%">
+    <div class="main-body">
+        <div class="under-construction">
+            <div class="alert alert-warning" role="alert">
+                Under construction, see <a href="{% url 'blog' %}" class="alert-link">blog</a>.
+            </div>
+        </div>
         {% comment %}
-
-            CAROUSEL
-
-                TODO: Later add here some photos I want to show with maybe link to the post.
-
+            CAROUSEL TODO: Later add here some photos I want to show with maybe link to the post.
         {% endcomment %}
         <div style="padding: 2% 10%;">
             <div id="carouselExampleCaptions" class="carousel carousel-dark slide" data-bs-ride="false">
@@ -67,10 +66,7 @@
             </div>
         </div>
         {% comment %}
-
-            CARDS
-                TODO: Later add random or set of recent or popular posts here
-
+            CARDS TODO: Later add random or set of recent or popular posts here
         {% endcomment %}
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col">
@@ -116,7 +112,6 @@
             </div>
         </div>
     </div>
-
     {% comment %}
         <span class="placeholder col-12 bg-primary"></span>
         <div style="text-align: left; margin-top: 10px">
