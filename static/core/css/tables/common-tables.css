@@ -1,0 +1,105 @@
+table {
+    width: 100%;
+    border-collapse: collapse !important;
+    font-family: 'Maven Pro', sans-serif;
+}
+
+td {
+    padding: 8px 16px;
+    border-bottom: 1px solid #e5e5e5 !important;
+
+}
+
+th {
+    background: #ffffff;
+}
+
+/*General */
+.table-shrink {
+    margin-bottom: .2em !important;
+}
+
+.table-shrink td th {
+    padding: .1rem !important;
+    vertical-align: middle;
+}
+
+
+/* Table fomts and row sizes */
+.small-font {
+    font-size: 0.7em;
+}
+
+.no-wrap_whitesp {
+    white-space: nowrap;
+}
+
+.break-all {
+    word-break: break-all;
+}
+
+.monospace {
+    font-family: monospace;
+}
+
+.center_txt {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.row-txt-center {
+    /*white-space: nowrap;*/
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+
+.row-txt-left {
+    /*white-space: nowrap;*/
+    text-align: left !important;
+    vertical-align: middle !important;
+}
+
+.row-txt-left-sm {
+    /*white-space: nowrap;*/
+    font-size: 0.8em;
+    text-align: left !important;
+    vertical-align: middle !important;
+}
+
+.row-txt-right {
+    /*white-space: nowrap;*/
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+
+.row-txt-right-sm {
+    /*white-space: nowrap;*/
+    font-size: 0.8em;
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+
+.row-txt-center-sm {
+    /*white-space: nowrap;*/
+    font-size: 0.8em;
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.row-mono-left-sm {
+    font-size: 0.8em;
+    font-weight: 500;
+    font-family: 'Maven Pro', monospace;
+    text-align: left !important;
+    vertical-align: middle !important;
+
+}
+
+.row-mono-center-sm {
+    font-size: 0.8em;
+    font-weight: 500;
+    font-family: 'Maven Pro', monospace;
+    text-align: center !important;
+    vertical-align: middle !important;
+}

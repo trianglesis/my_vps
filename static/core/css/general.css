@@ -1,0 +1,65 @@
+/*
+General styles for all objects
+*/
+
+
+.main-body {
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+/* Single sections */
+.blog-content {
+    display: grid;
+    grid-template-rows: auto;
+    grid-auto-rows: minmax(min-content, max-content);
+    grid-template-areas:
+        ". left center center center center right ."
+        ". a b c d e f .";
+}
+
+.grid-col-center {
+    grid-area: center;
+    grid-row: auto;
+}
+
+.grid-col-1 {
+    grid-area: left;
+    grid-row: auto;
+}
+
+.grid-col-2 {
+    grid-area: right;
+    grid-row: auto;
+}
+
+.grid-col-3 {
+    grid-column-start: left;
+    grid-column-end: right;
+}
+
+.grid-col-3to1 {
+    grid-column-start: a;
+    grid-column-end: e;
+}
+
+.grid-col-1to3 {
+    grid-area: f;
+    grid-row: auto;
+}
+
+
+.blog-post-column {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.blog-page-widgets-sides {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.under-construction {
+    padding-top: 30px;
+    padding-bottom: 600px;
+}
