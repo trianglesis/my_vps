@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from tinymce.models import HTMLField
 
 
 class Tag(models.Model):
@@ -11,13 +12,16 @@ class Tag(models.Model):
 
 class Post(models.Model):
     """
-
+    Use 'django-tinymce'
+    https://django-tinymce.readthedocs.io/en/latest/installation.html
+    TODO: Use 'django-filebrowser'
+    https://github.com/sehmaschine/django-filebrowser
     """
     title = models.CharField(max_length=255, unique=True)
     subtitle = models.CharField(max_length=255, blank=True)
     slug = models.SlugField(max_length=255, unique=True)
 
-    body = models.TextField()
+    body = HTMLField()
 
     meta_description = models.CharField(max_length=150, blank=True)
 

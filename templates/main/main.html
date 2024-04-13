@@ -100,6 +100,12 @@
     <meta charset="UTF-8">
 
     {% comment %}
+    Code highlighter prismJS
+    https://prismjs.com/download.html#themes=prism-twilight&languages=markup+css+clike+javascript+apacheconf+bash+css-extras+django+editorconfig+git+graphql+http+ignore+ini+json+log+makefile+markdown+markup-templating+nginx+perl+php+powershell+python+regex+sql+systemd+vim+wiki+xml-doc+yaml&plugins=line-highlight+line-numbers+show-invisibles+file-highlight+show-language+highlight-keywords+normalize-whitespace+toolbar+copy-to-clipboard
+    {% endcomment %}
+    <link rel="stylesheet" type="text/css" href="/static/prismjs/prism.css">
+
+    {% comment %}
         Custom
     {% endcomment %}
     <link rel="stylesheet" type="text/css" href="{% static 'core/main.css' %}"/>
@@ -264,6 +270,12 @@
 {% comment %}
     <script src="{% static 'custom/js/tooltip-active.js' %}"></script>
 {% endcomment %}
+{% comment %}
+Code highlighter prismJS
+https://prismjs.com/download.html#themes=prism-twilight&languages=markup+css+clike+javascript+apacheconf+bash+css-extras+django+editorconfig+git+graphql+http+ignore+ini+json+log+makefile+markdown+markup-templating+nginx+perl+php+powershell+python+regex+sql+systemd+vim+wiki+xml-doc+yaml&plugins=line-highlight+line-numbers+show-invisibles+file-highlight+show-language+highlight-keywords+normalize-whitespace+toolbar+copy-to-clipboard
+{% endcomment %}
+<script src="/static/prismjs/prism.js"></script>
+
 <script type="text/javascript">
 </script>
 </body>

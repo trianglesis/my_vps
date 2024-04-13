@@ -6,6 +6,9 @@ from blog.models import *
 # admin.site.unregister(Post)
 
 class PostAdmin(admin.ModelAdmin):
+    """
+    https://django-tinymce.readthedocs.io/en/latest/usage.html
+    """
     model = Post
     ordering = ('-publish_date',)
     filter_horizontal = ('tags',)

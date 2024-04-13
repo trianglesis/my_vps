@@ -46,6 +46,8 @@ urlpatterns = [
 
     # Only load on a local dev system when needed
 
+    # TMCE
+    path('tinymce/', include('tinymce.urls')),
 ]
 
 if const.is_dev():
