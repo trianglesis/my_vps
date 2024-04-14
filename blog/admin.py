@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.forms import TextInput
+
 from blog.models import *
 
 
@@ -16,7 +18,7 @@ class PostAdmin(admin.ModelAdmin):
         'title',
         'subtitle',
         'slug',
-        'body',
+        # 'body',
         'meta_description',
         'date_created',
         'date_modified',
@@ -33,27 +35,44 @@ class PostAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
     fieldsets = [
-        ('Title', {'fields': [
+        (None, {'fields': [
             ('title',),
             ('subtitle',),
-        ]}),
-        ('Content', {'fields': [
-            ('body',)
-        ]}),
-        ('Meta', {'fields': [
+            ('body',),
             ('meta_description',),
-            ('published',),
-            ('publish_date',),
         ]}),
-        ('Details', {'fields': [
+        ('Published', {'fields': [
             ('author',),
             ('tags',),
+            ('publish_date',),
+            ('published',),
+        ]}),
+        ('Details', {'fields': [
             ('slug',),
             ('date_created',),
             ('date_modified',),
         ]})
 
     ]
+
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '160'})},
+        # models.TextField: {'widget': Textarea(attrs={'rows': 12, 'cols': 50})},
+    }
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """
+        https://stackoverflow.com/a/5633217/4915733
+        :param db_field:
+        :param request:
+        :param kwargs:
+        :return:
+        """
+        if db_field.name == 'author':
+            kwargs['initial'] = request.user.id
+        return super(PostAdmin, self).formfield_for_foreignkey(
+            db_field, request, **kwargs
+        )
 
 
 admin.site.register(Post, PostAdmin)
