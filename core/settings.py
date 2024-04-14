@@ -401,11 +401,12 @@ TINYMCE_DEFAULT_CONFIG = {
                "fullscreen insertdatetime media table paste code help wordcount spellchecker codesample",
     # https://www.tiny.cloud/docs/tinymce/6/available-toolbar-buttons/
     "toolbar1": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
-                "aligncenter alignright alignjustify | outdent indent | codesample | numlist bullist checklist | forecolor "
+                "aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor "
                 "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
-                "fullscreen preview save print | insertfile image media pageembed template link anchor codesample | "
-                "a11ycheck ltr rtl | showcomments addcomment code",
-    "toolbar2": "table tablecellprops tablecopyrow tablecutrow tabledelete tabledeletecol tabledeleterow "
+                "fullscreen preview save print | insertfile image media pageembed template link anchor | "
+                "a11ycheck ltr rtl | showcomments addcomment",
+    "toolbar2": "codesample | h1 h2 h3 h4 h5 h6 | code ",
+    "toolbar3": "table tablecellprops tablecopyrow tablecutrow tabledelete tabledeletecol tabledeleterow "
                 "tableinsertdialog tableinsertcolafter tableinsertcolbefore tableinsertrowafter tableinsertrowbefore "
                 "tablemergecells tablepasterowafter tablepasterowbefore tableprops tablerowprops tablesplitcells "
                 "tableclass tablecellclass tablecellvalign tablecellborderwidth tablecellborderstyle tablecaption "
