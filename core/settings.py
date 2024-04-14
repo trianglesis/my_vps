@@ -389,7 +389,7 @@ else:
 # Tiny MCE https://www.tiny.cloud/my-account/integrate/#more
 # Only for cloud!
 # TINYMCE_JS_URL = 'https://cdn.tiny.cloud/1/id2tbcpsi0fidqs5ntnru0azxgsoyrf96hrkkvnee5osbmvb/tinymce/7/tinymce.min.js'
-TINYMCE_SPELLCHECKER = True
+TINYMCE_SPELLCHECKER = False
 TINYMCE_COMPRESSOR = False
 
 TINYMCE_DEFAULT_CONFIG = {
@@ -397,8 +397,8 @@ TINYMCE_DEFAULT_CONFIG = {
     "height": "620px",
     "width": "1260px",
     "menubar": "file edit view insert format tools table help",
-    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
-               "fullscreen insertdatetime media table paste code help wordcount spellchecker codesample",
+    "plugins": "advlist autolink lists link image charmap preview anchor searchreplace visualblocks code "
+               "fullscreen insertdatetime media table code help wordcount codesample",
     # https://www.tiny.cloud/docs/tinymce/6/available-toolbar-buttons/
     "toolbar1": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
                 "aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor "
