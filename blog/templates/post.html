@@ -10,23 +10,13 @@
 {% block content %}
     <div class="blog-content" style="padding-top: 30px">
         <div class="grid-col-1 blog-page-widgets-sides">
-            <div class="card" style="width: 18rem;">
-                <img src="/static/favicon/android-chrome-192x192.png" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    <li class="list-group-item">A third item</li>
-                </ul>
-                <div class="card-body">
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                </div>
+            {% include 'blocks/about_me_sidebar.html' %}
+            <div style="padding-top: 30px">
+                {% include 'blocks/soft_recommendation.html' %}
             </div>
-
+            <div style="padding-top: 30px">
+                {% include 'blocks/py_lib_recommendation.html' %}
+            </div>
         </div>
         <div class="grid-col-center blog-post-column">
             <div class="card">
@@ -44,7 +34,7 @@
                     <span title="raw time: {{ object.date_created }}">Posted: {{ object.date_created|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</span>
                     {% if object.tags.all %}
                         {% for tag in object.tags.all %}
-                            <a href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
+                            <a title="{{ tag.description }}" href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -72,15 +62,7 @@
             </div>
         </div>
         <div class="grid-col-2 blog-page-widgets-sides">
-            <div class="card" style="width: 18rem;">
-                <div class="card-header">Other topics</div>
-                <ul class="list-group list-group-flush">
-                    {% list_tags as all_tags %}
-                    {% for tag in all_tags %}
-                        <li class="list-group-item"><a href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a></li>
-                    {% endfor %}
-                </ul>
-            </div>
+            {% include 'blocks/tags_sidebar.html' %}
         </div>
     </div>
 {% endblock %}

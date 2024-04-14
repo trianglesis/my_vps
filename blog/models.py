@@ -39,7 +39,10 @@ class Post(models.Model):
     published = models.BooleanField(default=False)
 
     author = models.ForeignKey(User, on_delete=models.PROTECT)
-    tags = models.ManyToManyField(Tag, blank=True)
+    tags = models.ManyToManyField(Tag,
+                                  blank=True,
+                                  related_name='post_rel_tag'
+                                  )
 
     class Meta:
         ordering = ["-publish_date"]
