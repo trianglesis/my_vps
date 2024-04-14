@@ -387,6 +387,7 @@ else:
     print(f"Settings: Live: STATICFILES_DIRS: {STATICFILES_DIRS}")
 
 # Tiny MCE https://www.tiny.cloud/my-account/integrate/#more
+# Buttons https://www.tiny.cloud/docs/advanced/available-toolbar-buttons/
 # Only for cloud!
 # TINYMCE_JS_URL = 'https://cdn.tiny.cloud/1/id2tbcpsi0fidqs5ntnru0azxgsoyrf96hrkkvnee5osbmvb/tinymce/7/tinymce.min.js'
 TINYMCE_SPELLCHECKER = False
@@ -406,46 +407,46 @@ TINYMCE_DEFAULT_CONFIG = {
                 "fullscreen preview save print | insertfile image media pageembed template link anchor | "
                 "a11ycheck ltr rtl | showcomments addcomment",
     "toolbar2": "codesample | h1 h2 h3 h4 h5 h6 | code ",
-    "toolbar3": "table tablecellprops tablecopyrow tablecutrow tabledelete tabledeletecol tabledeleterow "
-                "tableinsertdialog tableinsertcolafter tableinsertcolbefore tableinsertrowafter tableinsertrowbefore "
-                "tablemergecells tablepasterowafter tablepasterowbefore tableprops tablerowprops tablesplitcells "
-                "tableclass tablecellclass tablecellvalign tablecellborderwidth tablecellborderstyle tablecaption "
-                "tablecellbackgroundcolor tablecellbordercolor tablerowheader tablecolheader",
+    # "toolbar3": "table tablecellprops tablecopyrow tablecutrow tabledelete tabledeletecol tabledeleterow "
+    #             "tableinsertdialog tableinsertcolafter tableinsertcolbefore tableinsertrowafter tableinsertrowbefore "
+    #             "tablemergecells tablepasterowafter tablepasterowbefore tableprops tablerowprops tablesplitcells "
+    #             "tableclass tablecellclass tablecellvalign tablecellborderwidth tablecellborderstyle tablecaption "
+    #             "tablecellbackgroundcolor tablecellbordercolor tablerowheader tablecolheader",
     "custom_undo_redo_levels": 10,
     "codesample_global_prismjs": True,
     "codesample_languages": [
         {'value': "py", 'text': "Python"},
+        {'value': "sh", 'text': "Shell .sh"},
+        {'value': "bash", 'text': "BASH"},
+        {'value': "shell-session", 'text': "shell-session"},
+        {'value': "json", 'text': "JSON"},
         {'value': "html", 'text': "HTML"},
         {'value': "xml", 'text': "XML"},
-        {'value': "apacheconf", 'text': "Apache Configuration"},
-        {'value': "sh", 'text': "Shell .sh"},
-        {'value': "csv", 'text': "CSV"},
+        {'value': "yaml", 'text': "YAML .yaml"},
+        {'value': "yml", 'text': "YAML .yml"},
         {'value': "django", 'text': "Django/Jinja2"},
         {'value': "editorconfig", 'text': "EditorConfig"},
+        {'value': "ini", 'text': "ini"},
+        {'value': "apacheconf", 'text': "Apache Configuration"},
+        {'value': "csv", 'text': "CSV"},
         {'value': "graphql", 'text': "GraphQL"},
         {'value': "http", 'text': "HTTP"},
         {'value': "gitignore", 'text': ".gitignore"},
         {'value': "git", 'text': ".git"},
-        {'value': "json", 'text': "JSON"},
         {'value': "JavaScript", 'text': "javascript"},
         {'value': "CSS", 'text': "css"},
         {'value': "log", 'text': "Log file .log"},
         {'value': "md", 'text': "Markdown .md"},
         {'value': "nginx", 'text': "nginx"},
         {'value': "powershell", 'text': "PowerShell"},
-        {'value': "shell-session", 'text': "shell-session"},
         {'value': "sh-session", 'text': "sh-session"},
         {'value': "shellsession", 'text': "shellsession"},
         {'value': "sql", 'text': "SQL"},
         {'value': "systemd", 'text': "Systemd configuration file"},
         {'value': "vim", 'text': "vim"},
         {'value': "wiki", 'text': "Wiki markup"},
-        {'value': "yaml", 'text': "YAML .yaml"},
-        {'value': "yml", 'text': "YAML .yml"},
         {'value': "makefile", 'text': "makefile"},
-        {'value': "ini", 'text': "ini"},
         {'value': "python", 'text': "Python"},
-
     ],
 
 }
