@@ -6,8 +6,14 @@ from tinymce.models import HTMLField
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
+    class Meta:
+        managed = True
+        db_table = 'tria_tags'
+        verbose_name = '[Blog] Tag'
+        verbose_name_plural = '[Blog] Tags'
+
     def __str__(self):
-        return self.name
+        return f'{self.id}-{self.name}'
 
 
 class Post(models.Model):
@@ -36,3 +42,17 @@ class Post(models.Model):
 
     class Meta:
         ordering = ["-publish_date"]
+        managed = True
+        db_table = 'tria_posts'
+        # unique_together = (
+        #     (
+        #         'title',
+        #         'subtitle',
+        #         'slug',
+        #     ),
+        # )
+        verbose_name = '[Blog] Post'
+        verbose_name_plural = '[Blog] Posts'
+
+    def __str__(self):
+        return f'{self.id} - {self.title}-{self.author}'
