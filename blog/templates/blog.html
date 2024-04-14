@@ -18,25 +18,31 @@
         <div class="grid-col-center blog-post-column">
             <div class="paginator-any">{% include 'utils/pagination.html' %}</div>
             {% for post in object_list %}
-                <div class="card">
-                    <div class="card-header">
-                        {{ post.title }}
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.subtitle }}</h5>
-                        <p class="card-text">
-                            {{ post.body|slice:500 }}
-                        </p>
-                        <a href="{% url 'post' post.slug %}" class="btn btn-sm btn-primary">Read...</a>
-                    </div>
-                    <div class="card-footer text-muted">
-                        <span title="Author">By: {{ object.author.first_name }}</span>
-                        <span title="raw time: {{ post.date_created }}">Posted: {{ post.date_created|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</span>
-                        {% if post.tags.all %}
-                            {% for tag in post.tags.all %}
-                                <a title="{{ tag.description }}" href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
-                            {% endfor %}
-                        {% endif %}
+                <div style="padding-bottom: 30px;">
+                    <div class="card" style="max-width: 70rem">
+                        <div class="card-header">
+                            {{ post.title }}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.subtitle }}</h5>
+                            <p class="card-text">
+                                {% comment %}
+                                It's now showing HTML tags, later rethink
+                                {{ post.body|slice:500 }}
+                                {% endcomment %}
+                                {{ post.meta_description }}
+                            </p>
+                            <a href="{% url 'post' post.slug %}" class="btn btn-sm btn-primary">Read...</a>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <span title="Author">By: {{ object.author.first_name }}</span>
+                            <span title="raw time: {{ post.date_created }}">Posted: {{ post.date_created|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</span>
+                            {% if post.tags.all %}
+                                {% for tag in post.tags.all %}
+                                    <a title="{{ tag.description }}" href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             {% endfor %}
