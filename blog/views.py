@@ -38,7 +38,7 @@ def blog_filer(selector, queryset):
 class MainPageBlogListView(ListView):
     __url_path = '/blog/'
     # model = Post
-    queryset = Post.objects.all()
+    queryset = Post.objects.filter(published__exact=True)
     template_name = 'blog.html'
     paginate_by = 50
 
