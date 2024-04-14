@@ -5,6 +5,7 @@ from tinymce.models import HTMLField
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    description = models.TextField()
 
     class Meta:
         managed = True
@@ -29,7 +30,7 @@ class Post(models.Model):
 
     body = HTMLField()
 
-    meta_description = models.CharField(max_length=150, blank=True)
+    meta_description = models.CharField(max_length=255, blank=True)
 
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)

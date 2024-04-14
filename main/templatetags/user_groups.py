@@ -21,3 +21,5 @@ def is_user_perm(context, perm):
     user = context['user']
     # log.debug(f"User permission: {user}:{perm} - {user.has_perm(perm)}")
     user.has_perm(perm)
+
+

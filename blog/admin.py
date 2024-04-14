@@ -6,6 +6,14 @@ from blog.models import *
 
 # Register your models here.
 # admin.site.unregister(Post)
+class TagAdmin(admin.ModelAdmin):
+    model = Tag
+    list_display = (
+        'name',
+        'description',
+    )
+    # Later add selection fort all posts with such a tag
+
 
 class PostAdmin(admin.ModelAdmin):
     """

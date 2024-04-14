@@ -2,6 +2,7 @@
 {% load static %}
 {% load humanize %}
 {% load tz %}
+{% load selections %}
 
 {% block page_title %}
     {{ title }}
@@ -37,13 +38,13 @@
                     <p class="card-text">
                         {{ object.body|safe }}
                     </p>
-                    <a href="#{{ object.slug }}" class="btn btn-sm btn-primary">Read...</a>
                 </div>
                 <div class="card-footer text-muted">
+                    <span title="Author">By: {{ object.author.first_name }}</span>
                     <span title="raw time: {{ object.date_created }}">Posted: {{ object.date_created|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</span>
                     {% if object.tags.all %}
                         {% for tag in object.tags.all %}
-                            <a href="{{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
+                            <a href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
                         {% endfor %}
                     {% endif %}
                 </div>
@@ -72,11 +73,12 @@
         </div>
         <div class="grid-col-2 blog-page-widgets-sides">
             <div class="card" style="width: 18rem;">
-                <div class="card-header">Featured</div>
+                <div class="card-header">Other topics</div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    <li class="list-group-item">A third item</li>
+                    {% list_tags as all_tags %}
+                    {% for tag in all_tags %}
+                        <li class="list-group-item"><a href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a></li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>

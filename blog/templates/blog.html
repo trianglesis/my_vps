@@ -1,4 +1,5 @@
 {% extends "main/main.html" %}
+{% load selections %}
 {% load static %}
 {% load humanize %}
 {% load tz %}
@@ -55,11 +56,12 @@
         </div>
         <div class="grid-col-2 blog-page-widgets-sides">
             <div class="card" style="width: 18rem;">
-                <div class="card-header">Featured</div>
+                <div class="card-header">Other topics</div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">An item</li>
-                    <li class="list-group-item">A second item</li>
-                    <li class="list-group-item">A third item</li>
+                    {% list_tags as all_tags %}
+                    {% for tag in all_tags %}
+                        <li class="list-group-item"><a href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a></li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
