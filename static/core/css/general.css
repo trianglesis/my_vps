@@ -59,6 +59,11 @@ General styles for all objects
     padding-right: 30px;
 }
 
+.last-posts {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
 .under-construction {
     padding-top: 30px;
     padding-bottom: 600px;

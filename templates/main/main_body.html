@@ -1,4 +1,6 @@
 {% extends "main/main.html" %}
+{% load humanize %}
+{% load tz %}
 {% load static %}
 {% block page_title %}
     Main page Trianglesis's
@@ -11,6 +13,28 @@
     </div>
 {% endcomment %}
     <div class="main-body">
+        {% comment %} Last 3 posts {% endcomment %}
+        <div class="last-posts">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for post in objects.posts|slice:3 %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">{{ post.title }}</div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    {{ post.body|safe|truncatechars_html:150 }}
+                                </p>
+                                <a href="{% url 'post' post.slug %}" class="btn btn-sm btn-light">{{ post.meta_description }}</a>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted"
+                                       title="raw time: {{ post.date_created }}">{{ post.date_modified|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
         <div class="under-construction">
             <div class="alert alert-warning" role="alert">
                 Under construction, see <a href="{% url 'blog' %}" class="alert-link">blog</a>.
@@ -63,52 +87,6 @@
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                 </button>
-            </div>
-        </div>
-        {% comment %}
-            CARDS TODO: Later add random or set of recent or popular posts here
-        {% endcomment %}
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col">
-                <div class="card h-100">
-                    <img src="/static/favicon/android-chrome-192x192.png" class="img-fluid card-img-top w-50" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="/static/favicon/android-chrome-192x192.png" class="img-fluid card-img-top w-50" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This card has supporting text below as a natural lead-in to additional
-                            content.</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <img src="/static/favicon/android-chrome-192x192.png" class="img-fluid card-img-top w-50" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                            additional content. This card has even longer content than the first to show that equal
-                            height
-                            action.</p>
-                    </div>
-                    <div class="card-footer">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
