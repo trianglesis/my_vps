@@ -28,9 +28,10 @@
                             <p class="card-text">
                                 {% comment %}
                                 It's now showing HTML tags, later rethink
-                                {{ post.body|slice:500 }}
+                                https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#truncatechars-html
                                 {% endcomment %}
-                                {{ post.meta_description }}
+                                {{ post.body|truncatechars_html:500 }}
+{#                                {{ post.meta_description }}#}
                             </p>
                             <a href="{% url 'post' post.slug %}" class="btn btn-sm btn-primary">Read...</a>
                         </div>
