@@ -14,6 +14,9 @@
             <div style="padding-top: 30px">
                 {% include 'blocks/soft_recommendation.html' %}
             </div>
+            <div style="padding-top: 30px">
+                {% include 'blocks/py_lib_recommendation.html' %}
+            </div>
         </div>
         <div class="grid-col-center blog-post-column">
             <div class="paginator-any">{% include 'utils/pagination.html' %}</div>
@@ -30,7 +33,7 @@
                                 It's now showing HTML tags, later rethink
                                 https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#truncatechars-html
                                 {% endcomment %}
-                                {{ post.body|truncatechars_html:500 }}
+                                {{ post.body|safe|truncatewords_html:150 }}
 {#                                {{ post.meta_description }}#}
                             </p>
                             <a href="{% url 'post' post.slug %}" class="btn btn-sm btn-primary">Read...</a>
