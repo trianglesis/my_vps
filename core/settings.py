@@ -185,6 +185,7 @@ ALLOWED_HOSTS = ['localhost',
                  Credentials.IP,
                  Credentials.HOSTNAME,
                  HostnamesSupported.LIVE_WEB,
+                 HostnamesSupported.LIVE_WEB_WWW,
                  socket.getfqdn(),
                  socket.gethostname()
                  ]
@@ -265,7 +266,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
 ]
 
