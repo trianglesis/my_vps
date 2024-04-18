@@ -29,6 +29,7 @@ handler400 = 'core.views.bad_request_view'
 
 urlpatterns = [
     path('', MainPage.as_view(), name='home'),
+    path('index/', MainPage.as_view(), name='index'),
 
     # Include other:
     path('main/', include('main.urls')),
