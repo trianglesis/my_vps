@@ -27,7 +27,7 @@ print("Settings: Setup settings environment.")
 if hostname == HostnamesSupported.DEV_HOSTNAME:
     ENV = 0
     LOG_DIR = ''
-    DEBUG = True
+    DEBUG = False
     DEV = True
     THIS_IS_DEV = True
     print(f"Settings: Development: {hostname} ENV={ENV}")
@@ -229,6 +229,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.redirects',
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
@@ -265,6 +266,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
 ]
 
 # Local DEV and Lobster and New Octopus?
