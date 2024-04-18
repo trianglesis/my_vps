@@ -44,9 +44,9 @@ def bad_request_view(request, exception=None):
     client_ip, is_routable = get_client_ip(request)
     # log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
     save_visit(client_ip, is_routable, request)
-    resp = "Bad request: 400"
-    return HttpResponse(resp, status=400)
-
+    # resp = "Bad request: 400"
+    # return HttpResponse(resp, status=400)
+    return redirect('/')
 
 def permission_denied_view(request, exception=None):
     client_ip, is_routable = get_client_ip(request)
