@@ -5,7 +5,7 @@ from hashlib import blake2b
 
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.test import SimpleTestCase, override_settings
 from django.urls import path
 from django.utils import timezone
@@ -37,7 +37,7 @@ def page_not_found_view(request, exception=None):
     save_visit(client_ip, is_routable, request)
     # resp = f'404 Not Found'
     # return HttpResponse(resp, status=404)
-    return redirect('')
+    return render(request, 'main/main_body.html')
 
 
 def bad_request_view(request, exception=None):
@@ -46,7 +46,7 @@ def bad_request_view(request, exception=None):
     save_visit(client_ip, is_routable, request)
     # resp = "Bad request: 400"
     # return HttpResponse(resp, status=400)
-    return redirect('')
+    return render(request, 'main/main_body.html')
 
 def permission_denied_view(request, exception=None):
     client_ip, is_routable = get_client_ip(request)
