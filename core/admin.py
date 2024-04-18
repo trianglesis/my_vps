@@ -1,6 +1,6 @@
 from django.contrib import admin
 # from django.contrib.auth.models import User
-
+from django.contrib.sites.models import Site
 from core.models import *
 
 # Register your models here.
@@ -21,3 +21,5 @@ admin.site.register(DjangoSession)
 
 admin.site.register(CeleryTaskmeta)
 admin.site.register(CeleryTasksetmeta)
+
+# admin.site.register(Site)

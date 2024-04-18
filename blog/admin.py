@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.forms import TextInput
+from django.contrib.sites.shortcuts import get_current_site
 
 from blog.models import *
 
@@ -33,6 +34,7 @@ class PostAdmin(admin.ModelAdmin):
         'publish_date',
         'published',
         'author',
+        'site',
         # 'tags',
 
     ]
@@ -56,6 +58,7 @@ class PostAdmin(admin.ModelAdmin):
             ('published',),
         ]}),
         ('Details', {'fields': [
+            ('site',),
             ('slug',),
             ('date_created',),
             ('date_modified',),
@@ -78,6 +81,8 @@ class PostAdmin(admin.ModelAdmin):
         """
         if db_field.name == 'author':
             kwargs['initial'] = request.user.id
+        if db_field.name == 'site':
+            kwargs['initial'] = get_current_site(request)
         return super(PostAdmin, self).formfield_for_foreignkey(
             db_field, request, **kwargs
         )

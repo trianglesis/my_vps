@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
+from django.contrib.sitemaps.views import sitemap
+
 from core import constants as const
-
-
-from main.views import *
+from main.views import MainPage
+from blog.sitemap import BlogSitemap
 
 handler404 = 'core.views.page_not_found_view'
 handler500 = 'core.views.response_error_handler'
@@ -43,6 +45,11 @@ urlpatterns = [
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
 
     path('blah-blah-blah/a-a-a-admin/', admin.site.urls),
+
+    # WWW
+    # See also: https://django-robots.readthedocs.io/en/latest/
+    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path("sitemap.xml", sitemap, {"sitemaps": {"blog": BlogSitemap}}, name="django.contrib.sitemaps.views.sitemap"),
 
     # Only load on a local dev system when needed
 

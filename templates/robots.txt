@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /remotes/
+Disallow: /tinymce/
+Disallow: /__debug__/
+Disallow: /blah-blah-blah/
+
+User-agent: GPTBot
+Disallow: /

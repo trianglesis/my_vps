@@ -5,9 +5,12 @@ from hashlib import blake2b
 
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.test import SimpleTestCase, override_settings
 from django.urls import path
 from django.utils import timezone
+from django.views.decorators.http import require_GET
+from django.views.generic import TemplateView
 
 from ipware import get_client_ip
 
@@ -32,8 +35,9 @@ def page_not_found_view(request, exception=None):
     client_ip, is_routable = get_client_ip(request)
     # log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
     save_visit(client_ip, is_routable, request)
-    resp = f'404 Not Found'
-    return HttpResponse(resp, status=404)
+    # resp = f'404 Not Found'
+    # return HttpResponse(resp, status=404)
+    return redirect('/')
 
 
 def bad_request_view(request, exception=None):

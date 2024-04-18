@@ -230,6 +230,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
     'django.contrib.humanize',
     'rest_framework',
     'rest_framework.authtoken',
@@ -242,6 +244,8 @@ INSTALLED_APPS = [
     'remotes.apps.RemotesConfig',
     'tinymce',
 ]
+
+SITE_ID = 1
 
 # In local dev
 if ENV == 0:

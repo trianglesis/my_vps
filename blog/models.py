@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+
 from tinymce.models import HTMLField
 
 
@@ -39,6 +41,8 @@ class Post(models.Model):
     published = models.BooleanField(default=False)
 
     author = models.ForeignKey(User, on_delete=models.PROTECT)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+
     tags = models.ManyToManyField(Tag,
                                   blank=True,
                                   related_name='post_rel_tag'
@@ -60,3 +64,14 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.id} - {self.title}-{self.author}'
+
+    def get_absolute_url(self):
+        """
+        Generate URL for each published post.
+        Example:
+        <loc>http://Site.objects.get_current().domain/post/raspberry-5-test-to-speech-using-piper</loc>
+        https://docs.djangoproject.com/en/5.0/ref/contrib/sites/#module-django.contrib.sites
+        Do not add here domain
+        :return:
+        """
+        return f"/post/{self.slug}"
