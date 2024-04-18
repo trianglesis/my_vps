@@ -41,9 +41,9 @@ def page_not_found_view(request, exception=None):
     client_ip, is_routable = get_client_ip(request)
     # log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
     save_visit(client_ip, is_routable, request)
-    resp = f'404 Not Found'
-    return HttpResponse(resp, status=404)
-    # return render(request, 'main/main_body.html')
+    # resp = f'404 Not Found'
+    # return HttpResponse(resp, status=404)
+    return render(request, 'main/main_body.html')
 
 
 def bad_request_view(request, exception=None):
@@ -56,9 +56,9 @@ def bad_request_view(request, exception=None):
     client_ip, is_routable = get_client_ip(request)
     # log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
     save_visit(client_ip, is_routable, request)
-    resp = "Bad request: 400"
-    return HttpResponse(resp, status=400)
-    # return render(request, 'main/main_body.html')
+    # resp = "Bad request: 400"
+    # return HttpResponse(resp, status=400)
+    return render(request, 'main/main_body.html')
 
 def permission_denied_view(request, exception=None):
     client_ip, is_routable = get_client_ip(request)
