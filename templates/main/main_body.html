@@ -1,4 +1,5 @@
 {% extends "main/main.html" %}
+{% load selections %}
 {% load humanize %}
 {% load tz %}
 {% load static %}
@@ -16,7 +17,8 @@
         {% comment %} Last 3 posts {% endcomment %}
         <div class="last-posts">
             <div class="row row-cols-1 row-cols-md-3 g-4">
-                {% for post in objects.posts|slice:3 %}
+                {% last_posts as last_posts %}
+                {% for post in last_posts %}
                     <div class="col">
                         <div class="card">
                             <div class="card-header">{{ post.title }}</div>

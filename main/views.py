@@ -15,13 +15,13 @@ class MainPage(TemplateView):
         context = super(MainPage, self).get_context_data(**kwargs)
         context.update(
             debug=False,
-            objects=self.get_queryset(),
+            # objects=self.get_queryset(),
         )
         return context
 
     def get_queryset(self):
         main_data = dict(
-            posts = Post.objects.all(),
+            posts = Post.objects.filter(published=True),
             tags = Tag.objects.all(),
         )
         return main_data

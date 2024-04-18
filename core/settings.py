@@ -27,7 +27,7 @@ print("Settings: Setup settings environment.")
 if hostname == HostnamesSupported.DEV_HOSTNAME:
     ENV = 0
     LOG_DIR = ''
-    DEBUG = False
+    DEBUG = True
     DEV = True
     THIS_IS_DEV = True
     print(f"Settings: Development: {hostname} ENV={ENV}")
