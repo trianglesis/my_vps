@@ -6,6 +6,9 @@ yum install libxml2-devel
 yum install expat-devel
 
 2. Check OpenSSL compile newest
+
+# Try not to install OpenSSL to a very custom place. Use system default if possible.
+
 curl -O https://www.openssl.org/source/openssl-3.0.4.tar.gz
 tar xzf openssl-3.0.4.tar.gz
 cd openssl-3.0.4
