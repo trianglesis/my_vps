@@ -16,6 +16,25 @@
         - Bootstrap
 
     {% endcomment %}
+    {% comment %}
+    GOOGLE Analytics
+    {% endcomment %}
+    <!-- Google tag (gtag.js) -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QBW83ZTQV5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-QBW83ZTQV5');
+    </script>
+    {% comment %}
+    Fav{% endcomment %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon/favicon.ico' %}"/>
     {% comment %}
       Add here host checked function and load DEV icons on local host
