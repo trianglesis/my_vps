@@ -1,10 +1,12 @@
 User-agent: *
 Disallow: /admin/
 Disallow: /accounts/
+Disallow: /rest-auth/
+Disallow: /api-auth/
 Disallow: /remotes/
 Disallow: /tinymce/
+Disallow: /giraffe/
 Disallow: /__debug__/
-Disallow: /blah-blah-blah/
 
 User-agent: GPTBot
 Disallow: /

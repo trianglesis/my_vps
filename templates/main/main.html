@@ -166,7 +166,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                 </li>
-
                 {# BLOG and categories #}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="{% url 'blog' %}" id="navbarDropdown" role="button"
@@ -176,15 +175,26 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Tech</a></li>
-                        <li><a class="dropdown-item" href="#">Photo</a></li>
+                        <li>
+                            <h6 class="dropdown-header">Tags - categories</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'blog' %}?tag=tech">Tech</a></li>
+                        <li><a class="dropdown-item" href="{% url 'blog' %}?tag=python">Python</a></li>
+                        <li><a class="dropdown-item" href="{% url 'blog' %}?tag=Django">Django</a></li>
+                        <li><a class="dropdown-item" href="{% url 'blog' %}?tag=raspberry">raspberry</a></li>
+                        <li><a class="dropdown-item" href="{% url 'blog' %}?tag=web">web</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">Different</a></li>
+                        <li>
+                            <h6 class="dropdown-header">Personal</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'blog' %}?tag=photo">Photo</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                     </ul>
                 </li>
-
                 {# DRAFT Dropdown and categories #}
                 {% comment %}
                 <li class="nav-item dropdown">
@@ -230,10 +240,12 @@
             <span class="navbar-text site-time">{% now "l jS F Y H:i" %}</span>
             {# Search and login MB? #}
             <div class="search-blog">
+                {% comment %}
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search (not yet)" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
+                {% endcomment %}
             </div>
             {# AUTH: DJANGO_REGISTRATION  #}
             <div class="site-login">
