@@ -62,13 +62,15 @@ class Command(BaseCommand):
                     """
                     OLD:
                     - http://www.trianglesis.org.ua/wp-content/uploads/2019/10/image.png
+                    - http://www.trianglesis.org.ua/files/Images/vk_tools/thumbs/thumbs_comment_stats.png
                     New:
                     
                     """
-                    old_wp = re.compile(r"http(?:s|)://\S+trianglesis.org.ua/wp-content/uploads/")
-                    new_blog_url = "https://trianglesis.org.ua/static/old-wordpress/"
+                    # old_wp = re.compile(r"http(?:s|)://\S+trianglesis.org.ua/wp-content/uploads/")
+                    old_wp = re.compile(r"http(?:s|)://\S+trianglesis.org.ua/files/Images/")
+                    new_blog_url = "https://trianglesis.org.ua/static/old-wordpress/Images/"
                     for post in Post.objects.all():
-                        if 'trianglesis.org.ua/wp-content/uploads/' in post.body:
+                        if 'files/Images' in post.body:
                             post.body = old_wp.sub(new_blog_url, post.body)
                             post.save()
                             print(f"Post with old pics: {post.title} - {post.id} - replace URL")
