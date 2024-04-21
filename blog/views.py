@@ -53,7 +53,7 @@ class MainPageBlogListView(ListView):
         selector = blog_selector(self.request.GET)
         # Simple selection:
         if selector.get('tag'):
-            self.queryset = Post.objects.filter(tags__name=selector.get('tag'))
+            self.queryset = self.queryset.filter(tags__name=selector.get('tag'))
         return self.queryset.order_by('-publish_date')
 
 

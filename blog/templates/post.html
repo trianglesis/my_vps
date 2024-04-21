@@ -21,17 +21,21 @@
         <div class="grid-col-center blog-post-column">
             <div class="card" style="max-width: 70rem;">
                 <div class="card-header">
-                    {{ object.title }}
+                    <h3>{{ object.title }}</h3>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ object.subtitle }}</h5>
+                    <h6 class="card-title">{{ object.subtitle }}</h6>
                     <p class="card-text">
                         {{ object.body|safe }}
                     </p>
+                    <div class="blockquote-footer text-muted text-sm-end">
+                        <span title="raw time: {{ object.date_modified }}"> Modified: {{ object.date_modified|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
+                    </div>
                 </div>
                 <div class="card-footer text-muted">
-                    <span title="Author">By: {{ object.author.first_name }}</span>
-                    <span title="raw time: {{ object.publish_date }}">Posted: {{ object.publish_date|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</span>
+                    <span class="badge bg-dark">{{ object.author.first_name }}</span>
+                    <span title="raw time: {{ object.publish_date }}"
+                          class="badge bg-light text-dark">{{ object.publish_date|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
                     {% if object.tags.all %}
                         {% for tag in object.tags.all %}
                             <a title="{{ tag.description }}" href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
