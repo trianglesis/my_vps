@@ -72,7 +72,6 @@ class Command(BaseCommand):
                             post.body = old_wp.sub(new_blog_url, post.body)
                             post.save()
                             print(f"Post with old pics: {post.title} - {post.id} - replace URL")
-                            break
 
 
 
