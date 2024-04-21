@@ -68,3 +68,7 @@ General styles for all objects
     padding-top: 30px;
     padding-bottom: 600px;
 }
+
+.break-w {
+    word-break: break-word;
+}
