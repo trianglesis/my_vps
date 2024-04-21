@@ -23,5 +23,10 @@ def list_last_posts_and_tags(limit_posts=3, limit_tags=5):
 
 
 @register.simple_tag()
-def last_posts(limit=3):
+def posts_last(limit=3):
     return Post.objects.filter(published=True).order_by("-publish_date")[:limit]
+
+
+@register.simple_tag()
+def posts_random(limit=5):
+    return Post.objects.filter(published=True).order_by("?")[:limit]
