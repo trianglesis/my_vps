@@ -25,6 +25,7 @@ class PostAdmin(admin.ModelAdmin):
     filter_horizontal = ('tags',)
     list_display = [
         'title',
+        'published',
         'subtitle',
         'slug',
         # 'body',
@@ -32,7 +33,6 @@ class PostAdmin(admin.ModelAdmin):
         'date_created',
         'date_modified',
         'publish_date',
-        'published',
         'author',
         'site',
         # 'tags',
