@@ -21,6 +21,7 @@ class PostAdmin(admin.ModelAdmin):
     https://django-tinymce.readthedocs.io/en/latest/usage.html
     """
     model = Post
+    search_fields = ['title', 'body']
     ordering = ('-publish_date',)
     filter_horizontal = ('tags',)
     list_display = [
