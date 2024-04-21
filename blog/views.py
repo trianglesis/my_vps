@@ -40,7 +40,7 @@ class MainPageBlogListView(ListView):
     # model = Post
     queryset = Post.objects.filter(published__exact=True)
     template_name = 'blog.html'
-    paginate_by = 50
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super(MainPageBlogListView, self).get_context_data(**kwargs)
