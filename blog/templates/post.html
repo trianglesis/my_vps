@@ -8,8 +8,8 @@
     {{ title }}
 {% endblock %}
 {% block content %}
-    <div class="blog-content" style="padding-top: 30px">
-        <div class="grid-col-1 blog-page-widgets-sides">
+    <div class="row" style="padding-top: 10px">
+        <div class="col">
             {% include 'blocks/about_me_sidebar.html' %}
             <div style="padding-top: 30px">
                 {% include 'blocks/soft_recommendation.html' %}
@@ -18,8 +18,8 @@
                 {% include 'blocks/py_lib_recommendation.html' %}
             </div>
         </div>
-        <div class="grid-col-center blog-post-column">
-            <div class="card" style="max-width: 70rem;">
+        <div class="col col-8">
+            <div class="card border-light" style="max-width: 70rem;">
                 <div class="card-header">
                     <h3>{{ object.title }}</h3>
                 </div>
@@ -70,7 +70,7 @@
                 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
             </div>
         </div>
-        <div class="grid-col-2 blog-page-widgets-sides">
+        <div class="col">
             {% include 'blocks/tags_sidebar.html' %}
         </div>
     </div>
