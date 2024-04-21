@@ -31,7 +31,7 @@
                 </div>
                 <div class="card-footer text-muted">
                     <span title="Author">By: {{ object.author.first_name }}</span>
-                    <span title="raw time: {{ object.date_created }}">Posted: {{ object.date_created|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</span>
+                    <span title="raw time: {{ object.publish_date }}">Posted: {{ object.publish_date|timezone:"Europe/Kyiv"|date:'N d (D) H:i'|naturaltime }}</span>
                     {% if object.tags.all %}
                         {% for tag in object.tags.all %}
                             <a title="{{ tag.description }}" href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
