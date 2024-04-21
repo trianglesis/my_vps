@@ -27,16 +27,16 @@ class Command(BaseCommand):
 
         if mode:
             if mode == 'WP_old_database_filter':
-                log.debug(f"Run mode: WP_old_database_filter, method: {method}")
+                print(f"Run mode: WP_old_database_filter, method: {method}")
                 if method == 'select_and_show':
                     posts = WptriaPosts.objects.all()
                     for post in posts:
-                        log.debug(f"posts: {post.post_title}")
+                        print(f"posts: {post.post_title}")
                 elif method == 'select_and_import':
                     posts = WptriaPosts.objects.all()
                     for post in posts:
                         if post.post_name:
-                            log.debug(f"Importing: {post.post_name}, date: {post.post_date}")
+                            print(f"Importing: {post.post_name}, date: {post.post_date}")
                             imported = Post(
                                 title=post.post_title,
                                 slug=post.post_name,
@@ -54,7 +54,7 @@ class Command(BaseCommand):
                     for post in Post.objects.all():
                         if any([word in post.body for word in keywords]):
                             tag = Tag.objects.get(name='python')
-                            log.debug(f"This post is related to tag 'python': {post.title}")
+                            print(f"This post is related to tag 'python': {post.title}")
                             post.tags.add(tag)
                             post.save()
 
