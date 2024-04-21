@@ -1,5 +1,6 @@
 import logging
 import datetime
+import re
 
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -57,7 +58,21 @@ class Command(BaseCommand):
                             print(f"This post is related to tag 'python': {post.title}")
                             post.tags.add(tag)
                             post.save()
-
+                elif method == 'select_imported_body_with_pic':
+                    """
+                    OLD:
+                    - http://www.trianglesis.org.ua/wp-content/uploads/2019/10/image.png
+                    New:
+                    
+                    """
+                    old_wp = re.compile(r"http://www\.trianglesis\.org\.ua/wp-content/uploads/")
+                    new_blog_url = "https://trianglesis.org.ua/static/old-wordpress/"
+                    for post in Post.objects.all():
+                        if '/wp-content/uploads/' in post.body:
+                            post.body = old_wp.sub(new_blog_url, post.body)
+                            post.save()
+                            print(f"Post with old pics: {post.title} - {post.id} - replace URL")
+                            break
 
 
 
@@ -66,4 +81,5 @@ class Command(BaseCommand):
 python manage.py imports_exports --mode=WP_old_database_filter --method=select_and_show
 python manage.py imports_exports --mode=WP_old_database_filter --method=select_and_import
 python manage.py imports_exports --mode=WP_old_database_filter --method=select_and_tag
+python manage.py imports_exports --mode=WP_old_database_filter --method=select_imported_body_with_pic
 """
