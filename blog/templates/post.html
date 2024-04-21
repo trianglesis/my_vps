@@ -28,6 +28,11 @@
                     <p class="card-text">
                         {{ object.body|safe }}
                     </p>
+                    {% if user.is_staff %}
+                        <div>
+                            <a class="btn btn-warning" href="{% url 'admin:index' %}blog/post/{{ object.id }}/change">Edit</a>
+                        </div>
+                    {% endif %}
                     <div class="blockquote-footer text-muted text-sm-end">
                         <span title="raw time: {{ object.date_modified }}"> Modified: {{ object.date_modified|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
                     </div>

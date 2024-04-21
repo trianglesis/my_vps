@@ -19,8 +19,11 @@ from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import sitemap
 
 from core import constants as const
+from core.security import Other
 from main.views import MainPage
 from blog.sitemap import BlogSitemap
+
+ADMIN_URL = Other.ADMIN_URL
 
 handler404 = 'core.views.page_not_found_view'
 handler500 = 'core.views.response_error_handler'
@@ -38,14 +41,14 @@ urlpatterns = [
 
     # Built-ins
 
-    path('blah-blah-blah/a-a-accounts/', include('django_registration.backends.activation.urls')),
-    path('blah-blah-blah/a-a-accounts/', include('django.contrib.auth.urls')),
+    path(f'{ADMIN_URL}/accounts/', include('django_registration.backends.activation.urls')),
+    path(f'{ADMIN_URL}/accounts/', include('django.contrib.auth.urls')),
 
-    path('blah-blah-blah/re-re-rest-auth/', include('dj_rest_auth.urls')),
-    path('blah-blah-blah/a-a-a-api-auth/', include('rest_framework.urls')),
+    path(f'{ADMIN_URL}/rest-auth/', include('dj_rest_auth.urls')),
+    path(f'{ADMIN_URL}/api-auth/', include('rest_framework.urls')),
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
 
-    path('blah-blah-blah/a-a-a-admin/', admin.site.urls),
+    path(f'{ADMIN_URL}/admin/', admin.site.urls),
 
     # WWW
     # See also: https://django-robots.readthedocs.io/en/latest/

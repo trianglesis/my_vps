@@ -75,3 +75,9 @@ class CeleryCreds:
     WSL_WORKERS = ["core@layer",
                    "remotes@layer",
                    ]
+
+
+class Other:
+
+    GOOGLE_ANALYTICS_ID = 'TOKEN'
+    ADMIN_URL = "FAKE_URL_PATH"

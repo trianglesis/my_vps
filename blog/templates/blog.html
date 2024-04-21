@@ -36,6 +36,11 @@
                                 {{ post.body|safe|truncatewords_html:150 }}
                                 {#                                {{ post.meta_description }}#}
                             </p>
+                            {% if user.is_staff %}
+                                <div>
+                                    <a class="btn btn-warning" href="{% url 'admin:index' %}blog/post/{{ post.id }}/change">Edit</a>
+                                </div>
+                            {% endif %}
                             <div class="blockquote-footer text-muted text-sm-end">
                                 <span title="raw time: {{ post.date_modified }}"> Modified: {{ post.date_modified|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
                             </div>
