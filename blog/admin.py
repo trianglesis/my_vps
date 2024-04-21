@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.forms import TextInput
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils.html import format_html
 
 from blog.models import *
 
@@ -30,12 +31,13 @@ class PostAdmin(admin.ModelAdmin):
         'subtitle',
         'slug',
         # 'body',
+        'in_tags',
         'meta_description',
         'date_created',
         'date_modified',
         'publish_date',
-        'author',
-        'site',
+        # 'author',
+        # 'site',
         # 'tags',
 
     ]
@@ -45,10 +47,13 @@ class PostAdmin(admin.ModelAdmin):
         'date_modified',
         'published',
         'tags__name',
+        'author',
+        'site',
     ]
     readonly_fields = [
         'date_created',
         'date_modified',
+        'in_tags',
     ]
     prepopulated_fields = {'slug': ('title',)}
 
@@ -94,6 +99,15 @@ class PostAdmin(admin.ModelAdmin):
         return super(PostAdmin, self).formfield_for_foreignkey(
             db_field, request, **kwargs
         )
+
+    def in_tags(self, obj):
+        field = ""
+        if obj.tags.all():
+            for tag in obj.tags.all():
+                field += f'{tag.name}, '
+        return format_html(field)
+
+    in_tags.short_description = "Tags"
 
 
 admin.site.register(Post, PostAdmin)
