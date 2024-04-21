@@ -26,7 +26,7 @@
                                 <p class="card-text">
                                     {{ post.body|safe|truncatechars_html:150 }}
                                 </p>
-                                <a href="{% url 'post' post.slug %}" class="btn btn-sm btn-light">{{ post.meta_description }}</a>
+                                <a href="{% url 'post' post.slug %}" class="btn btn-sm btn-light">{% if post.meta_description %}{{ post.meta_description }}{% else %}Read...{% endif %}</a>
                             </div>
                             <div class="card-footer">
                                 <small class="text-muted"

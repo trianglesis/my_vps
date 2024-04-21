@@ -26,7 +26,7 @@ class Post(models.Model):
     TODO: Use 'django-filebrowser'
     https://github.com/sehmaschine/django-filebrowser
     """
-    title = models.CharField(max_length=255, unique=True)
+    title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255, blank=True)
     slug = models.SlugField(max_length=255, unique=True)
 
@@ -45,7 +45,7 @@ class Post(models.Model):
 
     tags = models.ManyToManyField(Tag,
                                   blank=True,
-                                  related_name='post_rel_tag'
+                                  related_name='post_rel_tag',
                                   )
 
     class Meta:
@@ -75,3 +75,24 @@ class Post(models.Model):
         :return:
         """
         return f"/post/{self.slug}"
+
+
+class WptriaPosts(models.Model):
+    id = models.BigAutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    post_author = models.PositiveBigIntegerField()
+    post_date = models.DateTimeField(blank=True, null=True)
+    post_date_gmt = models.DateTimeField(blank=True, null=True)
+    post_content = models.TextField(db_collation='utf8mb3_general_ci')
+    post_title = models.TextField(db_collation='utf8mb3_general_ci')
+    post_excerpt = models.TextField(db_collation='utf8mb3_general_ci')
+    post_status = models.CharField(max_length=20, db_collation='utf8mb3_general_ci')
+    comment_status = models.CharField(max_length=20, db_collation='utf8mb3_general_ci')
+    post_name = models.CharField(max_length=200, db_collation='utf8mb3_general_ci')
+    post_modified = models.DateTimeField(blank=True, null=True)
+    post_modified_gmt = models.DateTimeField(blank=True, null=True)
+    post_content_filtered = models.TextField(db_collation='utf8mb3_general_ci')
+    guid = models.CharField(max_length=255, db_collation='utf8mb3_general_ci')
+
+    class Meta:
+        managed = False
+        db_table = 'wptria_posts'

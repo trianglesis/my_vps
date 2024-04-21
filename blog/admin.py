@@ -38,6 +38,13 @@ class PostAdmin(admin.ModelAdmin):
         # 'tags',
 
     ]
+    list_filter = [
+        'publish_date',
+        'date_created',
+        'date_modified',
+        'published',
+        'tags__name',
+    ]
     readonly_fields = [
         'date_created',
         'date_modified',
