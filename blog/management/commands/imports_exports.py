@@ -65,10 +65,10 @@ class Command(BaseCommand):
                     New:
                     
                     """
-                    old_wp = re.compile(r"http://www\.trianglesis\.org\.ua/wp-content/uploads/")
+                    old_wp = re.compile(r"http(?:s|)://\S+trianglesis.org.ua/wp-content/uploads/")
                     new_blog_url = "https://trianglesis.org.ua/static/old-wordpress/"
                     for post in Post.objects.all():
-                        if '/wp-content/uploads/' in post.body:
+                        if 'trianglesis.org.ua/wp-content/uploads/' in post.body:
                             post.body = old_wp.sub(new_blog_url, post.body)
                             post.save()
                             print(f"Post with old pics: {post.title} - {post.id} - replace URL")
