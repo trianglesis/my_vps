@@ -267,6 +267,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
+    # this package's middleware
+    "main.middleware.UserVisitMiddleware",
 ]
 
 # Local DEV and Lobster and New Octopus?

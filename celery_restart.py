@@ -19,7 +19,7 @@ print("Setup celery environment.")
 if hostname == HostnamesSupported.DEV_HOSTNAME:
     ENV = 0
     CELERY_BIN = "/home/user/projects/my_vps/venv/bin/celery"
-    cwd = "/mnt/d/Projects/PycharmProjects/my_vps/"
+    CWD = "/mnt/d/Projects/PycharmProjects/my_vps/"
     CELERYD_PID_FILE = "/home/user/{PID}.pid"
     CELERY_LOG_PATH = '/mnt/d/Projects/PycharmProjects/my_vps/'
     workers = CeleryCreds.WSL_WORKERS
@@ -29,9 +29,9 @@ if hostname == HostnamesSupported.DEV_HOSTNAME:
 elif hostname == HostnamesSupported.LIVE_HOSTNAME:
     ENV = 1
     CELERY_BIN = "/var/www/my_vps/venv/bin/celery"
-    cwd = "/var/www/my_vps/"
+    CWD = "/var/www/my_vps/"
     CELERYD_PID_FILE = "/opt/celery/{PID}.pid"
-    CELERY_LOG_PATH = '/var/log/octopus/celery'
+    CELERY_LOG_PATH = '/var/log/my_vps/'
     workers = CeleryCreds.WORKERS
     CELERYD_LOG_LEVEL = "INFO"
     print(f"Celery ENV Live: {hostname} ENV={ENV} CELERY_BIN:{CELERY_BIN} workers: {workers}")
@@ -62,7 +62,7 @@ commands_list_restart = "python3 {CELERY_BIN} multi restart " \
                         "{celery_node} -A {CELERY_APP} " \
                         "--pidfile={CELERYD_PID_FILE}"
 
-commands_list_kill = "pkill -9 -f 'octo.octo_celery:app worker " \
+commands_list_kill = "pkill -9 -f 'core.core_celery:app worker " \
                      "--pidfile={CELERYD_PID_FILE}'"
 
 
@@ -121,7 +121,7 @@ def th_run(args):
 def worker_restart(**args_d):
     cmd = args_d.get('cmd')
     test_q = args_d.get('test_q')
-    cwd = "/var/www/my_vps/"
+    cwd = CWD
     my_env = os.environ.copy()
     run_results = []
     try:

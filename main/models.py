@@ -40,7 +40,6 @@ class NetworkVisitorsAddresses(models.Model):
         unique_together = (('ip', 'hashed_ip_agent_path'),)
 
 
-
 class NetworkVisitorsAddressesAgentProxy(NetworkVisitorsAddresses):
     class Meta:
         proxy = True
