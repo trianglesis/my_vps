@@ -1,7 +1,8 @@
 from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
 
-from main.models import NetworkVisitorsAddresses, MailsTexts, NetworkVisitorsAddressesAgentProxy, NetworkVisitorsAddressesUrlPathProxy
+from main.models import (NetworkVisitorsAddresses, MailsTexts,
+                         NetworkVisitorsAddressesAgentProxy, NetworkVisitorsAddressesUrlPathProxy,
+                         Options)
 
 admin.site.register(MailsTexts)
 
@@ -79,4 +80,29 @@ class NetworkVisitorsAddressesUrlPathProxyAdmin(admin.ModelAdmin):
         'request_post_args',
         'updated_at',
         'created_at',
+    )
+
+
+@admin.register(Options)
+class OptionsAdmin(admin.ModelAdmin):
+    ordering = ('-updated_at',)
+    search_fields = (
+        'option_key',
+        'option_value',
+        'comments',
+    )
+    list_filter = (
+        'option_bool',
+        'private',
+        'created_at',
+        'updated_at',
+    )
+    list_display = (
+        'option_key',
+        'option_value',
+        'option_bool',
+        'private',
+        'comments',
+        'created_at',
+        'updated_at',
     )

@@ -2,6 +2,26 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class Options(models.Model):
+    option_key = models.CharField(max_length=120, unique=True)
+    option_value = models.TextField(blank=True, null=True)
+    option_bool = models.BooleanField(default=False)
+    private = models.BooleanField(default=True)
+
+    comments = models.TextField(blank=True, null=True)  # Explanation
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = True
+        db_table = 'main_options'
+        ordering = ['updated_at']
+
+    def __str__(self):
+        return f'{self.id} - {self.option_key}'
+
+
 class MailsTexts(models.Model):
     mail_key = models.CharField(_('key unique'), max_length=120, unique=True)
     subject = models.CharField(_('subject'), max_length=255, unique=True)
