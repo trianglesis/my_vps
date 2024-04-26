@@ -135,17 +135,3 @@ class NetworkVisitorsAddresses(models.Model):
 
     def __str__(self):
         return f'Visitor id:{self.pk} {self.ip}'
-
-
-class NetworkVisitorsAddressesAgentProxy(NetworkVisitorsAddresses):
-    class Meta:
-        proxy = True
-        verbose_name = '[ Visit Proxy ] User agent'
-        verbose_name_plural = '[ Visit Proxy ] User agents'
-
-
-class NetworkVisitorsAddressesUrlPathProxy(NetworkVisitorsAddresses):
-    class Meta:
-        proxy = True
-        verbose_name = '[ Visit Proxy ] Request path'
-        verbose_name_plural = '[ Visit Proxy ] Request path'

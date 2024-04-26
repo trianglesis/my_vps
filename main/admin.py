@@ -3,7 +3,6 @@ from django.db.models import Count
 from django.utils.html import format_html
 
 from main.models import (NetworkVisitorsAddresses, MailsTexts,
-                         NetworkVisitorsAddressesAgentProxy, NetworkVisitorsAddressesUrlPathProxy,
                          URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors,
                          Options)
 
@@ -25,76 +24,74 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     list_display = (
         'ip',
         'is_routable',
-        'user_agent',
         'url_path',
-        'request_get_args',
-        'request_post_args',
+        'user_agent',
+        'request_get',
+        'request_post',
+        'updated_at',
+        'created_at',
+    )
+    readonly_fields = (
+        'ip',
+        'is_routable',
+        'url_path',
+        'user_agent',
+        'request_get',
+        'request_post',
         'updated_at',
         'created_at',
     )
     list_filter = (
-        # 'ip',
         'is_routable',
         'created_at',
         'updated_at',
-        'user_agent',
-        # 'url_path',
     )
     search_fields = (
         'ip',
         'is_routable',
-        'user_agent',
-        'url_path',
+        'rel_user_agent',
+        'rel_url_path',
     )
     list_per_page = 300
+    fieldsets = [
+        ('Details', {
+            'description': "Basic info",
+            'fields': [
+                ('ip', 'is_routable',),
+                ('updated_at', 'created_at',),
+            ]
+        }),
+        ('Relations', {
+            'description': "Basic info",
+            'fields': [
+                ('url_path',),
+                ('user_agent',),
+                ('request_get',),
+                ('request_post',),
+            ]
+        })
+    ]
 
+    def url_path(self, obj):
+        if obj.rel_url_path:
+            return obj.rel_url_path.url_path
 
-@admin.register(NetworkVisitorsAddressesAgentProxy)
-class NetworkVisitorsAddressesAgentProxyAdmin(admin.ModelAdmin):
-    ordering = ('-updated_at',)
-    search_fields = (
-        'ip',
-        'is_routable',
-        'user_agent',
-        'url_path',
-    )
-    list_filter = (
-        'created_at',
-        'updated_at',
-        'user_agent',
-    )
-    list_display = (
-        'ip',
-        'user_agent',
-        'updated_at',
-        'created_at',
-    )
-    list_per_page = 300
+    def user_agent(self, obj):
+        if obj.rel_user_agent:
+            return obj.rel_user_agent.user_agent
 
+    def request_get(self, obj):
+        if obj.rel_request_get:
+            return obj.rel_request_get.request_get_args
 
-@admin.register(NetworkVisitorsAddressesUrlPathProxy)
-class NetworkVisitorsAddressesUrlPathProxyAdmin(admin.ModelAdmin):
-    ordering = ('-updated_at',)
-    search_fields = (
-        'ip',
-        'is_routable',
-        'user_agent',
-        'url_path',
-    )
-    list_filter = (
-        'created_at',
-        'updated_at',
-        'url_path',
-    )
-    list_display = (
-        'ip',
-        'url_path',
-        'request_get_args',
-        'request_post_args',
-        'updated_at',
-        'created_at',
-    )
-    list_per_page = 300
+    def request_post(self, obj):
+        if obj.rel_request_post:
+            return obj.rel_request_post.request_post_args
+
+    url_path.short_description = 'url_path'
+    user_agent.short_description = 'user_agent'
+    request_get.short_description = 'request_get'
+    request_post.short_description = 'request_post'
 
 
 @admin.register(URLPathsVisitors)
