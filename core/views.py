@@ -1,8 +1,6 @@
 import logging
 
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.test import SimpleTestCase, override_settings
 from django.urls import path
 
 from main.tasks import save_visit_task
@@ -28,9 +26,8 @@ def page_not_found_view(request, exception=None):
     :return:
     """
     save_visit_task(request)
-    # resp = f'404 Not Found'
-    # return HttpResponse(resp, status=404)
-    return render(request, 'main/main_body.html')
+    resp = f'404 Not Found'
+    return HttpResponse(resp, status=404)
 
 
 def bad_request_view(request, exception=None):
@@ -41,9 +38,8 @@ def bad_request_view(request, exception=None):
     :return:
     """
     save_visit_task(request)
-    # resp = "Bad request: 400"
-    # return HttpResponse(resp, status=400)
-    return render(request, 'main/main_body.html')
+    resp = "Bad request: 400"
+    return HttpResponse(resp, status=400)
 
 def permission_denied_view(request, exception=None):
     save_visit_task(request)
