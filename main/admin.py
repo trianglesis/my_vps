@@ -49,7 +49,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     search_fields = (
         'ip',
     )
-    list_per_page = 300
+    list_per_page = 25
     fieldsets = [
         ('Details', {
             'description': "Basic info",
@@ -109,7 +109,7 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
         "hits",
         "visitors_table",
     ]
-    list_per_page = 50
+    list_per_page = 25
     fieldsets = [
         ('Details', {
             'description': "Basic info",
@@ -178,7 +178,7 @@ class UserAgentVisitorsAdmin(admin.ModelAdmin):
         "hits",
         "visitors_table",
     ]
-    list_per_page = 50
+    list_per_page = 25
     fieldsets = [
         ('Details', {
             'description': "Basic info",
@@ -249,7 +249,7 @@ class RequestGetVisitorsAdmin(admin.ModelAdmin):
         "hits",
         "visitors_table",
     ]
-    list_per_page = 50
+    list_per_page = 25
     fieldsets = [
         ('Details', {
             'description': "Basic info",
@@ -316,7 +316,7 @@ class RequestPostVisitorsAdmin(admin.ModelAdmin):
         "hits",
         "visitors_table",
     ]
-    list_per_page = 50
+    list_per_page = 25
     fieldsets = [
         ('Details', {
             'description': "Basic info",
@@ -389,4 +389,4 @@ class OptionsAdmin(admin.ModelAdmin):
         'created_at',
         'updated_at',
     )
-    list_per_page = 50
+    list_per_page = 25
