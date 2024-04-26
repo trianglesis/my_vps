@@ -33,33 +33,25 @@ handler400 = 'core.views.bad_request_view'
 urlpatterns = [
     path('', MainPage.as_view(), name='home'),
     path('index/', MainPage.as_view(), name='index'),
-
     # Include other:
     path('main/', include('main.urls')),
     path('blog/', include('blog.urls')),
     path('remotes/', include('remotes.urls')),
-
     # Built-ins
-
     path(f'{ADMIN_URL}/accounts/', include('django_registration.backends.activation.urls')),
     path(f'{ADMIN_URL}/accounts/', include('django.contrib.auth.urls')),
-
     path(f'{ADMIN_URL}/rest-auth/', include('dj_rest_auth.urls')),
     path(f'{ADMIN_URL}/api-auth/', include('rest_framework.urls')),
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
-
     path(f'{ADMIN_URL}/admin/', admin.site.urls),
-
     # WWW
     # See also: https://django-robots.readthedocs.io/en/latest/
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     path("sitemap.xml", sitemap, {"sitemaps": {"blog": BlogSitemap}}, name="django.contrib.sitemaps.views.sitemap"),
-
-    # Only load on a local dev system when needed
-
-    # TMCE
-    path('tinymce/', include('tinymce.urls')),
 ]
 
+# Only load on a local dev system when needed
 if const.is_dev():
+    # TMCE
+    path('tinymce/', include('tinymce.urls')),
     urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))

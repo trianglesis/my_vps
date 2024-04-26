@@ -238,7 +238,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_celery_beat.apps.BeatConfig',
-    'dj_rest_auth',
+    # 'dj_rest_auth',
     'django_registration',
     'core',
     'main.apps.CoreConfig',
@@ -266,9 +266,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'main.middleware.UserVisitMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
-    # this package's middleware
-    "main.middleware.UserVisitMiddleware",
 ]
 
 # Local DEV and Lobster and New Octopus?
