@@ -60,13 +60,22 @@ def pick_request_useful_data(request):
     :return:
     """
     client_ip, is_routable = get_client_ip(request)
-    # log.debug(f"request: {client_ip} {request.path}  {request.GET.dict()} {request.POST.dict()} saving")
+
+    request_get_args = request.GET.dict()
+    if not request_get_args:
+        request_get_args = None
+
+    request_post_args = request.POST.dict()
+    if not request_post_args:
+        request_post_args = None
+
+    # log.debug(f"request: {client_ip} {request.path}  {request_get_args} {request_post_args} saving")
     pickable_dict = dict(
         client_ip=client_ip,
         is_routable=is_routable,
         u_agent=request.META.get('HTTP_USER_AGENT', None),
         path=request.path,
-        request_get_args=request.GET.dict(),
-        request_post_args=request.POST.dict(),
+        request_get_args=request_get_args,
+        request_post_args=request_post_args,
     )
     return pickable_dict

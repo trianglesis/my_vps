@@ -39,6 +39,54 @@ class MailsTexts(models.Model):
         return f'{self.id} - {self.mail_key}'
 
 
+class URLPathsVisitors(models.Model):
+    url_path = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = 'visitors_url_path'
+        ordering = ['created_at']
+        verbose_name = '[ Visit ] URL Path'
+        verbose_name_plural = '[ Visit ] URL Paths'
+
+
+class UserAgentVisitors(models.Model):
+    user_agent = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = 'visitors_user_agent'
+        ordering = ['created_at']
+        verbose_name = '[ Visit ] User Agent'
+        verbose_name_plural = '[ Visit ] User Agents'
+
+
+class RequestGetVisitors(models.Model):
+    request_get_args = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = 'visitors_request_get'
+        ordering = ['created_at']
+        verbose_name = '[ Visit ] Request GET'
+        verbose_name_plural = '[ Visit ] Request GETs'
+
+
+class RequestPostVisitors(models.Model):
+    request_post_args = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = True
+        db_table = 'visitors_request_post'
+        ordering = ['created_at']
+        verbose_name = '[ Visit ] Request POST'
+        verbose_name_plural = '[ Visit ] Request POSTs'
+
+
 class NetworkVisitorsAddresses(models.Model):
     ip = models.GenericIPAddressField(protocol='both', unpack_ipv4=True)
     is_routable = models.BooleanField(null=True)
@@ -50,6 +98,30 @@ class NetworkVisitorsAddresses(models.Model):
 
     hashed_ip_agent_path = models.CharField(max_length=255)
 
+    rel_url_path = models.ForeignKey(URLPathsVisitors,
+                                     blank=True,
+                                     null=True,
+                                     related_name='visitor_rel_url_path',
+                                     on_delete=models.SET_NULL)
+
+    rel_user_agent = models.ForeignKey(UserAgentVisitors,
+                                       blank=True,
+                                       null=True,
+                                       related_name='visitor_rel_user_agent',
+                                       on_delete=models.SET_NULL)
+
+    rel_request_get = models.ForeignKey(RequestGetVisitors,
+                                        blank=True,
+                                        null=True,
+                                        related_name='visitor_rel_request_get',
+                                        on_delete=models.SET_NULL)
+
+    rel_request_post = models.ForeignKey(RequestPostVisitors,
+                                         blank=True,
+                                         null=True,
+                                         related_name='visitor_rel_request_post',
+                                         on_delete=models.SET_NULL)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -58,18 +130,22 @@ class NetworkVisitorsAddresses(models.Model):
         db_table = 'visitors_agents'
         ordering = ['updated_at']
         unique_together = (('ip', 'hashed_ip_agent_path'),)
+        verbose_name = '[ Visit ] Network Address'
+        verbose_name_plural = '[ Visit ] Network Addresses'
+
+    def __str__(self):
+        return f'Visitor id:{self.pk} {self.ip}'
 
 
 class NetworkVisitorsAddressesAgentProxy(NetworkVisitorsAddresses):
     class Meta:
         proxy = True
-        verbose_name = '[ Visitors ] User agent'
-        verbose_name_plural = '[ Visitors ] User agents'
-
+        verbose_name = '[ Visit Proxy ] User agent'
+        verbose_name_plural = '[ Visit Proxy ] User agents'
 
 
 class NetworkVisitorsAddressesUrlPathProxy(NetworkVisitorsAddresses):
     class Meta:
         proxy = True
-        verbose_name = '[ Visitors ] Request path'
-        verbose_name_plural = '[ Visitors ] Request path'
+        verbose_name = '[ Visit Proxy ] Request path'
+        verbose_name_plural = '[ Visit Proxy ] Request path'
