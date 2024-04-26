@@ -1,10 +1,13 @@
 from django.contrib import admin
 from django.db.models import Count
 from django.utils.html import format_html
+from core.security import Other
 
 from main.models import (NetworkVisitorsAddresses, MailsTexts,
                          URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors,
                          Options)
+
+ADMIN_URL = Other.ADMIN_URL
 
 admin.site.register(MailsTexts)
 
@@ -147,7 +150,7 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
         if obj.visitor_rel_url_path:
             for visitor in obj.visitor_rel_url_path.all().order_by("-updated_at"):
                 field += (f"<tr>"
-                          f"<td>{visitor.ip}</td>"
+                          f"<td><a href=/{ADMIN_URL}/admin/main/networkvisitorsaddresses/{visitor.id}/change/>{visitor.ip}<a></td>"
                           f"<td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
                           f"<td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
                           f"<td>{validate_and_escape(visitor.rel_request_get.request_get_args)}</td>"
@@ -217,7 +220,7 @@ class UserAgentVisitorsAdmin(admin.ModelAdmin):
         if obj.visitor_rel_user_agent:
             for visitor in obj.visitor_rel_user_agent.all().order_by("-updated_at"):
                 field += (f"<tr>"
-                          f"<td>{visitor.ip}</td>"
+                          f"<td><a href=/{ADMIN_URL}/admin/main/networkvisitorsaddresses/{visitor.id}/change/>{visitor.ip}<a></td>"
                           f"<td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
                           f"<td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
                           f"<td>{visitor.rel_url_path.url_path if visitor.rel_url_path.url_path else ''}</td>"
@@ -286,7 +289,7 @@ class RequestGetVisitorsAdmin(admin.ModelAdmin):
         if obj.visitor_rel_request_get and obj.visitor_rel_request_get.all():
             for visitor in obj.visitor_rel_request_get.all().order_by("-updated_at"):
                 field += (f"<tr>"
-                          f"<td>{visitor.ip}</td>"
+                          f"<td><a href=/{ADMIN_URL}/admin/main/networkvisitorsaddresses/{visitor.id}/change/>{visitor.ip}<a></td>"
                           f"<td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
                           f"<td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
                           f"<td>{visitor.rel_url_path.url_path if visitor.rel_url_path.url_path else ''}</td>"
@@ -353,7 +356,7 @@ class RequestPostVisitorsAdmin(admin.ModelAdmin):
         if obj.visitor_rel_request_post:
             for visitor in obj.visitor_rel_request_post.all().order_by("-updated_at"):
                 field += (f"<tr>"
-                          f"<td>{visitor.ip}</td>"
+                          f"<td><a href=/{ADMIN_URL}/admin/main/networkvisitorsaddresses/{visitor.id}/change/>{visitor.ip}<a></td>"
                           f"<td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
                           f"<td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
                           f"<td>{visitor.rel_url_path.url_path if visitor.rel_url_path.url_path else ''}</td>"
