@@ -10,7 +10,7 @@ from core.security import Other
 
 ADMIN_URL = Other.ADMIN_URL
 
-log = logging.getLogger("dev")
+log = logging.getLogger("core")
 
 @app.task(
     queue=CeleryCreds.QUEUE_CORE,
@@ -60,8 +60,13 @@ def save_visit_task(request):
                 log.info(f"IP is skip able: {client_ip}")
             return False
 
+    # For dev ENV just run as it is
+    if const.is_dev():
+        log.warning(f"Non TASK save request at DEV ENV!")
+        save_visit(data_pickable)
     # Now make actual work:
-    task_added = t_save_visitor.apply_async(args=[data_pickable])
-    if show_log:
-        log.info(f"Save visit task: {data_pickable.get('client_ip')} {data_pickable.get('path')} - {task_added}")
+    else:
+        task_added = t_save_visitor.apply_async(args=[data_pickable])
+        if show_log:
+            log.info(f"Save visit task: {data_pickable.get('client_ip')} {data_pickable.get('path')} - {task_added}")
     return True

@@ -7,7 +7,7 @@ from django.urls import path
 
 from main.tasks import save_visit_task
 
-log = logging.getLogger("dev")
+log = logging.getLogger("core")
 
 """
 Conf https://github.com/un33k/django-ipware

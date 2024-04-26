@@ -5,7 +5,7 @@ from django.utils import timezone
 from ipware import get_client_ip
 from main.models import (NetworkVisitorsAddresses, URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors)
 
-log = logging.getLogger("dev")
+log = logging.getLogger("core")
 
 
 def save_visit(request_d):
@@ -33,31 +33,27 @@ def save_visit(request_d):
     h.update(ip_agent_path.encode('utf-8'))
     hashed = h.hexdigest()
 
-    # log.debug(f"Making hash: \n\t{ip_agent_path} \n\thashed: {hashed}")
-    # log.debug(f"Path requested: {path}")
-
     # Relations:
-    rel_url_path, created = URLPathsVisitors.objects.update_or_create(url_path=path)
-    rel_user_agent, created = UserAgentVisitors.objects.update_or_create(user_agent=u_agent)
-    rel_request_get, created = RequestGetVisitors.objects.update_or_create(request_get_args=request_get_args)
-    rel_request_post, created = RequestPostVisitors.objects.update_or_create(request_post_args=request_post_args)
+    rel_url_path, _ = URLPathsVisitors.objects.update_or_create(url_path=path)
+    rel_user_agent, _ = UserAgentVisitors.objects.update_or_create(user_agent=u_agent)
+    rel_request_get, _ = RequestGetVisitors.objects.update_or_create(request_get_args=request_get_args)
+    rel_request_post, _ = RequestPostVisitors.objects.update_or_create(request_post_args=request_post_args)
 
     guests = dict(
         ip=client_ip,
         is_routable=is_routable,
         updated_at=datetime.datetime.now(tz=timezone.utc),
         hashed_ip_agent_path=hashed,
-        # Relations:
+    )
+    visitor, created = NetworkVisitorsAddresses.objects.update_or_create(
+        hashed_ip_agent_path=guests.get('hashed_ip_agent_path'),
         rel_url_path=rel_url_path,
         rel_user_agent=rel_user_agent,
         rel_request_get=rel_request_get,
         rel_request_post=rel_request_post,
-    )
-    visitor, created = NetworkVisitorsAddresses.objects.update_or_create(
-        hashed_ip_agent_path=guests.get('hashed_ip_agent_path'),
         defaults=guests,
     )
-    log.debug(f"Visitor: {visitor} created: {created}")
+    # log.debug(f"Visitor: {visitor} created: {created}")
     return None
 
 

@@ -24,20 +24,20 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     list_display = (
         'ip',
         'is_routable',
-        'url_path',
-        'user_agent',
-        'request_get',
-        'request_post',
+        'url_path_fk',
+        'user_agent_fk',
+        'request_get_fk',
+        'request_post_fk',
         'updated_at',
         'created_at',
     )
     readonly_fields = (
         'ip',
         'is_routable',
-        'url_path',
-        'user_agent',
-        'request_get',
-        'request_post',
+        'url_path_fk',
+        'user_agent_fk',
+        'request_get_fk',
+        'request_post_fk',
         'updated_at',
         'created_at',
     )
@@ -48,9 +48,6 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     )
     search_fields = (
         'ip',
-        'is_routable',
-        'rel_user_agent',
-        'rel_url_path',
     )
     list_per_page = 300
     fieldsets = [
@@ -64,34 +61,34 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         ('Relations', {
             'description': "Basic info",
             'fields': [
-                ('url_path',),
-                ('user_agent',),
-                ('request_get',),
-                ('request_post',),
+                ('url_path_fk',),
+                ('user_agent_fk',),
+                ('request_get_fk',),
+                ('request_post_fk',),
             ]
         })
     ]
 
-    def url_path(self, obj):
+    def url_path_fk(self, obj):
         if obj.rel_url_path:
             return obj.rel_url_path.url_path
 
-    def user_agent(self, obj):
+    def user_agent_fk(self, obj):
         if obj.rel_user_agent:
             return obj.rel_user_agent.user_agent
 
-    def request_get(self, obj):
+    def request_get_fk(self, obj):
         if obj.rel_request_get:
             return obj.rel_request_get.request_get_args
 
-    def request_post(self, obj):
+    def request_post_fk(self, obj):
         if obj.rel_request_post:
             return obj.rel_request_post.request_post_args
 
-    url_path.short_description = 'url_path'
-    user_agent.short_description = 'user_agent'
-    request_get.short_description = 'request_get'
-    request_post.short_description = 'request_post'
+    url_path_fk.short_description = 'url_path'
+    user_agent_fk.short_description = 'user_agent'
+    request_get_fk.short_description = 'request_get'
+    request_post_fk.short_description = 'request_post'
 
 
 @admin.register(URLPathsVisitors)
