@@ -10,6 +10,14 @@ from main.models import (NetworkVisitorsAddresses, MailsTexts,
 admin.site.register(MailsTexts)
 
 
+def validate_and_escape(field):
+    if field:
+        field = str(field).replace("{", '').replace("}", '')
+    else:
+        field = ''
+    return field
+
+
 @admin.register(NetworkVisitorsAddresses)
 class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     ordering = ('-updated_at',)
@@ -134,10 +142,23 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
         return queryset
 
     def visitors_table(self, obj):
-        field = '<table style="width:100%"><tr><td>ip</td><td>updated</td><td>created</td>'
+        field = ('<table style="width:100%">'
+                 '<tr>'
+                 '<td>ip</td>'
+                 '<td>updated</td>'
+                 '<td>created</td>'
+                 '<td>get</td>'
+                 '<td>post</td>'
+                 '')
         if obj.visitor_rel_url_path:
             for visitor in obj.visitor_rel_url_path.all().order_by("-updated_at"):
-                field += f"<tr><td>{visitor.ip}</td><td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td><td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td></tr>"
+                field += (f"<tr>"
+                          f"<td>{visitor.ip}</td>"
+                          f"<td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
+                          f"<td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
+                          f"<td>{validate_and_escape(visitor.rel_request_get.request_get_args)}</td>"
+                          f"<td>{validate_and_escape(visitor.rel_request_post.request_post_args)}</td>"
+                          f"</tr>")
         field += '</tr></table>'
         return format_html(field)
 
@@ -185,15 +206,30 @@ class UserAgentVisitorsAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(
-            _hits_count=Count("visitor_rel_url_path__hashed_ip_agent_path", distinct=True),
+            _hits_count=Count("visitor_rel_user_agent__hashed_ip_agent_path", distinct=True),
         )
         return queryset
 
     def visitors_table(self, obj):
-        field = '<table style="width:100%"><tr><td>ip</td><td>updated</td><td>created</td>'
+        field = ('<table style="width:100%">'
+                 '<tr>'
+                 '<td>ip</td>'
+                 '<td>updated</td>'
+                 '<td>created</td>'
+                 '<td>url</td>'
+                 '<td>get</td>'
+                 '<td>post</td>'
+                 '')
         if obj.visitor_rel_user_agent:
             for visitor in obj.visitor_rel_user_agent.all().order_by("-updated_at"):
-                field += f"<tr><td>{visitor.ip}</td><td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td><td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td></tr>"
+                field += (f"<tr>"
+                          f"<td>{visitor.ip}</td>"
+                          f"<td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
+                          f"<td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
+                          f"<td>{visitor.rel_url_path.url_path if visitor.rel_url_path.url_path else ''}</td>"
+                          f"<td>{validate_and_escape(visitor.rel_request_get.request_get_args)}</td>"
+                          f"<td>{validate_and_escape(visitor.rel_request_post.request_post_args)}</td>"
+                          f"</tr>")
         field += '</tr></table>'
         return format_html(field)
 
@@ -241,15 +277,26 @@ class RequestGetVisitorsAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(
-            _hits_count=Count("visitor_rel_url_path__hashed_ip_agent_path", distinct=True),
+            _hits_count=Count("visitor_rel_request_get__hashed_ip_agent_path", distinct=True),
         )
         return queryset
 
     def visitors_table(self, obj):
-        field = '<table style="width:100%"><tr><td>ip</td><td>updated</td><td>created</td>'
-        if obj.visitor_rel_request_get:
+        field = ('<table style="width:100%">'
+                 '<tr>'
+                 '<td>ip</td>'
+                 '<td>updated</td>'
+                 '<td>created</td>'
+                 '<td>url</td>'
+                 '')
+        if obj.visitor_rel_request_get and obj.visitor_rel_request_get.all():
             for visitor in obj.visitor_rel_request_get.all().order_by("-updated_at"):
-                field += f"<tr><td>{visitor.ip}</td><td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td><td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td></tr>"
+                field += (f"<tr>"
+                          f"<td>{visitor.ip}</td>"
+                          f"<td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
+                          f"<td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
+                          f"<td>{visitor.rel_url_path.url_path if visitor.rel_url_path.url_path else ''}</td>"
+                          f"</tr>")
         field += '</tr></table>'
         return format_html(field)
 
@@ -297,15 +344,26 @@ class RequestPostVisitorsAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(
-            _hits_count=Count("visitor_rel_url_path__hashed_ip_agent_path", distinct=True),
+            _hits_count=Count("visitor_rel_request_post__hashed_ip_agent_path", distinct=True),
         )
         return queryset
 
     def visitors_table(self, obj):
-        field = '<table style="width:100%"><tr><td>ip</td><td>updated</td><td>created</td>'
+        field = ('<table style="width:100%">'
+                 '<tr>'
+                 '<td>ip</td>'
+                 '<td>updated</td>'
+                 '<td>created</td>'
+                 '<td>url</td>'
+                 '')
         if obj.visitor_rel_request_post:
             for visitor in obj.visitor_rel_request_post.all().order_by("-updated_at"):
-                field += f"<tr><td>{visitor.ip}</td><td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td><td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td></tr>"
+                field += (f"<tr>"
+                          f"<td>{visitor.ip}</td>"
+                          f"<td>{visitor.updated_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
+                          f"<td>{visitor.created_at.strftime('%Y-%m-%d %H:%M:%S')}</td>"
+                          f"<td>{visitor.rel_url_path.url_path if visitor.rel_url_path.url_path else ''}</td>"
+                          f"</tr>")
         field += '</tr></table>'
         return format_html(field)
 
