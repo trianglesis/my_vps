@@ -42,6 +42,7 @@ def save_visit_task(request):
     skip_paths = Options.objects.get(option_key__exact='skip.request.paths')
     # If the option is True: skip
     if skip_paths.option_bool:
+        #  TODO: Validate and catch
         skip_paths = eval(skip_paths.option_value)
         if any([True if path in r_path else False for path in skip_paths]):
             if show_log:
@@ -52,6 +53,7 @@ def save_visit_task(request):
     skip_ips = Options.objects.get(option_key__exact='skip.client_ip')
     # If the option is True: skip
     if skip_ips.option_bool:
+        # TODO: Validate and catch
         skip_ips = eval(skip_ips.option_value)
         if any(client_ip == ip for ip in skip_ips):
             if show_log:

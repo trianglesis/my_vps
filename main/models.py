@@ -28,7 +28,7 @@ class MailsTexts(models.Model):
     body = models.TextField(_('body'), blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     private = models.BooleanField(_('private value'), null=True)
 
     class Meta:
@@ -50,8 +50,8 @@ class NetworkVisitorsAddresses(models.Model):
 
     hashed_ip_agent_path = models.CharField(max_length=255)
 
-    created_at = models.DateTimeField(auto_now=True)
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = True
