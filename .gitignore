@@ -10,14 +10,10 @@ db.sqlite3
 /static/
 !/static/core/*
 !/static/remotes/*
+!/static/favicon/*
 
 /templates/Django-and-registration/
-/core.log
-/dev.log
-/celery.log
 /y_devel/exclude_from_sharing/
-/beat@layer.log
-/remotes@layer.log
 
 y_devel/CAM
 y_devel/dump
