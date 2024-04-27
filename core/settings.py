@@ -26,7 +26,7 @@ ENV = 0
 print("Settings: Setup settings environment.")
 if hostname == HostnamesSupported.DEV_HOSTNAME:
     ENV = 0
-    LOG_DIR = ''
+    LOG_DIR = 'x_logs'
     DEBUG = True
     DEV = True
     THIS_IS_DEV = True
@@ -184,6 +184,7 @@ ALLOWED_HOSTS = ['localhost',
                  Credentials.FQDN,
                  Credentials.IP,
                  Credentials.HOSTNAME,
+                 HostnamesSupported.LIVE_IPV6,
                  HostnamesSupported.LIVE_WEB,
                  HostnamesSupported.LIVE_WEB_WWW,
                  socket.getfqdn(),

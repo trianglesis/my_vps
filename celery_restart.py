@@ -21,7 +21,7 @@ if hostname == HostnamesSupported.DEV_HOSTNAME:
     CELERY_BIN = "/home/user/projects/my_vps/venv/bin/celery"
     CWD = "/mnt/d/Projects/PycharmProjects/my_vps/"
     CELERYD_PID_FILE = "/home/user/{PID}.pid"
-    CELERY_LOG_PATH = '/mnt/d/Projects/PycharmProjects/my_vps/'
+    CELERY_LOG_PATH = '/mnt/d/Projects/PycharmProjects/my_vps/x_logs'
     workers = CeleryCreds.WSL_WORKERS
     CELERYD_LOG_LEVEL = "INFO"
     print(f"Celery ENV LOCAL: {hostname} ENV={ENV} CELERY_BIN:{CELERY_BIN} workers: {workers}")

@@ -25,6 +25,7 @@ from core.helpers.mailing import Mails
 from main.models import MailsTexts
 
 log = logging.getLogger("core")
+log_mail = logging.getLogger("mail")
 curr_hostname = getattr(settings, 'CURR_HOSTNAME', None)
 
 
@@ -40,25 +41,18 @@ def exception(function):
             return function(*args, **kwargs)
         except SoftTimeLimitExceeded as e:
             log.warning("Firing SoftTimeLimitExceeded exception.")
-            # exc_more = f'{e} Task had reached soft time limit and was killed to free the queue.'
+            log_mail.error(f"Task exeption 'SoftTimeLimitExceeded': {e}")
             TMail().mail_log(function, e, _args=args, _kwargs=kwargs)
-            # Do not rise when soft time limit, just inform:
-
-            addm_items = kwargs.get('addm_items', False)
-            if addm_items:
-                log.error(f"TODO: WIll run ADDM Clean task 'run_operation_cmd'!")
-                # ADDMStaticOperations().run_operation_cmd(**kwargs)
             return wrapper
 
         except TimeLimitExceeded as e:
             log.warning("Firing TimeLimitExceeded exception. Task will now die!")
-            # exc_more = f'{e} Task time limit reached! This task was cancelled to release the worker.'
+            log_mail.error(f"Task exeption 'TimeLimitExceeded': {e}")
             TMail().mail_log(function, e, _args=args, _kwargs=kwargs)
-            # Raise when task goes out of a latest time limit:
             raise TimeLimitExceeded(e)
 
         except WorkerLostError as e:
-            # exc_more = f'{e} Task cannot be executed. Celery worker lost or became unreachable.'
+            log_mail.error(f"Task exeption 'WorkerLostError': {e}")
             TMail().mail_log(function, e, _args=args, _kwargs=kwargs)
             raise Exception(e)
 
@@ -81,7 +75,7 @@ def exception(function):
             except TypeError:
                 log.error(f"Task Exception: {error_d}")
             if const.is_dev():
-                log.info(
+                log_mail.info(
                     f'Exceptions on test machine do not send mail log on task fail! {function} {exc_more} {args} {kwargs}')
                 TMail().mail_log(function, e, _args=args, _kwargs=kwargs, sam=sam)
             raise Exception(e)
