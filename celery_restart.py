@@ -158,19 +158,22 @@ python celery_restart.py --mode=restart
 python celery_restart.py --mode=restart --worker=w_parsing
 
 
-
 python3 /var/www/my_vps/venv/bin/celery multi start core@layer -A core.core_celery:app --pidfile=/opt/celery/core@layer.pid --logfile=/var/log/my_vps/core@layer.log --loglevel=INFO --concurrency=1 -E
 python3 /var/www/my_vps/venv/bin/celery -A core.core_celery:app worker --loglevel=INFO
-
 
 celery --app=proj worker -l INFO $ celery -A proj worker -l INFO -Q hipri,lopri
 celery -A proj worker --concurrency=4 $ celery -A proj worker --concurrency=1000 -P eventlet 
 celery worker --autoscale=10,0
 
-
 python3 /var/www/my_vps/venv/bin/celery --app=core.core_celery:app worker core --concurrency=5 --detach
 
 celery -A core.core_celery:app worker --loglevel=INFO
+
+
+# For WIN
+celery -A core.core_celery:app beat --loglevel=INFO
+# Older:
+python celery_restart.py --mode=kill --worker=beat; python celery_restart.py --mode=beat --worker=beat
 """
 
 """

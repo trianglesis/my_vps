@@ -1,12 +1,15 @@
 from __future__ import absolute_import, unicode_literals
+
 import logging
+
 from core import constants as const
 from core.core_celery import app
 from core.helpers.tasks_helpers import exception
 from core.security import CeleryCreds
-from main.visitors import save_visit, pick_request_useful_data
-from main.models import Options
 from core.security import Other
+from main.models import Options
+from main.visitors import save_visit, pick_request_useful_data
+from blog.calculations import calculate_hits
 
 ADMIN_URL = Other.ADMIN_URL
 
@@ -14,12 +17,32 @@ log = logging.getLogger("core")
 
 @app.task(
     queue=CeleryCreds.QUEUE_CORE,
-    routing_key='routines.MainTasks.make_snap',
+    routing_key='main.t_save_visitor',
     soft_time_limit=const.MIN_1, task_time_limit=const.MIN_1)
 @exception
 def t_save_visitor(request):
+    """
+    Save request data from any HTTP Request visit
+    :param request:
+    :return:
+    """
     save_visit(request)
     return True
+
+
+@app.task(
+    queue=CeleryCreds.QUEUE_CORE,
+    routing_key='main.t_calculate_hits',
+    soft_time_limit=const.MIN_1, task_time_limit=const.MIN_1)
+@exception
+def t_calculate_hits():
+    """
+    Calculate posts visitors, once a day.
+    :return:
+    """
+    calculate_hits()
+    return True
+
 
 
 def save_visit_task(request):
@@ -70,3 +93,6 @@ def save_visit_task(request):
         if show_log:
             log.info(f"Save visit task: {data_pickable.get('client_ip')} {data_pickable.get('path')} - {task_added}")
     return True
+
+
+

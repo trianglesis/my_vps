@@ -76,6 +76,17 @@ class Post(models.Model):
         """
         return f"/blog/post/{self.slug}"
 
+class Hits(models.Model):
+    hits = models.IntegerField(default=0)
+    post = models.ForeignKey(Post,
+                             related_name='hits_rel_post',
+                             # If post delete do not keep hits
+                             on_delete=models.CASCADE)
+    class Meta:
+        managed = True
+        db_table = 'tria_posts_hits'
+        verbose_name = '[Blog] Hit'
+        verbose_name_plural = '[Blog] Hits'
 
 class WptriaPosts(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)  # Field name made lowercase.

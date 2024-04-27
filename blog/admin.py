@@ -3,7 +3,9 @@ from django.forms import TextInput
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.html import format_html
 
-from blog.models import *
+from django.db import models
+
+from blog.models import Tag, Post, Hits
 
 
 # Register your models here.
@@ -108,6 +110,18 @@ class PostAdmin(admin.ModelAdmin):
         return format_html(field)
 
     in_tags.short_description = "Tags"
+
+
+# Hits
+@admin.register(Hits)
+class HitsAdmin(admin.ModelAdmin):
+    model = Hits
+    ordering = ('-post__publish_date',)
+    list_display = [
+        "id",
+        "post",
+        "hits",
+    ]
 
 
 admin.site.register(Post, PostAdmin)
