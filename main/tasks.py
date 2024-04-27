@@ -56,7 +56,6 @@ def t_raise_exception(*args, **kwargs):
            f"\n\targs: {args}"
            f"\n\tkwargs: {kwargs}")
     log.error(msg)
-
     try:
         Mails().short(
             subject="t_raise_exception",

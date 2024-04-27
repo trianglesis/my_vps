@@ -50,7 +50,7 @@ def make_connection(retry_i=3, wait_s=10):
         except socket.gaierror as e:
             CONNECTION = None
             while retry_i > 1:
-                log.info(f"{retry_i}: retry on exception - open email connection")
+                log.info(f"Try {retry_i}: on exception - open email connection")
                 sleep(wait_s)
                 retry_i -= 1
                 make_connection(retry_i, wait_s)
@@ -60,7 +60,7 @@ def make_connection(retry_i=3, wait_s=10):
                     log_mail.error(msg)
                     raise Exception(msg)
             else:
-                log.error(f"All retries were used ({retry_i}), exit!")
+                log.error(f"Connection retries ended ({retry_i}), exit!")
         finally:
             log.debug(f'Connection established: {CONNECTION}')
     else:
@@ -79,7 +79,7 @@ def email_retry(email, retry_i=3, wait_s=10):
     # Now catch generic exception, but collect errors and add exceptions.
     except Exception as e:
         while retry_i > 1:
-            log.error(f"{retry_i}: retry - send email")
+            log.error(f"Try: {retry_i}: retry - send email")
             sleep(wait_s)
             retry_i -= 1
             email_retry(email, retry_i, wait_s)
@@ -89,7 +89,7 @@ def email_retry(email, retry_i=3, wait_s=10):
                 log_mail.error(msg)
                 raise Exception(msg)
         else:
-            log.error(f"All retries were used ({retry_i}), exit!")
+            log.error(f"Re-send retried ended ({retry_i}), exit!")
     finally:
         log.debug(f'Finish mail sending loop!')
 
@@ -189,7 +189,7 @@ class Mails:
         email_args = dict(
             subject=subject,
             body=body,
-            from_email=getattr(settings, 'EMAIL_ADDR', None),
+            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', None),
             to=send_to,
             cc=send_cc,
             bcc=bcc,

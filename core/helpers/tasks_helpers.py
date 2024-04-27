@@ -21,7 +21,6 @@ from core.helpers.mailing import Mails
 from main.models import MailsTexts
 
 log = logging.getLogger("core")
-log_mail = logging.getLogger("mail")
 curr_hostname = getattr(settings, 'CURR_HOSTNAME', None)
 
 
@@ -37,18 +36,18 @@ def exception(function):
             return function(*args, **kwargs)
         except SoftTimeLimitExceeded as e:
             log.warning("Firing SoftTimeLimitExceeded exception.")
-            log_mail.error(f"Task exception 'SoftTimeLimitExceeded': {e}")
+            log.error(f"Task exception 'SoftTimeLimitExceeded': {e}")
             TMail().mail_log(function, e, _args=args, _kwargs=kwargs)
             return wrapper
 
         except TimeLimitExceeded as e:
             log.warning("Firing TimeLimitExceeded exception. Task will now die!")
-            log_mail.error(f"Task exception 'TimeLimitExceeded': {e}")
+            log.error(f"Task exception 'TimeLimitExceeded': {e}")
             TMail().mail_log(function, e, _args=args, _kwargs=kwargs)
             raise TimeLimitExceeded(e)
 
         except WorkerLostError as e:
-            log_mail.error(f"Task exception 'WorkerLostError': {e}")
+            log.error(f"Task exception 'WorkerLostError': {e}")
             TMail().mail_log(function, e, _args=args, _kwargs=kwargs)
             raise Exception(e)
 
@@ -65,6 +64,7 @@ def exception(function):
             # Last
             TMail().mail_log(function, e, _args=args, _kwargs=kwargs, sam=sam)
             raise Exception(e)
+
     return wrapper
 
 
@@ -81,21 +81,20 @@ class TMail:
         :param sam:
         :return:
         """
-        mails_txt = ''
         send_to = _kwargs.get('user_name', False)
         if not send_to:
             send_to = _kwargs.get('user_email', 'email.service.error')
-
         # When something bad happened - use a selected text object to fill mail subject and body:
-        try:
-            mails_txt = MailsTexts.objects.get(mail_key__contains=f'{function.__module__}.{function.__name__}')
-        except ObjectDoesNotExist:
-            mails_txt = MailsTexts.objects.get(mail_key__contains='general_exception')
-            log.info(f'<=TASK Exception mail_log=> No email found for this kind of function, use default!'
-                     f'\n\tmail_key: "{function.__module__}.{function.__name__}"')
-        if not mails_txt:
-            log.error(f"Cannot find any email texts for exception to send, send without an explanation!")
-
+        # Or create a new one with the default message.
+        mails_txt = MailsTexts.objects.get_or_create(
+            mail_key__contains=f'{function.__module__}.{function.__name__}',
+            defaults={
+                "subject": "General exception!",
+                "description": "This is a general exception message, "
+                               "it not a known exception, please investigate."
+                               "\n\nUpdate this email body the backend site with later explanation.",
+            }
+        )
         subject = f'Exception: {mails_txt.subject} | {curr_hostname}'
         test_added = loader.get_template('helpers/exception_email.html')
         mail_html = test_added.render(dict(
