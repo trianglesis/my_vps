@@ -109,6 +109,5 @@ python manage.py visitors_sorting --mode=visitors_select --method=select_and_sor
 python manage.py visitors_sorting --mode=visitors_select --method=select_urls_and_update_redirects
 
 
-
 visitors_url_path visitors_user_agent visitors_request_get visitors_request_post visitors_agents
 """

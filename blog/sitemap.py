@@ -6,7 +6,7 @@ class BlogSitemap(Sitemap):
     """
     https://docs.djangoproject.com/en/5.0/ref/contrib/sitemaps/
     """
-    changefreq = "daily"
+    changefreq = "weekly"
     priority = 0.5
 
     def items(self):

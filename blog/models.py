@@ -74,7 +74,7 @@ class Post(models.Model):
         Do not add here domain
         :return:
         """
-        return f"/post/{self.slug}"
+        return f"/blog/post/{self.slug}"
 
 
 class WptriaPosts(models.Model):
