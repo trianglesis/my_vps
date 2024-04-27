@@ -4,8 +4,9 @@ import logging
 
 from core import constants as const
 from core.core_celery import app
+from core.helpers.mailing import Mails
 from core.helpers.tasks_helpers import exception
-from core.security import CeleryCreds
+from core.security import CeleryCreds, DjangoCreds
 from core.security import Other
 from main.models import Options
 from main.visitors import save_visit, pick_request_useful_data
@@ -14,6 +15,7 @@ from blog.calculations import calculate_hits
 ADMIN_URL = Other.ADMIN_URL
 
 log = logging.getLogger("core")
+
 
 @app.task(
     queue=CeleryCreds.QUEUE_CORE,
@@ -51,9 +53,21 @@ def t_calculate_hits():
 @exception
 def t_raise_exception(*args, **kwargs):
     msg = (f"Task for exception!"
-              f"args: {args}"
-              f"kwargs: {kwargs}")
+           f"\n\targs: {args}"
+           f"\n\tkwargs: {kwargs}")
     log.error(msg)
+
+    try:
+        Mails().short(
+            subject="t_raise_exception",
+            body=msg,
+            send_to=DjangoCreds.mails['admin'],
+            bcc=DjangoCreds.mails['admin']
+        )
+    except Exception as e:
+        log.error(f"Task for exception cannot send a test email!"
+                  f"\n\tException:\n{e}")
+
     raise Exception(msg)
 
 
@@ -105,6 +119,3 @@ def save_visit_task(request):
         if show_log:
             log.info(f"Save visit task: {data_pickable.get('client_ip')} {data_pickable.get('path')} - {task_added}")
     return True
-
-
-

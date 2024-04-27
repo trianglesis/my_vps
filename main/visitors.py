@@ -37,8 +37,6 @@ def save_visit(request_d):
     h.update(ip_agent_path.encode('utf-8'))
     hashed = h.hexdigest()
 
-    log.info(f"Saving: {ip_agent_path}")
-
     # Relations:
     rel_url_path, _ = URLPathsVisitors.objects.update_or_create(url_path=path)
     rel_user_agent, _ = UserAgentVisitors.objects.update_or_create(user_agent=u_agent)
