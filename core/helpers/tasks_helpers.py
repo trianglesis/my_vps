@@ -128,7 +128,7 @@ class TMail:
         if not send_to:
             send_to = _kwargs.get('user_email', 'email.service.error')
 
-        # When something bad happened - use selected text object to fill mail subject and body:
+        # When something bad happened - use a selected text object to fill mail subject and body:
         log.error(f'<=TASK Exception mail_log=> Selecting mail txt for: "{function.__module__}.{function.__name__}"')
         try:
             mails_txt = MailsTexts.objects.get(mail_key__contains=f'{function.__module__}.{function.__name__}')
@@ -150,5 +150,10 @@ class TMail:
             exception_sam=sam,
         ))
 
-        Mails().short(subject=subject, send_to=send_to, mail_html=mail_html, send_cc='email.service.error')
+        Mails().short(
+            subject=subject,
+            send_to=send_to,
+            mail_html=mail_html,
+            send_cc='email.service.error'
+        )
         # return mail_html

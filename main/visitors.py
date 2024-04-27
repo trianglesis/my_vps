@@ -1,8 +1,12 @@
-import datetime
 import logging
 from hashlib import blake2b
-from django.utils import timezone
+import sys
+import traceback
+
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.db.utils import DatabaseError
 from ipware import get_client_ip
+
 from main.models import (NetworkVisitorsAddresses, URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors)
 
 log = logging.getLogger("core")
@@ -39,19 +43,46 @@ def save_visit(request_d):
     rel_request_get, _ = RequestGetVisitors.objects.update_or_create(request_get_args=request_get_args)
     rel_request_post, _ = RequestPostVisitors.objects.update_or_create(request_post_args=request_post_args)
 
-    visitor, created = NetworkVisitorsAddresses.objects.update_or_create(
-        hashed_ip_agent_path=hashed,
-        rel_url_path=rel_url_path,
-        rel_user_agent=rel_user_agent,
-        rel_request_get=rel_request_get,
-        rel_request_post=rel_request_post,
-        defaults=dict(
-            ip=client_ip,
-            is_routable=is_routable,
-            updated_at=datetime.datetime.now(tz=timezone.utc),
-        ),
-    )
-    # log.debug(f"Visitor: {visitor} created: {created}")
+    try:
+        visitor, created = NetworkVisitorsAddresses.objects.update_or_create(
+            # Get by this and update of nothing got.
+            hashed_ip_agent_path=hashed,
+            defaults=dict(
+                ip=client_ip,
+                is_routable=is_routable,
+                rel_url_path=rel_url_path,
+                rel_user_agent=rel_user_agent,
+                rel_request_get=rel_request_get,
+                rel_request_post=rel_request_post,
+            ),
+        )
+        if created:
+            log.debug(f"Visitor: {visitor} created: {created}")
+
+    # I forgot to handle different problems:
+    except ObjectDoesNotExist as e:
+         # Rare or should not happen
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        sam = traceback.format_exception(exc_type, exc_value, exc_traceback)
+        log.error(f"Cannot update of create a visitor!"
+                  f"\n\tException:\n{e}"
+                  f"\n\tTraceback:\n{sam}")
+
+    except MultipleObjectsReturned as e:
+        # Rare or should not happen
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        sam = traceback.format_exception(exc_type, exc_value, exc_traceback)
+        log.error(f"Cannot update of create a visitor!"
+                  f"\n\tException:\n{e}"
+                  f"\n\tTraceback:\n{sam}")
+
+    except DatabaseError as e:
+        # Happened a few times, investigating
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        sam = traceback.format_exception(exc_type, exc_value, exc_traceback)
+        log.error(f"Cannot update of create a visitor!"
+                  f"\n\tException:\n{e}"
+                  f"\n\tTraceback:\n{sam}")
     return None
 
 
