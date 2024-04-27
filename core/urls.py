@@ -48,10 +48,9 @@ urlpatterns = [
     # See also: https://django-robots.readthedocs.io/en/latest/
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     path("sitemap.xml", sitemap, {"sitemaps": {"blog": BlogSitemap}}, name="django.contrib.sitemaps.views.sitemap"),
+    path('tinymce/', include('tinymce.urls')),
 ]
 
 # Only load on a local dev system when needed
 if const.is_dev():
-    # TMCE
-    path('tinymce/', include('tinymce.urls')),
     urlpatterns.append(path('__debug__/', include('debug_toolbar.urls')))
