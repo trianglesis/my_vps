@@ -3,7 +3,6 @@
 {% load static %}
 {% load humanize %}
 {% load tz %}
-
 {% block page_title %}
     {{ title }}
 {% endblock %}
@@ -62,7 +61,7 @@
                                     <span class="badge bg-secondary"
                                           title="Hits or unique visitors">{{ post.hits_rel_post.hits }}</span>
                                     <span class="disqus-comment-count"
-                                          data-disqus-url="{{ post.get_absolute_url }}"
+                                          data-disqus-url="{{ post.get_absolute_hostname_url }}"
                                           data-disqus-identifier="{{ post.slug }}">C</span>
                                 {% endif %}
                             </div>
