@@ -59,7 +59,13 @@
                             </div>
                             <div class="text-left">
                                 {% if post.hits_rel_post %}
-                                    <a title="Hits or unique visitors"><span class="badge bg-secondary">{{ post.hits_rel_post.hits }}</span></a>
+                                    <span class="badge bg-secondary"
+                                          title="Hits or unique visitors">{{ post.hits_rel_post.hits }}</span>
+                                    <span class="badge bg-secondary disqus-comment-count"
+                                          style="text-decoration: none;"
+                                          data-disqus-url="{{ post.get_absolute_url }}"
+                                          data-disqus-identifier="{{ post.get_absolute_url }}"
+                                          title="Comments count">Comments</span>
                                 {% endif %}
                             </div>
                         </div>

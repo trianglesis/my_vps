@@ -26,3 +26,5 @@ class MainPage(TemplateView):
         )
         return main_data
 
+class FeedBackComments(TemplateView):
+    template_name = 'main/feedback.html'
