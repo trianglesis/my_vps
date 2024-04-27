@@ -22,13 +22,13 @@ log = logging.getLogger("core")
     routing_key='main.t_save_visitor',
     soft_time_limit=const.MIN_1, task_time_limit=const.MIN_1)
 @exception
-def t_save_visitor(request):
+def t_save_visitor(request, **kwargs):
     """
     Save request data from any HTTP Request visit
     :param request:
     :return:
     """
-    save_visit(request)
+    save_visit(request, **kwargs)
     return True
 
 
@@ -114,7 +114,7 @@ def save_visit_task(request):
         save_visit(data_pickable)
     # Now make actual work:
     else:
-        task_added = t_save_visitor.apply_async(args=[data_pickable])
+        task_added = t_save_visitor.apply_async(args=[data_pickable], kwargs=dict(show_log=show_log))
         if show_log:
             log.info(f"Save visit task: {data_pickable.get('client_ip')} {data_pickable.get('path')} - {task_added}")
     return True

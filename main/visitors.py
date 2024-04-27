@@ -12,7 +12,7 @@ from main.models import (NetworkVisitorsAddresses, URLPathsVisitors, UserAgentVi
 log = logging.getLogger("core")
 
 
-def save_visit(request_d):
+def save_visit(request_d, **kwargs):
     """
     Save each visit if user got errors or tried to access some places.
     Later
@@ -24,6 +24,7 @@ def save_visit(request_d):
     :param request:
     :return:
     """
+    show_log = kwargs.get('show_log', False)
 
     client_ip = request_d.get('client_ip')
     is_routable = request_d.get('is_routable')
@@ -56,8 +57,8 @@ def save_visit(request_d):
                 rel_request_post=rel_request_post,
             ),
         )
-        if created:
-            log.info(f"Visitor: {visitor} created: {created}")
+        if show_log and created:
+            log.info(f"{visitor} created: {created}")
 
     # I forgot to handle different problems:
     except ObjectDoesNotExist as e:
