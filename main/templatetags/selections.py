@@ -3,6 +3,7 @@ import logging
 from django import template
 
 from blog.models import Tag, Post
+from core.setup_logic import Credentials
 
 register = template.Library()
 log = logging.getLogger("core")
@@ -30,6 +31,11 @@ def selector_validate(context, exclude_key=None, update_context=False):
         return ''
     else:
         return sel_str
+
+
+@register.simple_tag()
+def site_http():
+    return Credentials.SITE_HTTP
 
 
 @register.simple_tag()

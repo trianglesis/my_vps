@@ -1,8 +1,9 @@
-from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-
+from django.db import models
 from tinymce.models import HTMLField
+
+from core.setup_logic import Credentials
 
 
 class Tag(models.Model):
@@ -76,6 +77,8 @@ class Post(models.Model):
         """
         return f"/blog/post/{self.slug}"
 
+    def get_absolute_hostname_url(self):
+        return f"{Credentials.SITE_HTTP}/blog/post/{self.slug}"
 
 class Hits(models.Model):
     hits = models.IntegerField(default=0)

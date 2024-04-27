@@ -51,6 +51,8 @@ class Credentials:
         EMAIL_HOST_USER = DjangoCreds.EMAIL_HOST_USER
         EMAIL_HOST_PASSWORD = DjangoCreds.EMAIL_HOST_PASSWORD
         SITE = HostnamesSupported.DEV_WEB
+        SITE_HTTP = HostnamesSupported.DEV_LIVE_WEB_HTML
+
     elif ENV == 1:
         print(f"Setup credentials Live creds: {hostname} ENV={ENV}")
         HOSTNAME = HostnamesSupported.LIVE_HOSTNAME
@@ -61,6 +63,7 @@ class Credentials:
         EMAIL_HOST_USER = DjangoCreds.EMAIL_HOST_USER
         EMAIL_HOST_PASSWORD = DjangoCreds.EMAIL_HOST_PASSWORD
         SITE = HostnamesSupported.LIVE_WEB
+        SITE_HTTP = HostnamesSupported.LIVE_WEB_HTML
     else:
         print(f"ERROR: Setup credentials Unexpected creds: {hostname} ENV={ENV}")
         sys.exit(f"ERROR: Setup credentials Unexpected creds: {hostname} ENV={ENV}")

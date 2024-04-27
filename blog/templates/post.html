@@ -64,9 +64,9 @@
                     /*
                     */
                     var disqus_config = function () {
-                        this.page.url = {{ object.get_absolute_url }};
-                        this.page.identifier = {{ object.slug }};
-                        this.page.title = {{ object.title }};
+                        this.page.url = '{{ object.get_absolute_hostname_url }}';
+                        this.page.identifier = '{{ object.slug }}';
+                        this.page.title = '{{ object.title }}';
                     };
                     (function () { // DON'T EDIT BELOW THIS LINE
                         var d = document, s = d.createElement('script');

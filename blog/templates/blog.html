@@ -61,11 +61,9 @@
                                 {% if post.hits_rel_post %}
                                     <span class="badge bg-secondary"
                                           title="Hits or unique visitors">{{ post.hits_rel_post.hits }}</span>
-                                    <span class="badge bg-secondary disqus-comment-count"
-                                          style="text-decoration: none;"
+                                    <span class="disqus-comment-count"
                                           data-disqus-url="{{ post.get_absolute_url }}"
-                                          data-disqus-identifier="{{ post.slug }}"
-                                          title="Comments count">Comments</span>
+                                          data-disqus-identifier="{{ post.slug }}">C</span>
                                 {% endif %}
                             </div>
                         </div>
