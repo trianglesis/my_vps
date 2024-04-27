@@ -6,20 +6,16 @@ Decorator and helpers for tasks, like:
 
 """
 import functools
-import json
 # Python logger
 import logging
 import sys
 import traceback
-from pprint import pformat
 
 from billiard.exceptions import WorkerLostError
 from celery.exceptions import SoftTimeLimitExceeded, TimeLimitExceeded
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import loader
-
-from core import constants as const
 
 from core.helpers.mailing import Mails
 from main.models import MailsTexts
