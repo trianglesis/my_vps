@@ -37,15 +37,22 @@
                         <span title="raw time: {{ object.date_modified }}"> Modified: {{ object.date_modified|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
                     </div>
                 </div>
-                <div class="card-footer text-muted">
-                    <span class="badge bg-dark">{{ object.author.first_name }}</span>
-                    <span title="raw time: {{ object.publish_date }}"
-                          class="badge bg-light text-dark">{{ object.publish_date|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
-                    {% if object.tags.all %}
-                        {% for tag in object.tags.all %}
-                            <a title="{{ tag.description }}" href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
-                        {% endfor %}
-                    {% endif %}
+                <div class="card-footer text-muted d-flex justify-content-between">
+                    <div class="text-right">
+                        <span class="badge bg-dark">{{ object.author.first_name }}</span>
+                        <span title="raw time: {{ object.publish_date }}"
+                              class="badge bg-light text-dark">{{ object.publish_date|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
+                        {% if object.tags.all %}
+                            {% for tag in object.tags.all %}
+                                <a title="{{ tag.description }}" href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="text-left">
+                        {% if object.hits_rel_post %}
+                            <a title="Hits or unique visitors"><span class="badge bg-secondary">{{ object.hits_rel_post.hits }}</span></a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="discuss-comments" style="padding-top: 30px;padding-bottom: 50px">
