@@ -44,6 +44,18 @@ def t_calculate_hits():
     return True
 
 
+@app.task(
+    queue=CeleryCreds.QUEUE_CORE,
+    routing_key='main.t_raise_exception',
+    soft_time_limit=const.MIN_1, task_time_limit=const.MIN_1)
+@exception
+def t_raise_exception(*args, **kwargs):
+    msg = (f"Task for exception!"
+              f"args: {args}"
+              f"kwargs: {kwargs}")
+    log.error(msg)
+    raise Exception(msg)
+
 
 def save_visit_task(request):
     """
