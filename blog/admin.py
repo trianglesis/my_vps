@@ -38,6 +38,7 @@ class PostAdmin(admin.ModelAdmin):
         'date_created',
         'date_modified',
         'publish_date',
+        'hits',
         # 'author',
         # 'site',
         # 'tags',
@@ -56,6 +57,7 @@ class PostAdmin(admin.ModelAdmin):
         'date_created',
         'date_modified',
         'in_tags',
+        'hits',
     ]
     prepopulated_fields = {'slug': ('title',)}
 
@@ -73,6 +75,7 @@ class PostAdmin(admin.ModelAdmin):
             ('published',),
         ]}),
         ('Details', {'fields': [
+            ('hits',),
             ('site',),
             ('slug',),
             ('date_created',),
@@ -85,6 +88,12 @@ class PostAdmin(admin.ModelAdmin):
         models.CharField: {'widget': TextInput(attrs={'size': '160'})},
         # models.TextField: {'widget': Textarea(attrs={'rows': 12, 'cols': 50})},
     }
+
+    def hits(self, obj):
+        value = 0
+        if obj.hits_rel_post:
+            return obj.hits_rel_post.hits
+        return value
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """
@@ -110,6 +119,8 @@ class PostAdmin(admin.ModelAdmin):
         return format_html(field)
 
     in_tags.short_description = "Tags"
+    hits.admin_order_field = 'hits_rel_post__hits'
+
 
 
 # Hits
