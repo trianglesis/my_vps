@@ -86,13 +86,15 @@ app.conf.update(
     # Do not set! Or logic will not wait of task OK: # task_ignore_result=True,
     task_track_started=True,
 
+
+
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#result-backend
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#database-url-examples
     # https://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html#keeping-results
     # 1406, "Data too long for column 'result' at row 1" - it's not so important to keep it in DB
     result_backend=result_backend,
     # result_backend='django-db',
-    database_engine_options={'pool_timeout': 90},
+    database_engine_options={'pool_timeout': 300},
 
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
     beat_scheduler='django_celery_beat.schedulers:DatabaseScheduler',
@@ -103,8 +105,13 @@ app.conf.update(
     task_default_routing_key='default',
     task_default_exchange_type='direct',
 
-    task_default_delivery_mode='transient',  # https://docs.celeryproject.org/en/master/userguide/configuration.html#task-default-delivery-mode
-    task_create_missing_queues=True,  # By Default  # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-create-missing-queues
+    worker_direct=True,  # http://docs.celeryproject.org/en/latest/userguide/configuration.html#worker-direct
+    # If enabled (default), any queues specified that aren’t defined in task_queues will be automatically created. See Automatic routing.
+    task_create_missing_queues=True,  # Default: Enabled.
+    # If set to True, result messages will be persistent. This means the messages won’t be lost after a broker restart.
+    # result_persistent=True,  # https://docs.celeryq.dev/en/stable/userguide/configuration.html#result-persistent
+    # Can be transient (messages not written to disk) or persistent (written to disk).
+    task_default_delivery_mode='transient',  # Default: "persistent". https://docs.celeryproject.org/en/master/userguide/configuration.html#task-default-delivery-mode
 
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#worker-prefetch-multiplier
     worker_prefetch_multiplier=1,  # NOTE: Do not rely on celery queue no more, use rabbitmq queues instead!
@@ -112,12 +119,14 @@ app.conf.update(
     worker_disable_rate_limits=True,
     worker_concurrency=1,  # https://docs.celeryproject.org/en/master/userguide/configuration.html#worker-concurrency
     worker_lost_wait=20,  # https://docs.celeryproject.org/en/master/userguide/configuration.html#worker-lost-wait
-    worker_max_memory_per_child=1024 * 100,  # 100MB
-    worker_max_tasks_per_child=10,  # https://docs.celeryproject.org/en/master/userguide/configuration.html#worker-max-tasks-per-child
+    worker_max_memory_per_child=1024 * 20,  # 20MB
+    worker_max_tasks_per_child=100,  # https://docs.celeryproject.org/en/master/userguide/configuration.html#worker-max-tasks-per-child
+    worker_proc_alive_timeout=5.0,
+    worker_cancel_long_running_tasks_on_connection_loss=True,
 
     # Useful
     # https://docs.celeryproject.org/en/master/userguide/configuration.html#worker-log-format
-    worker_timer_precision=1,  # https://docs.celeryproject.org/en/master/userguide/configuration.html#worker-timer-precision
+    worker_timer_precision=1.0,  # https://docs.celeryproject.org/en/master/userguide/configuration.html#worker-timer-precision
     worker_enable_remote_control=True,  # https://docs.celeryproject.org/en/master/userguide/configuration.html#worker-enable-remote-control
     task_send_sent_event=True,  # https://docs.celeryproject.org/en/master/userguide/configuration.html#task-send-sent-event
     worker_send_task_events=True,  # -E at worker service # http://docs.celeryproject.org/en/latest/userguide/configuration.html#events
@@ -130,16 +139,25 @@ app.conf.update(
     # Setting this to true allows the message to be re-queued instead, so that the task will execute again by the same worker, or another worker.
     task_reject_on_worker_lost=False,  # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-reject-on-worker-lost
 
-    broker_pool_limit=50,  # http://docs.celeryproject.org/en/latest/userguide/configuration.html#broker-pool-limit
+    # Broker setup:
+
+    # Automatically try to establish the connection to the AMQP broker on Celery startup if it is unavailable.
+    broker_connection_retry_on_startup=True,  # https://docs.celeryq.dev/en/latest/userguide/configuration.html#broker-connection-retry-on-startup
+    broker_connection_retry=True,  # Default: Enabled. https://docs.celeryq.dev/en/latest/userguide/configuration.html#broker-connection-retry
+    # New in version 5.3.
+    # Automatically try to re-establish the connection to the AMQP broker if any invalid response has been returned.
+    # RECONNECT RabbitMQ: https://docs.celeryq.dev/en/stable/userguide/configuration.html#broker-channel-error-retry
+    broker_channel_error_retry=True,  # Default: Disabled.
+    # The maximum number of connections that can be open in the connection pool.
+    broker_pool_limit=100,  # Default: 10. http://docs.celeryproject.org/en/latest/userguide/configuration.html#broker-pool-limit
+
 
     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#broker-connection-timeout
-    broker_connection_timeout=4,
-    broker_connection_retry=True,
+    broker_connection_timeout=4.0,
     broker_connection_max_retries=0,
 
-    worker_direct=True,  # http://docs.celeryproject.org/en/latest/userguide/configuration.html#worker-direct
-
-    broker_heartbeat=10,  # https://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_heartbeat
+    broker_heartbeat=10.0,  # https://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_heartbeat
+    broker_heartbeat_checkrate=2.0
 
 )
 

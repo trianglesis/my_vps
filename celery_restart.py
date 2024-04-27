@@ -185,3 +185,15 @@ celery -A core.core_celery:app worker --logfile=remotes@layer.log --loglevel=INF
 """
 
 
+"""
+RabbitMQ checking:
+/sbin/service rabbitmq-server status
+/sbin/service rabbitmq-server restart
+
+rabbitmqctl list_feature_flags
+rabbitmqctl -p layer list_feature_flags
+rabbitmqctl enable_feature_flag stream_single_active_consumer
+
+Queues
+rabbitmqctl -p layer list_queues
+"""
