@@ -57,14 +57,3 @@ class UserVisitMiddleware:
                     'error_code': f'CODE: {response.status_code}'
                 })
         return response
-
-    def process_exception(self, request, exception):
-        """
-        To save exception when request is not recognized
-        For example,
-        - Invalid HTTP_HOST header:
-        :param request:
-        :param exception:
-        :return:
-        """
-        log.error(f"Middleware process_exception:\n{str(exception)}\n")

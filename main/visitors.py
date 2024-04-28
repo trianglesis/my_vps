@@ -1,7 +1,7 @@
 import logging
 import sys
 import traceback
-
+from main.models import Options
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.utils import DatabaseError
 from ipware import get_client_ip
@@ -134,3 +134,24 @@ def pick_request_useful_data(request):
         request_post_args=request_post_args,
     )
     return pickable_dict
+
+
+def skip(option_key, value, show_log=False):
+    """
+
+    :param option_key: unique key from Options table
+    :param value: Value to check with from pick_request_useful_data
+    :return:
+    """
+
+    # Skip by USer Agent
+    skip_option = Options.objects.get(option_key__exact=option_key)
+    if skip_option.option_bool:
+        # TODO: Validate and catch
+        skip_items = eval(skip_option.option_value)
+        log.info(f"Skipping {skip_items}")
+        if any(value == skip for skip in skip_items):
+            if show_log:
+                log.info(f"This key {option_key} have a skip-able value: {value}")
+            return True
+    return False

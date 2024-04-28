@@ -9,7 +9,7 @@ from core.helpers.tasks_helpers import exception
 from core.security import CeleryCreds, DjangoCreds
 from core.security import Other
 from main.models import Options
-from main.visitors import save_visit, pick_request_useful_data
+from main.visitors import skip, save_visit, pick_request_useful_data
 from blog.calculations import calculate_hits
 
 ADMIN_URL = Other.ADMIN_URL
@@ -80,33 +80,19 @@ def save_visit_task(request, status=None):
     # First get all we need from request (it's unpickable)
     data_pickable = pick_request_useful_data(request)
 
-    r_path = data_pickable.get('path')
     # Do not save admin url requests
-    if ADMIN_URL in r_path:
+    if ADMIN_URL in data_pickable.get('path'):
         return False
 
     show_log = Options.objects.get(option_key__exact='save_visit_task.log_info').option_bool
-    # Skip-able paths list:
-    skip_paths = Options.objects.get(option_key__exact='skip.request.paths')
-    # If the option is True: skip
-    if skip_paths.option_bool:
-        #  TODO: Validate and catch
-        skip_paths = eval(skip_paths.option_value)
-        if any([True if path in r_path else False for path in skip_paths]):
-            if show_log:
-                log.info(f"Path is skip able: {r_path}")
-            return False
 
-    client_ip = data_pickable.get('client_ip')
-    skip_ips = Options.objects.get(option_key__exact='skip.client_ip')
-    # If the option is True: skip
-    if skip_ips.option_bool:
-        # TODO: Validate and catch
-        skip_ips = eval(skip_ips.option_value)
-        if any(client_ip == ip for ip in skip_ips):
-            if show_log:
-                log.info(f"IP is skip able: {client_ip}")
-            return False
+    # Variants that we don't want to save:
+    if skip('skip.request.paths', data_pickable.get('path'), show_log):
+        return False
+    if skip('skip.client_ip', data_pickable.get('client_ip'), show_log):
+        return False
+    if skip('skip.user_agent', data_pickable.get('u_agent'), show_log):
+        return False
 
     # For dev ENV just run as it is
     if const.is_dev():
