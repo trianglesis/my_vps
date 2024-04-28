@@ -1,7 +1,7 @@
 import logging
 import typing
 
-from django.core.exceptions import SuspiciousOperation
+from django.core.exceptions import SuspiciousOperation, DisallowedHost
 # from django.core.exceptions import MiddlewareNotUsed
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
@@ -29,8 +29,16 @@ class UserVisitMiddleware:
         :param request:
         :return:
         """
+        # TODO: Catch: django.security.DisallowedHost
         try:
             response = self.get_response(request)
+        except DisallowedHost as e:
+            save_visit_task(request, status='ERR')
+            log.info(f"DisallowedHost - save visit for later, Traceback:\n{e}")
+            return render(request, 'main/main_body.html', {
+                'error_message': 'Something went wrong!',
+                'error_code': f'CODE: ERR do not try that again!'
+            })
         except SuspiciousOperation as e:
             log.error(f"SuspiciousOperation:"
                       f"\nException:\n{e}\n")
