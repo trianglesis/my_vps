@@ -98,18 +98,20 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
 class URLPathsVisitorsAdmin(admin.ModelAdmin):
     # date_hierarchy = "created_at"  # FIX TZ for MySQL
     ordering = ["-created_at"]
-    search_fields = ["url_path"]
+    search_fields = ["url_path", "hash"]
     list_filter = ["created_at"]
     list_display = [
         "pk",
         "created_at",
         "hits",
+        "hash",
         "url_path",
     ]
     readonly_fields = [
         "url_path",
         "created_at",
         "hits",
+        "hash",
         "visitors_table",
     ]
     list_per_page = 25
@@ -167,18 +169,20 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
 @admin.register(UserAgentVisitors)
 class UserAgentVisitorsAdmin(admin.ModelAdmin):
     ordering = ["-created_at"]
-    search_fields = ["user_agent"]
+    search_fields = ["user_agent", "hash"]
     list_filter = ["created_at"]
     list_display = [
         "pk",
         "created_at",
         "hits",
+        "hash",
         "user_agent",
     ]
     readonly_fields = [
         "user_agent",
         "created_at",
         "hits",
+        "hash",
         "visitors_table",
     ]
     list_per_page = 25
@@ -189,6 +193,7 @@ class UserAgentVisitorsAdmin(admin.ModelAdmin):
                 ("user_agent",),
                 ("created_at",),
                 ("hits",),
+                ("hash",),
                 ("visitors_table",),
             ]
         })
@@ -238,18 +243,20 @@ class UserAgentVisitorsAdmin(admin.ModelAdmin):
 @admin.register(RequestGetVisitors)
 class RequestGetVisitorsAdmin(admin.ModelAdmin):
     ordering = ["-created_at"]
-    search_fields = ["request_get_args"]
+    search_fields = ["request_get_args", "hash"]
     list_filter = ["created_at"]
     list_display = [
         "pk",
         "created_at",
         "hits",
+        "hash",
         "request_get_args",
     ]
     readonly_fields = [
         "request_get_args",
         "created_at",
         "hits",
+        "hash",
         "visitors_table",
     ]
     list_per_page = 25
@@ -260,6 +267,7 @@ class RequestGetVisitorsAdmin(admin.ModelAdmin):
                 ("request_get_args",),
                 ("created_at",),
                 ("hits",),
+                ("hash",),
                 ("visitors_table",),
             ]
         })
@@ -305,18 +313,20 @@ class RequestGetVisitorsAdmin(admin.ModelAdmin):
 @admin.register(RequestPostVisitors)
 class RequestPostVisitorsAdmin(admin.ModelAdmin):
     ordering = ["-created_at"]
-    search_fields = ["request_post_args"]
+    search_fields = ["request_post_args", "hash"]
     list_filter = ["created_at"]
     list_display = [
         "pk",
         "created_at",
         "hits",
+        "hash",
         "request_post_args",
     ]
     readonly_fields = [
         "request_post_args",
         "created_at",
         "hits",
+        "hash",
         "visitors_table",
     ]
     list_per_page = 25
@@ -327,6 +337,7 @@ class RequestPostVisitorsAdmin(admin.ModelAdmin):
                 ("request_post_args",),
                 ("created_at",),
                 ("hits",),
+                ("hash",),
                 ("visitors_table",),
             ]
         })

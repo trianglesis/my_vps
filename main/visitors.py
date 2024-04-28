@@ -1,4 +1,5 @@
 import logging
+import time
 from hashlib import blake2b
 import sys
 import traceback
@@ -7,9 +8,10 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.utils import DatabaseError
 from ipware import get_client_ip
 
-from main.models import (NetworkVisitorsAddresses, URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors)
+from main.models import (hashify, NetworkVisitorsAddresses, URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors)
 
 log = logging.getLogger("core")
+
 
 
 def save_visit(request_d, **kwargs):
@@ -33,21 +35,32 @@ def save_visit(request_d, **kwargs):
     request_get_args = request_d.get('request_get_args')
     request_post_args = request_d.get('request_post_args')
 
-    ip_agent_path = f"{client_ip}-{u_agent}-{path}-{request_get_args}-{request_post_args}"
-    h = blake2b(digest_size=64)
-    h.update(ip_agent_path.encode('utf-8'))
-    hashed = h.hexdigest()
+    # Let the database do its work before proceed to next query in the next task,
+    # time.sleep(0.5)
 
     # Relations:
-    rel_url_path, _ = URLPathsVisitors.objects.update_or_create(url_path=path)
-    rel_user_agent, _ = UserAgentVisitors.objects.update_or_create(user_agent=u_agent)
-    rel_request_get, _ = RequestGetVisitors.objects.update_or_create(request_get_args=request_get_args)
-    rel_request_post, _ = RequestPostVisitors.objects.update_or_create(request_post_args=request_post_args)
+    rel_url_path, _ = URLPathsVisitors.objects.get_or_create(
+        hash=hashify(path),
+        url_path=path
+    )
+    rel_user_agent, _ = UserAgentVisitors.objects.get_or_create(
+        hash=hashify(u_agent),
+        user_agent=u_agent
+    )
+    rel_request_get, _ = RequestGetVisitors.objects.get_or_create(
+        hash=hashify(request_get_args),
+        request_get_args=request_get_args
+    )
+    rel_request_post, _ = RequestPostVisitors.objects.get_or_create(
+        hash=hashify(request_post_args),
+        request_post_args=request_post_args
+    )
 
     try:
+        ip_agent_path = f"{client_ip}-{u_agent}-{path}-{request_get_args}-{request_post_args}"
         visitor, created = NetworkVisitorsAddresses.objects.update_or_create(
             # Get by this and update of nothing got.
-            hashed_ip_agent_path=hashed,
+            hashed_ip_agent_path=hashify(ip_agent_path, digest_size=64),
             defaults=dict(
                 ip=client_ip,
                 is_routable=is_routable,
@@ -58,7 +71,7 @@ def save_visit(request_d, **kwargs):
             ),
         )
         if show_log and created:
-            log.info(f"{visitor} created: {created}")
+            log.info(f"{visitor} created: {created}; url: {rel_url_path.url_path} hash: {visitor.hashed_ip_agent_path}")
 
     # I forgot to handle different problems:
     except ObjectDoesNotExist as e:

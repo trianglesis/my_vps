@@ -131,7 +131,14 @@ class CeleryTaskmeta(models.Model):
     class Meta:
         managed = False
         db_table = 'celery_taskmeta'
+        verbose_name = '[ Celery ] Task Meta Details'
+        verbose_name_plural = '[ Celery ] Tasks Meta Details'
 
+class CeleryTaskmetaProxy(CeleryTaskmeta):
+    class Meta:
+        proxy = True
+        verbose_name = '[ Celery ] Proxy Task Meta Details'
+        verbose_name_plural = '[ Celery ] Proxy Tasks Meta Details'
 
 class CeleryTasksetmeta(models.Model):
     taskset_id = models.CharField(unique=True, max_length=155, blank=True, null=True)
@@ -141,3 +148,5 @@ class CeleryTasksetmeta(models.Model):
     class Meta:
         managed = False
         db_table = 'celery_tasksetmeta'
+        verbose_name = '[ Celery ] Task Meta'
+        verbose_name_plural = '[ Celery ] Tasks Meta'

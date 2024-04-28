@@ -1,6 +1,16 @@
+from hashlib import blake2b
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
+def hashify(item_col, digest_size=8):
+    h = blake2b(digest_size=digest_size)
+    if item_col is None:
+        h.update('nothing'.encode('utf-8'))
+    else:
+        h.update(item_col.encode('utf-8'))
+    return h.hexdigest()
 
 class Options(models.Model):
     option_key = models.CharField(max_length=120, unique=True)
@@ -40,6 +50,7 @@ class MailsTexts(models.Model):
 
 
 class URLPathsVisitors(models.Model):
+    hash = models.CharField(max_length=16, unique=True, null=True)
     url_path = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -50,8 +61,13 @@ class URLPathsVisitors(models.Model):
         verbose_name = '[ Visit ] URL Path'
         verbose_name_plural = '[ Visit ] URL Paths'
 
+    def save(self, *args, **kwargs):
+        self.hash = hashify(self.url_path)
+        return super(URLPathsVisitors, self).save(*args, **kwargs)
+
 
 class UserAgentVisitors(models.Model):
+    hash = models.CharField(max_length=16, unique=True, null=True)
     user_agent = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -62,8 +78,13 @@ class UserAgentVisitors(models.Model):
         verbose_name = '[ Visit ] User Agent'
         verbose_name_plural = '[ Visit ] User Agents'
 
+    def save(self, *args, **kwargs):
+        self.hash = hashify(self.user_agent)
+        return super(UserAgentVisitors, self).save(*args, **kwargs)
+
 
 class RequestGetVisitors(models.Model):
+    hash = models.CharField(max_length=16, unique=True, null=True)
     request_get_args = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -74,8 +95,13 @@ class RequestGetVisitors(models.Model):
         verbose_name = '[ Visit ] Request GET'
         verbose_name_plural = '[ Visit ] Request GETs'
 
+    def save(self, *args, **kwargs):
+        self.hash = hashify(self.request_get_args)
+        return super(RequestGetVisitors, self).save(*args, **kwargs)
+
 
 class RequestPostVisitors(models.Model):
+    hash = models.CharField(max_length=16, unique=True, null=True)
     request_post_args = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -85,6 +111,10 @@ class RequestPostVisitors(models.Model):
         ordering = ['created_at']
         verbose_name = '[ Visit ] Request POST'
         verbose_name_plural = '[ Visit ] Request POSTs'
+
+    def save(self, *args, **kwargs):
+        self.hash = hashify(self.request_post_args)
+        return super(RequestPostVisitors, self).save(*args, **kwargs)
 
 
 class NetworkVisitorsAddresses(models.Model):
@@ -130,3 +160,14 @@ class NetworkVisitorsAddresses(models.Model):
 
     def __str__(self):
         return f'Visitor id:{self.pk} {self.ip}'
+
+    # def save(self, *args, **kwargs):
+    #     self.hashed_ip_agent_path = hashify(
+    #         f"{self.ip}-"
+    #         f"{self.rel_user_agent.user_agent}-"
+    #         f"{self.rel_url_path.url_path}-"
+    #         f"{self.rel_request_get.request_get_args}-"
+    #         f"{self.rel_request_post.request_post_args}",
+    #         digest_size=64
+    #     )
+    #     return super(NetworkVisitorsAddresses, self).save(*args, **kwargs)
