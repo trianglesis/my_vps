@@ -80,7 +80,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
             return obj.rel_url_path.url_path
 
     def url_path_code_fk(self, obj):
-        if obj.rel_url_path.code:
+        if obj.rel_url_path and obj.rel_url_path.code:
             return obj.rel_url_path.code.code
 
     def user_agent_fk(self, obj):
