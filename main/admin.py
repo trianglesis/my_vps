@@ -6,6 +6,9 @@ from core.security import Other
 from main.models import (NetworkVisitorsAddresses, MailsTexts,
                          URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors,
                          Options, StatusCodeVisitors)
+import logging
+
+log = logging.getLogger("core")
 
 ADMIN_URL = Other.ADMIN_URL
 
@@ -147,6 +150,8 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
             ]
         })
     ]
+    actions = ["delete_with_visitors"]
+
 
     def hits(self, obj):
         value = 0
@@ -193,6 +198,20 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
     code_val.admin_order_field = 'code'
     code_val.short_description = "HTTP"
     visitors_table.short_description = "Visitors Table"
+
+    def delete_with_visitors(self, request, queryset):
+        """
+        To delete all visitor logs related to this URL, if needed.
+        :param request:
+        :param queryset:
+        :return:
+        """
+        for item in queryset:
+            log.info(f"Deleting all related to: {item.url_path} visitor logs, "
+                     f"count {item.visitor_rel_url_path.all().count()}")
+            item.rel_url_path.all().delete()
+        queryset.delete()
+
 
 
 @admin.register(UserAgentVisitors)
@@ -268,6 +287,18 @@ class UserAgentVisitorsAdmin(admin.ModelAdmin):
     hits.admin_order_field = '_hits_count'
     visitors_table.short_description = "Visitors Table"
 
+    def delete_with_visitors(self, request, queryset):
+        """
+        To delete all visitor logs related to this URL, if needed.
+        :param request:
+        :param queryset:
+        :return:
+        """
+        for item in queryset:
+            log.info(f"Deleting all related to: {item.user_agent} visitor logs, "
+                     f"count {item.visitor_rel_user_agent.all().count()}")
+            item.visitor_rel_user_agent.all().delete()
+        queryset.delete()
 
 @admin.register(RequestGetVisitors)
 class RequestGetVisitorsAdmin(admin.ModelAdmin):
@@ -338,6 +369,18 @@ class RequestGetVisitorsAdmin(admin.ModelAdmin):
     hits.admin_order_field = '_hits_count'
     visitors_table.short_description = "Visitors Table"
 
+    def delete_with_visitors(self, request, queryset):
+        """
+        To delete all visitor logs related to this URL, if needed.
+        :param request:
+        :param queryset:
+        :return:
+        """
+        for item in queryset:
+            log.info(f"Deleting all related to: {item.request_get_args} visitor logs, "
+                     f"count {item.visitor_rel_request_get.all().count()}")
+            item.visitor_rel_request_get.all().delete()
+        queryset.delete()
 
 @admin.register(RequestPostVisitors)
 class RequestPostVisitorsAdmin(admin.ModelAdmin):
@@ -408,6 +451,18 @@ class RequestPostVisitorsAdmin(admin.ModelAdmin):
     hits.admin_order_field = '_hits_count'
     visitors_table.short_description = "Visitors Table"
 
+    def delete_with_visitors(self, request, queryset):
+        """
+        To delete all visitor logs related to this URL, if needed.
+        :param request:
+        :param queryset:
+        :return:
+        """
+        for item in queryset:
+            log.info(f"Deleting all related to: {item.request_post_args} visitor logs, "
+                     f"count {item.visitor_rel_request_post.all().count()}")
+            item.visitor_rel_request_post.all().delete()
+        queryset.delete()
 
 @admin.register(Options)
 class OptionsAdmin(admin.ModelAdmin):

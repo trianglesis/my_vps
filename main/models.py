@@ -142,22 +142,22 @@ class NetworkVisitorsAddresses(models.Model):
                                      blank=True,
                                      null=True,
                                      related_name='visitor_rel_url_path',
-                                     on_delete=models.SET_NULL)
+                                     on_delete=models.CASCADE)
     rel_user_agent = models.ForeignKey(UserAgentVisitors,
                                        blank=True,
                                        null=True,
                                        related_name='visitor_rel_user_agent',
-                                       on_delete=models.SET_NULL)
+                                       on_delete=models.CASCADE)
     rel_request_get = models.ForeignKey(RequestGetVisitors,
                                         blank=True,
                                         null=True,
                                         related_name='visitor_rel_request_get',
-                                        on_delete=models.SET_NULL)
+                                        on_delete=models.CASCADE)
     rel_request_post = models.ForeignKey(RequestPostVisitors,
                                          blank=True,
                                          null=True,
                                          related_name='visitor_rel_request_post',
-                                         on_delete=models.SET_NULL)
+                                         on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
