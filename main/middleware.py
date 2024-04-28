@@ -6,6 +6,7 @@ from django.core.exceptions import SuspiciousOperation
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
 
+from core import constants as const
 from main.tasks import save_visit_task
 
 log = logging.getLogger("core")
@@ -33,7 +34,8 @@ class UserVisitMiddleware:
         except SuspiciousOperation as e:
             log.error(f"SuspiciousOperation:"
                       f"\nException:\n{e}\n")
-            response = HttpResponseForbidden('CSRF verification failed.')
+            save_visit_task(request, status='SUS')
+            return HttpResponseForbidden('CSRF verification failed.')
         except Exception as e:
             log.error(f"General Exception: returning the main page by default."
                       f"\nException:\n{e}\n")
@@ -49,10 +51,11 @@ class UserVisitMiddleware:
         # Redirects to the main page!
         bad_codes = [400, 401, 403, 404, 500]
         if response.status_code in bad_codes:
-            return render(request, 'main/main_body.html', {
-                'error_message': 'Something went wrong!',
-                'error_code': f'CODE: {response.status_code}'
-            })
+            if not const.is_dev():
+                return render(request, 'main/main_body.html', {
+                    'error_message': 'Something went wrong!',
+                    'error_code': f'CODE: {response.status_code}'
+                })
         return response
 
     def process_exception(self, request, exception):

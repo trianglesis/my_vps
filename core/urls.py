@@ -25,11 +25,6 @@ from blog.sitemap import BlogSitemap
 
 ADMIN_URL = Other.ADMIN_URL
 
-# handler404 = 'core.views.page_not_found_view'
-# handler500 = 'core.views.response_error_handler'
-# handler403 = 'core.views.permission_denied_view'
-# handler400 = 'core.views.bad_request_view'
-
 urlpatterns = [
     path('', MainPage.as_view(), name='home'),
     path('index/', MainPage.as_view(), name='index'),

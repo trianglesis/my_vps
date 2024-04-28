@@ -15,6 +15,7 @@ def hashify(item_col, digest_size=8):
         h.update(item_col.encode('utf-8'))
     return h.hexdigest()
 
+
 class Options(models.Model):
     option_key = models.CharField(max_length=120, unique=True)
     option_value = models.TextField(blank=True, null=True)
@@ -52,9 +53,22 @@ class MailsTexts(models.Model):
         return f'{self.id} - {self.mail_key}'
 
 
+class StatusCodeVisitors(models.Model):
+    code = models.CharField(max_length=4, unique=True)
+
+    class Meta:
+        managed = True
+        db_table = 'visitors_code'
+        ordering = ['code']
+        verbose_name = '[ Visit ] HTTP Code'
+        verbose_name_plural = '[ Visit ] HTTP Codes'
+
+
 class URLPathsVisitors(models.Model):
     hash = models.CharField(max_length=16, unique=True)
     url_path = models.TextField()
+    # Status codes to sort out bad requests
+    code = models.ForeignKey(StatusCodeVisitors, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -122,7 +136,7 @@ class RequestPostVisitors(models.Model):
 
 class NetworkVisitorsAddresses(models.Model):
     ip = models.GenericIPAddressField(protocol='both', unpack_ipv4=True)
-    is_routable = models.BooleanField(null=True)
+    is_routable = models.BooleanField(null=True, verbose_name='Rout')
     hashed_ip_agent_path = models.CharField(max_length=255)
     rel_url_path = models.ForeignKey(URLPathsVisitors,
                                      blank=True,

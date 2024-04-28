@@ -5,7 +5,7 @@ from core.security import Other
 
 from main.models import (NetworkVisitorsAddresses, MailsTexts,
                          URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors,
-                         Options)
+                         Options, StatusCodeVisitors)
 
 ADMIN_URL = Other.ADMIN_URL
 
@@ -28,6 +28,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         'ip',
         'is_routable',
         'url_path_fk',
+        'url_path_code_fk',
         'user_agent_fk',
         'request_get_fk',
         'request_post_fk',
@@ -38,6 +39,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         'ip',
         'is_routable',
         'url_path_fk',
+        'url_path_code_fk',
         'user_agent_fk',
         'request_get_fk',
         'request_post_fk',
@@ -48,6 +50,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         'is_routable',
         'created_at',
         'updated_at',
+        'rel_url_path__code__code',
     )
     search_fields = (
         'ip',
@@ -64,7 +67,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
         ('Relations', {
             'description': "Basic info",
             'fields': [
-                ('url_path_fk',),
+                ('url_path_fk', 'url_path_code_fk'),
                 ('user_agent_fk',),
                 ('request_get_fk',),
                 ('request_post_fk',),
@@ -75,6 +78,10 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     def url_path_fk(self, obj):
         if obj.rel_url_path:
             return obj.rel_url_path.url_path
+
+    def url_path_code_fk(self, obj):
+        if obj.rel_url_path.code:
+            return obj.rel_url_path.code.code
 
     def user_agent_fk(self, obj):
         if obj.rel_user_agent:
@@ -89,9 +96,16 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
             return obj.rel_request_post.request_post_args
 
     url_path_fk.short_description = 'url_path'
+    url_path_code_fk.short_description = 'code'
     user_agent_fk.short_description = 'user_agent'
-    request_get_fk.short_description = 'request_get'
-    request_post_fk.short_description = 'request_post'
+    request_get_fk.short_description = 'get'
+    request_post_fk.short_description = 'post'
+
+@admin.register(StatusCodeVisitors)
+class StatusCodeVisitorsAdmin(admin.ModelAdmin):
+    ordering = ["-code"]
+    list_display = ["code"]
+    list_per_page = 25
 
 
 @admin.register(URLPathsVisitors)
@@ -99,13 +113,17 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
     # date_hierarchy = "created_at"  # FIX TZ for MySQL
     ordering = ["-created_at"]
     search_fields = ["url_path", "hash"]
-    list_filter = ["created_at"]
+    list_filter = [
+        "created_at",
+        "code__code",
+    ]
     list_display = [
         "pk",
         "created_at",
         "hits",
         "hash",
         "url_path",
+        "code_val",
     ]
     readonly_fields = [
         "url_path",
@@ -113,6 +131,8 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
         "hits",
         "hash",
         "visitors_table",
+        "code_val",
+
     ]
     list_per_page = 25
     fieldsets = [
@@ -122,6 +142,7 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
                 ("url_path",),
                 ("created_at",),
                 ("hits",),
+                ("code_val",),
                 ("visitors_table",),
             ]
         })
@@ -131,6 +152,12 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
         value = 0
         if obj.visitor_rel_url_path:
             return obj.visitor_rel_url_path.all().count()
+        return value
+
+    def code_val(self, obj):
+        value = ''
+        if obj.code:
+            value =  obj.code.code
         return value
 
     def get_queryset(self, request):
@@ -163,6 +190,8 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
 
     hits.short_description = "Hits"
     hits.admin_order_field = '_hits_count'
+    code_val.admin_order_field = 'code'
+    code_val.short_description = "HTTP"
     visitors_table.short_description = "Visitors Table"
 
 

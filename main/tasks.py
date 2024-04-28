@@ -114,7 +114,7 @@ def save_visit_task(request, status=None):
                     f"\n\tPath: {data_pickable['path']}"
                     f"\n\tStatus: {status}"
                     f"")
-        save_visit(data_pickable)
+        save_visit(data_pickable, status=status, show_log=show_log)
     # Now make actual work:
     else:
         task_added = t_save_visitor.apply_async(args=[data_pickable], kwargs=dict(status=status, show_log=show_log))

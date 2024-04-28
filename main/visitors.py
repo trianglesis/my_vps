@@ -1,6 +1,4 @@
 import logging
-import time
-from hashlib import blake2b
 import sys
 import traceback
 
@@ -8,10 +6,13 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.utils import DatabaseError
 from ipware import get_client_ip
 
-from main.models import (hashify, NetworkVisitorsAddresses, URLPathsVisitors, UserAgentVisitors, RequestGetVisitors, RequestPostVisitors)
+from main.models import (hashify,
+                         URLPathsVisitors, StatusCodeVisitors,
+                         UserAgentVisitors, RequestGetVisitors, RequestPostVisitors,
+                         NetworkVisitorsAddresses,
+                         )
 
 log = logging.getLogger("core")
-
 
 
 def save_visit(request_d, **kwargs):
@@ -28,9 +29,6 @@ def save_visit(request_d, **kwargs):
     """
     show_log = kwargs.get('show_log', False)
     status = kwargs.get('status', None)
-    if status is not None:
-        log.info(f"Saving request with status: {status}")
-
     client_ip = request_d.get('client_ip')
     is_routable = request_d.get('is_routable')
     u_agent = request_d.get('u_agent')
@@ -40,22 +38,18 @@ def save_visit(request_d, **kwargs):
 
     # Let the database do its work before proceed to next query in the next task,
     # time.sleep(0.5)
-    """
-    TODO: Probably duplicated because of redirects?
-    created: True; url: /blog/post/plone-installation hash: ... 
-    created: True; url: /blog/post/plone-installation/ hash: ... 
-    It's UA: Disqus/1.0
-    Example:
-    - Visitor id:51561
-    - Visitor id:51563
-    Somehow it tries to resolve two paths.
-    Ignore it's IP or user agent in the future?
-    """
+
+    # If status code provided adds rel, or None
+    if status is not None:
+        status, _ = StatusCodeVisitors.objects.get_or_create(code=status)
 
     # Relations:
-    rel_url_path, _ = URLPathsVisitors.objects.get_or_create(
+    rel_url_path, _ = URLPathsVisitors.objects.update_or_create(
         hash=hashify(path),
-        url_path=path
+        url_path=path,
+        defaults=dict(
+            code=status
+        ),
     )
     rel_user_agent, _ = UserAgentVisitors.objects.get_or_create(
         hash=hashify(u_agent),
@@ -89,7 +83,7 @@ def save_visit(request_d, **kwargs):
 
     # I forgot to handle different problems:
     except ObjectDoesNotExist as e:
-         # Rare or should not happen
+        # Rare or should not happen
         exc_type, exc_value, exc_traceback = sys.exc_info()
         sam = traceback.format_exception(exc_type, exc_value, exc_traceback)
         log.error(f"Cannot update of create a visitor!"
