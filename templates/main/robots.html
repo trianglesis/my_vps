@@ -1,0 +1,5 @@
+{% load selections %}
+{% block content %}
+    {% robots_txt as robots_txt %}
+    <pre style="word-wrap: break-word; white-space: pre-wrap;">{{ robots_txt|safe }}</pre>
+{% endblock %}

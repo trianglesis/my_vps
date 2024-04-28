@@ -20,7 +20,7 @@ from django.contrib.sitemaps.views import sitemap
 
 from core import constants as const
 from core.security import Other
-from main.views import MainPage
+from main.views import MainPage, RobotsTxt
 from blog.sitemap import BlogSitemap
 
 ADMIN_URL = Other.ADMIN_URL
@@ -41,7 +41,7 @@ urlpatterns = [
     path(f'{ADMIN_URL}/admin/', admin.site.urls),
     # WWW
     # See also: https://django-robots.readthedocs.io/en/latest/
-    path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path("robots.txt", RobotsTxt.as_view(), name='robots.txt'),
     path("sitemap.xml", sitemap, {"sitemaps": {"blog": BlogSitemap}}, name="django.contrib.sitemaps.views.sitemap"),
 ]
 

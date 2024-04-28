@@ -3,6 +3,7 @@ import logging
 from django import template
 
 from blog.models import Tag, Post
+from main.models import Options
 from core.setup_logic import Credentials
 
 register = template.Library()
@@ -37,6 +38,11 @@ def selector_validate(context, exclude_key=None, update_context=False):
 def site_http():
     return Credentials.SITE_HTTP
 
+
+@register.simple_tag()
+def robots_txt():
+    robots_txt = Options.objects.get(option_key__exact='robots.txt')
+    return robots_txt.option_value
 
 @register.simple_tag()
 def list_tags():

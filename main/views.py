@@ -28,3 +28,7 @@ class MainPage(TemplateView):
 
 class FeedBackComments(TemplateView):
     template_name = 'main/feedback.html'
+
+
+class RobotsTxt(TemplateView):
+    template_name = 'main/robots.html'
