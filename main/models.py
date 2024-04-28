@@ -8,6 +8,9 @@ def hashify(item_col, digest_size=8):
     h = blake2b(digest_size=digest_size)
     if item_col is None:
         h.update('nothing'.encode('utf-8'))
+    # Hash as simple string, same as it will be stored in table
+    elif isinstance(item_col, dict):
+        h.update(str(item_col).encode('utf-8'))
     else:
         h.update(item_col.encode('utf-8'))
     return h.hexdigest()
