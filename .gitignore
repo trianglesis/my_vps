@@ -7,10 +7,10 @@ core/security.py
 
 db.sqlite3
 
-/static/
-!/static/core/*
-!/static/remotes/*
-!/static/favicon/*
+/static/*
+!static/core/*
+!static/remotes/*
+!static/favicon/*
 
 /templates/Django-and-registration/
 /y_devel/exclude_from_sharing/
