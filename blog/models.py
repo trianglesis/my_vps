@@ -75,10 +75,10 @@ class Post(models.Model):
         Do not add here domain
         :return:
         """
-        return f"/blog/post/{self.slug}"
+        return f"/blog/post/{self.slug}/"
 
     def get_absolute_hostname_url(self):
-        return f"{Credentials.SITE_HTTP}/blog/post/{self.slug}"
+        return f"{Credentials.SITE_HTTP}/blog/post/{self.slug}/"
 
 class Hits(models.Model):
     hits = models.IntegerField(default=0)
