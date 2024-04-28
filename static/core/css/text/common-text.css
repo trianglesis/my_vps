@@ -2,6 +2,14 @@
     font-weight: bold;
 }
 
+.txt-mono {
+    font-family: monospace;
+}
+
+.txt-sm {
+    font-size: .7em;
+}
+
 .nodecor {
     text-decoration:none
 }

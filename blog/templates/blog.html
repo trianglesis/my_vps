@@ -37,11 +37,6 @@
                                 {{ post.body|safe|truncatewords_html:150 }}
                                 {#                                {{ post.meta_description }}#}
                             </p>
-                            {% if user.is_staff %}
-                                <div>
-                                    <a class="btn btn-warning" href="{% url 'admin:index' %}blog/post/{{ post.id }}/change">Edit</a>
-                                </div>
-                            {% endif %}
                             <div class="blockquote-footer text-muted text-sm-end">
                                 <span title="raw time: {{ post.date_modified }}"> Modified: {{ post.date_modified|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
                             </div>
@@ -59,6 +54,9 @@
                                 {% endif %}
                             </div>
                             <div class="text-left">
+                                {% if user.is_staff %}
+                                    <a class="badge bg-warning nodecor" href="{% url 'admin:index' %}blog/post/{{ post.id }}/change">Edit</a>
+                                {% endif %}
                                 {% if post.hits_rel_post %}
                                     <span class="badge bg-secondary"
                                           title="Hits or unique visitors">{{ post.hits_rel_post.hits }}</span>

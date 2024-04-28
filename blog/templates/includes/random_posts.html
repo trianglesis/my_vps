@@ -1,0 +1,46 @@
+{% load tz %}
+{% load humanize %}
+{% load selections %}
+{% block content %}
+    <div class="random-posts">
+        <div class="row row-cols-1 row-cols-md-3 g-2">
+            {% posts_random 10 as rand_posts %}
+            {% for post in rand_posts %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-text">{{ post.title }}</h6>
+                            <p class="card-text">{{ post.body|safe|truncatechars_html:100 }}</p>
+                            <p><a href="{% url 'post' post.slug %}" class="btn btn-sm btn-outline-info">
+                                {% if post.meta_description %}{{ post.meta_description }}{% else %}Read...{% endif %}</a></p>
+                        </div>
+                        <div class="card-footer text-muted d-flex justify-content-between">
+                            <div class="text-right">
+                                <span class="badge bg-dark">{{ post.author.first_name }}</span>
+                                <span title="raw time: {{ post.publish_date }}"
+                                      class="badge bg-light text-dark text-center txt-mono txt-sm">{{ post.publish_date|timezone:"Europe/Kyiv"|date:'Y N d (D) H:i'|naturaltime }}</span>
+                                {% if post.tags.all %}
+                                    {% for tag in post.tags.all %}
+                                        <a title="{{ tag.description }}" href="{% url 'blog' %}?tag={{ tag.name }}"><span class="badge bg-secondary">{{ tag.name }}</span></a>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="text-left">
+                                {% if user.is_staff %}
+                                    <a class="badge bg-warning nodecor" href="{% url 'admin:index' %}blog/post/{{ post.id }}/change">Edit</a>
+                                {% endif %}
+                                {% if post.hits_rel_post %}
+                                    <span class="badge bg-secondary"
+                                          title="Hits or unique visitors">{{ post.hits_rel_post.hits }}</span>
+                                    <span class="disqus-comment-count"
+                                            {% comment %}data-disqus-url="{{ post.get_absolute_hostname_url }}"{% endcomment %}
+                                          data-disqus-identifier="{{ post.slug }}"></span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
