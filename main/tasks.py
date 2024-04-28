@@ -109,7 +109,7 @@ def save_visit_task(request):
             return False
 
     # For dev ENV just run as it is
-    if not const.is_dev():
+    if const.is_dev():
         log.warning(f"Non TASK save request at DEV ENV!")
         save_visit(data_pickable)
     # Now make actual work:

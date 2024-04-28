@@ -50,7 +50,7 @@ class MailsTexts(models.Model):
 
 
 class URLPathsVisitors(models.Model):
-    hash = models.CharField(max_length=16, unique=True, null=True)
+    hash = models.CharField(max_length=16, unique=True)
     url_path = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -67,7 +67,7 @@ class URLPathsVisitors(models.Model):
 
 
 class UserAgentVisitors(models.Model):
-    hash = models.CharField(max_length=16, unique=True, null=True)
+    hash = models.CharField(max_length=16, unique=True)
     user_agent = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -84,7 +84,7 @@ class UserAgentVisitors(models.Model):
 
 
 class RequestGetVisitors(models.Model):
-    hash = models.CharField(max_length=16, unique=True, null=True)
+    hash = models.CharField(max_length=16, unique=True)
     request_get_args = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -101,7 +101,7 @@ class RequestGetVisitors(models.Model):
 
 
 class RequestPostVisitors(models.Model):
-    hash = models.CharField(max_length=16, unique=True, null=True)
+    hash = models.CharField(max_length=16, unique=True)
     request_post_args = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
