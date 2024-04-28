@@ -149,7 +149,6 @@ def skip(option_key, value, show_log=False):
     if skip_option.option_bool:
         # TODO: Validate and catch
         skip_items = eval(skip_option.option_value)
-        log.info(f"Skipping {skip_items}")
         if any(value == skip for skip in skip_items):
             if show_log:
                 log.info(f"This key {option_key} have a skip-able value: {value}")
