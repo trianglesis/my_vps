@@ -70,7 +70,7 @@ def t_raise_exception(*args, **kwargs):
     raise Exception(msg)
 
 
-def save_visit_task(request):
+def save_visit_task(request, status=None):
     """
     Save user visit with useful request data.
     Skip local paths, IPs, admin views, and so on.
@@ -110,11 +110,14 @@ def save_visit_task(request):
 
     # For dev ENV just run as it is
     if const.is_dev():
-        log.warning(f"Non TASK save request at DEV ENV!")
+        log.warning(f"Non TASK save request at DEV ENV!"
+                    f"\n\tPath: {data_pickable['path']}"
+                    f"\n\tStatus: {status}"
+                    f"")
         save_visit(data_pickable)
     # Now make actual work:
     else:
-        task_added = t_save_visitor.apply_async(args=[data_pickable], kwargs=dict(show_log=show_log))
+        task_added = t_save_visitor.apply_async(args=[data_pickable], kwargs=dict(status=status, show_log=show_log))
         if show_log:
             log.info(f"Save visit task: {data_pickable.get('client_ip')} {data_pickable.get('path')} - {task_added}")
     return True

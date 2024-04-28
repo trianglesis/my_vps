@@ -49,7 +49,6 @@
     {% endcomment %}
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
-
     {% comment %}
         Popper
     {% endcomment %}
@@ -64,7 +63,6 @@
     {% comment %}
         Bootstrap 5.2
     {% endcomment %}
-
     <meta charset="utf-8">
     {# https://getbootstrap.com/docs/5.2/getting-started/introduction/#responsive-meta-tag #}
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -73,7 +71,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
             crossorigin="anonymous"></script>
-
     {% comment %}
         Bootstrap 5.0.2
     {% endcomment %}
@@ -84,72 +81,57 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
     {% endcomment %}
-
     {% comment %}
         Place my settings here:
         <link rel="stylesheet" type="text/css" href="{% static 'my_site/css/main.css' %}"/>
     {% endcomment %}
-
     {% comment %}
         Icons, fonts
     {% endcomment %}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/octicons/8.5.0/build.css" rel="stylesheet">
-
     {% comment %}
         New FA approach
     {% endcomment %}
     <script src="https://kit.fontawesome.com/34b7ee38d6.js" crossorigin="anonymous"></script>
-
     {% comment %}
         Older FA setup
         <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" integrity="sha384-haqrlim99xjfMxRP6EWtafs0sB1WKcMdynwZleuUSwJR0mDeRYbhtY+KPMr+JL6f" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
     {% endcomment %}
-
     {% comment %}
         AJAX setup manual
     {% endcomment %}
     <script src="{% static 'core/js/ajax_setup.js' %}"></script>
-
     {# Fonts #}
     <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
     <link href="https://fonts.googleapis.com/css?family=JetBrains+Mono:wght@200;300;400|Maven+Pro:500&display=swap"
           rel="stylesheet">
     <meta charset="UTF-8">
-
     {% comment %}
     Code highlighter prismJS
     https://prismjs.com/download.html#themes=prism-twilight&languages=markup+css+clike+javascript+apacheconf+bash+css-extras+django+editorconfig+git+graphql+http+ignore+ini+json+log+makefile+markdown+markup-templating+nginx+perl+php+powershell+python+regex+sql+systemd+vim+wiki+xml-doc+yaml&plugins=line-highlight+line-numbers+show-invisibles+file-highlight+show-language+highlight-keywords+normalize-whitespace+toolbar+copy-to-clipboard
     {% endcomment %}
     <link rel="stylesheet" type="text/css" href="/static/prismjs/prism.css">
-
     {% comment %}
         Custom
     {% endcomment %}
     <link rel="stylesheet" type="text/css" href="{% static 'core/main.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'core/css/general.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'core/css/tables/common-tables.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'core/css/utils/utils_styles.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/text/common-text.css' %}"/>
     {% comment %}
         TITLE:
     {% endcomment %}
-
     <title id="page_title">
         {% block page_title %}{% trans 'Trianglesi`s Home' %}{% endblock %}
     </title>
 
 </head>
 <body>
-
-{% comment %}
-    General navbar for all site
-{% endcomment %}
-
 {% comment %}
  Load internal functions:
 {% endcomment %}
 {% is_member 'family' as family_user %}
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         {# Branding #}

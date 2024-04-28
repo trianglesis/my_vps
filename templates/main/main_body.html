@@ -14,6 +14,15 @@
     </div>
 {% endcomment %}
     <div class="main-body">
+        {% if error_message %}
+            <div class="under-construction">
+                <div class="alert alert-warning" role="alert">
+                    <span><a class="txt-bold text-danger nodecor" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">{{ error_code }}</a></span>
+                    <span>{{ error_message }}</span>
+                </div>
+            </div>
+        {% endif %}
+
         <div class="under-construction">
             <div class="alert alert-info" role="alert">
                 Last 4 posts published.
@@ -97,7 +106,7 @@
                                         <span class="badge bg-secondary"
                                               title="Hits or unique visitors">{{ post.hits_rel_post.hits }}</span>
                                         <span class="disqus-comment-count"
-                                              {% comment %}data-disqus-url="{{ post.get_absolute_hostname_url }}"{% endcomment %}
+                                                {% comment %}data-disqus-url="{{ post.get_absolute_hostname_url }}"{% endcomment %}
                                               data-disqus-identifier="{{ post.slug }}"></span>
                                     {% endif %}
                                 </div>

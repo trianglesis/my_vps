@@ -27,6 +27,9 @@ def save_visit(request_d, **kwargs):
     :return:
     """
     show_log = kwargs.get('show_log', False)
+    status = kwargs.get('status', None)
+    if status is not None:
+        log.info(f"Saving request with status: {status}")
 
     client_ip = request_d.get('client_ip')
     is_routable = request_d.get('is_routable')
@@ -37,6 +40,17 @@ def save_visit(request_d, **kwargs):
 
     # Let the database do its work before proceed to next query in the next task,
     # time.sleep(0.5)
+    """
+    TODO: Probably duplicated because of redirects?
+    created: True; url: /blog/post/plone-installation hash: ... 
+    created: True; url: /blog/post/plone-installation/ hash: ... 
+    It's UA: Disqus/1.0
+    Example:
+    - Visitor id:51561
+    - Visitor id:51563
+    Somehow it tries to resolve two paths.
+    Ignore it's IP or user agent in the future?
+    """
 
     # Relations:
     rel_url_path, _ = URLPathsVisitors.objects.get_or_create(
@@ -71,7 +85,7 @@ def save_visit(request_d, **kwargs):
             ),
         )
         if show_log and created:
-            log.info(f"{visitor} created: {created}; url: {rel_url_path.url_path} hash: {visitor.hashed_ip_agent_path}")
+            log.info(f"{visitor} created: {created}\n\turl: {rel_url_path.url_path}\n\thash: {visitor.hashed_ip_agent_path}")
 
     # I forgot to handle different problems:
     except ObjectDoesNotExist as e:
