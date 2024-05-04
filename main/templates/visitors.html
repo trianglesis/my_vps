@@ -1,0 +1,42 @@
+{% extends "main/main.html" %}
+{% load tz %}
+{% load static %}
+{% load humanize %}
+{% block page_title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/utils/utils-styles.css' %}"/>
+    <div class="row" style="margin: 30px">
+        <div class="alert alert-secondary" role="alert">
+            Table of visitor IPs (encrypted!) - plan is to show bots.
+        </div>
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">IP secret</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col">Created</th>
+                </tr>
+                </thead>
+
+                {% for visitor in object_list %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ visitor.masked_ip }}</td>
+                        <td>{{ visitor.rel_url_path.url_path }}</td>
+                        <td>{{ visitor.rel_url_path.code.code }}</td>
+                        <td title="Updated at: {{ visitor.updated_at }}">{{ visitor.updated_at|timezone:"UTC"| naturaltime }}</td>
+                        <td title="Created at: {{ visitor.created_at }}">{{ visitor.created_at|timezone:"UTC"| naturaltime }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+            <div class="paginator-any">{% include 'utils/pagination.html' %}</div>
+        </div>
+    </div>
+{% endblock %}

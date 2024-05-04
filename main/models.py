@@ -3,6 +3,8 @@ from hashlib import blake2b
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from core.security import Other
+
 
 def hashify(item_col, digest_size=8):
     h = blake2b(digest_size=digest_size)
@@ -177,13 +179,6 @@ class NetworkVisitorsAddresses(models.Model):
     def __str__(self):
         return f'Visitor id:{self.pk} {self.ip}'
 
-    # def save(self, *args, **kwargs):
-    #     self.hashed_ip_agent_path = hashify(
-    #         f"{self.ip}-"
-    #         f"{self.rel_user_agent.user_agent}-"
-    #         f"{self.rel_url_path.url_path}-"
-    #         f"{self.rel_request_get.request_get_args}-"
-    #         f"{self.rel_request_post.request_post_args}",
-    #         digest_size=64
-    #     )
-    #     return super(NetworkVisitorsAddresses, self).save(*args, **kwargs)
+    def masked_ip(self):
+        secret = Other.SECRET_FOR_VISITORS_IP
+        return hashify(f"{secret}{self.ip}", digest_size=12)

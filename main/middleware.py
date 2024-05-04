@@ -31,6 +31,7 @@ class UserVisitMiddleware:
         :param request:
         :return:
         """
+        # TODO: Catch Forbidden (Referer checking failed - no Referer.):
 
         # Check the DisallowedHost early, record this, but not raise.
         try:

@@ -107,6 +107,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     request_get_fk.short_description = 'get'
     request_post_fk.short_description = 'post'
 
+
 @admin.register(StatusCodeVisitors)
 class StatusCodeVisitorsAdmin(admin.ModelAdmin):
     ordering = ["-code"]
@@ -155,7 +156,6 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
     ]
     actions = ["delete_with_visitors"]
 
-
     def hits(self, obj):
         value = 0
         if obj.visitor_rel_url_path:
@@ -165,7 +165,7 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
     def code_val(self, obj):
         value = ''
         if obj.code:
-            value =  obj.code.code
+            value = obj.code.code
         return value
 
     def get_queryset(self, request):
@@ -214,7 +214,6 @@ class URLPathsVisitorsAdmin(admin.ModelAdmin):
                      f"count {item.visitor_rel_url_path.all().count()}")
             item.rel_url_path.all().delete()
         queryset.delete()
-
 
 
 @admin.register(UserAgentVisitors)
@@ -303,6 +302,7 @@ class UserAgentVisitorsAdmin(admin.ModelAdmin):
             item.visitor_rel_user_agent.all().delete()
         queryset.delete()
 
+
 @admin.register(RequestGetVisitors)
 class RequestGetVisitorsAdmin(admin.ModelAdmin):
     ordering = ["-created_at"]
@@ -385,6 +385,7 @@ class RequestGetVisitorsAdmin(admin.ModelAdmin):
             item.visitor_rel_request_get.all().delete()
         queryset.delete()
 
+
 @admin.register(RequestPostVisitors)
 class RequestPostVisitorsAdmin(admin.ModelAdmin):
     ordering = ["-created_at"]
@@ -466,6 +467,7 @@ class RequestPostVisitorsAdmin(admin.ModelAdmin):
                      f"count {item.visitor_rel_request_post.all().count()}")
             item.visitor_rel_request_post.all().delete()
         queryset.delete()
+
 
 @admin.register(Options)
 class OptionsAdmin(admin.ModelAdmin):

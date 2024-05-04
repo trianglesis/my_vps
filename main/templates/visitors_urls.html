@@ -1,0 +1,38 @@
+{% extends "main/main.html" %}
+{% load tz %}
+{% load static %}
+{% load humanize %}
+{% block page_title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/utils/utils-styles.css' %}"/>
+    <div class="row" style="margin: 30px">
+        <div class="alert alert-secondary" role="alert">
+            Table of most common URLs tried at my blog by any visitor. Now it's limited to only show items where hits GTE {{ limit_to }} times. And redirects are excluded.
+        </div>
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">Hits</th>
+                    <th scope="col">Created</th>
+                </tr>
+                </thead>
+
+                {% for visitor_url_path in object_list %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td class="txt-mono" title="Full len: {{ visitor_url_path.url_path }}">{{ visitor_url_path.url_path|truncatechars:100 }}</td>
+                        <td>{{ visitor_url_path.total }}</td>
+                        <td title="Created at: {{ visitor_url_path.created_at }}">{{ visitor_url_path.created_at|timezone:"UTC"| naturaltime }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+            <div class="paginator-any">{% include 'utils/pagination.html' %}</div>
+        </div>
+    </div>
+{% endblock %}
