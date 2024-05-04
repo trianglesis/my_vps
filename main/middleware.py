@@ -9,7 +9,7 @@ from django.shortcuts import render
 from core import constants as const
 from main.tasks import save_visit_task
 
-log = logging.getLogger("dev")
+log = logging.getLogger("core")
 
 
 class UserVisitMiddleware:
