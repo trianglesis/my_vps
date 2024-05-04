@@ -7,7 +7,7 @@ from django.views.generic import TemplateView, ListView
 from django.contrib.redirects.models import Redirect
 
 from blog.models import Post, Tag
-from main.models import NetworkVisitorsAddresses, URLPathsVisitors, Options
+from main.models import NetworkVisitorsAddresses, URLPathsVisitors, Options, RequestGetVisitors, RequestPostVisitors
 
 log = logging.getLogger("core")
 
@@ -87,13 +87,12 @@ class RobotsTxt(TemplateView):
 
 
 class Visitors(ListView):
-    model = NetworkVisitorsAddresses
+    # model = NetworkVisitorsAddresses
     queryset = NetworkVisitorsAddresses.objects.all().order_by('-updated_at')
     template_name = 'visitors.html'
     title = "Network visitor addresses"
-    paginate_by = 100
+    paginate_by = 250
     limit_to = 30
-
 
     def get_context_data(self, **kwargs):
         context = super(Visitors, self).get_context_data(**kwargs)
@@ -110,15 +109,24 @@ class Visitors(ListView):
         if selector.get('tag'):
             self.queryset = self.queryset.filter(tags__name=selector.get('tag'))
 
+        # Get all redirects where my url_path is found
+        redirects = Redirect.objects.all()
+        # Exclude urls which are mentioned in redirects.
+        self.queryset = self.queryset.filter(
+            ~Q(rel_url_path__url_path__in=redirects.values_list('old_path', flat=True)) &
+            ~Q(rel_url_path__url_path__in=redirects.values_list('new_path', flat=True)) &
+            Q(rel_url_path__code__code__in=['404', '403', '500', 'DIS', 'SUS', 'ERR'])
+        )
+
         return self.queryset.order_by('-updated_at')
 
 
 class VisitorsUrls(ListView):
-    model = URLPathsVisitors
+    # model = URLPathsVisitors
     queryset = URLPathsVisitors.objects.all().order_by('-created_at')
     template_name = 'visitors_urls.html'
     title = "Visitor URL hits"
-    paginate_by = 100
+    paginate_by = 250
     limit_to = 30
 
     def get_context_data(self, **kwargs):
@@ -151,6 +159,60 @@ class VisitorsUrls(ListView):
 
         # For now only show URLs with max hists:
         self.queryset = self.queryset.all().annotate(total=Count('visitor_rel_url_path')).order_by('-total')
+        self.queryset = self.queryset.filter(total__gte=self.limit_to)
+
+        return self.queryset
+
+
+class VisitorsGets(ListView):
+    queryset = RequestGetVisitors.objects.all().order_by('-created_at')
+    template_name = 'visitors_request_args.html'
+    title = "Visitor GET args hits"
+    paginate_by = 100
+    limit_to = 5
+
+    def get_context_data(self, **kwargs):
+        context = super(VisitorsGets, self).get_context_data(**kwargs)
+        context.update(
+            selector=main_selector(self.request.GET),
+            title=self.title,
+            limit_to=self.limit_to,
+            kind='GET',
+        )
+        return context
+
+    def get_queryset(self):
+        selector = main_selector(self.request.GET)
+
+        # For now only show URLs with max hists:
+        self.queryset = self.queryset.all().annotate(total=Count('visitor_rel_request_get')).order_by('-total')
+        self.queryset = self.queryset.filter(total__gte=self.limit_to)
+
+        return self.queryset
+
+
+class VisitorsPosts(ListView):
+    queryset = RequestPostVisitors.objects.all().order_by('-created_at')
+    template_name = 'visitors_request_args.html'
+    title = "Visitor POST args hits"
+    paginate_by = 100
+    limit_to = 5
+
+    def get_context_data(self, **kwargs):
+        context = super(VisitorsPosts, self).get_context_data(**kwargs)
+        context.update(
+            selector=main_selector(self.request.GET),
+            title=self.title,
+            limit_to=self.limit_to,
+            kind='POST',
+        )
+        return context
+
+    def get_queryset(self):
+        selector = main_selector(self.request.GET)
+
+        # For now only show URLs with max hists:
+        self.queryset = self.queryset.all().annotate(total=Count('visitor_rel_request_post')).order_by('-total')
         self.queryset = self.queryset.filter(total__gte=self.limit_to)
 
         return self.queryset

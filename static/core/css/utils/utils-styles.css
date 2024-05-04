@@ -7,3 +7,14 @@
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+.wider-popover {
+
+    --bs-popover-max-width: 600px;
+    --bs-popover-body-padding-x: 1rem;
+    --bs-popover-body-padding-y: .5rem;
+}
+
+.wider-popover > div > pre {
+    white-space: pre-wrap;
+}

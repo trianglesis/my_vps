@@ -1,0 +1,72 @@
+{% extends "main/main.html" %}
+{% load tz %}
+{% load static %}
+{% load humanize %}
+{% block page_title %}
+    {{ title }}
+{% endblock %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'core/css/utils/utils-styles.css' %}"/>
+    <div class="row" style="margin: 30px">
+        <div class="alert alert-secondary" role="alert">
+            Table of most common request args: {{ kind }} tried at my blog by any visitor. Now it's limited to only show items where hits GTE {{ limit_to }} times.
+        </div>
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Args</th>
+                    <th scope="col">Hits</th>
+                    <th scope="col">Created</th>
+                </tr>
+                </thead>
+
+                {% for visitor_url_path in object_list %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        {% if kind == 'GET' %}
+                            <td>
+                                <a tabindex="0" class="text-dark nodecor" role="button"
+                                   data-bs-custom-class="wider-popover"
+                                   data-bs-toggle="popover"
+{#                                   data-bs-trigger="focus"#}
+                                   data-bs-placement="bottom"
+                                   data-bs-html="true"
+                                   data-bs-title="Request: {{ kind }}"
+                                   data-bs-content="<pre>{{ visitor_url_path.request_get_args }}</pre>">
+                                    <span class="txt-mono">{{ visitor_url_path.request_get_args|truncatechars:100 }}</span>
+                                </a>
+                            </td>
+                        {% elif kind == 'POST' %}
+                            <td>
+                                <a tabindex="0" class="text-dark nodecor" role="button"
+                                   data-bs-custom-class="wider-popover"
+                                   data-bs-toggle="popover"
+{#                                   data-bs-trigger="focus"#}
+                                   data-bs-placement="bottom"
+                                   data-bs-html="true"
+                                   data-bs-title="Request: {{ kind }}"
+                                   data-bs-content="<pre>{{ visitor_url_path.request_post_args }}</pre>">
+                                    <span class="txt-mono">{{ visitor_url_path.request_post_args|truncatechars:100 }}</span>
+                                </a>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td>{{ visitor_url_path.total }}</td>
+                        <td title="Created at: {{ visitor_url_path.created_at }}">{{ visitor_url_path.created_at|timezone:"UTC"| naturaltime }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+            <div class="paginator-any">{% include 'utils/pagination.html' %}</div>
+        </div>
+    </div>
+{% endblock %}
+
+<a tabindex="0" class="btn btn-lg btn-danger" role="button"
+   data-bs-toggle="popover"
+   data-bs-trigger="focus"
+   data-bs-title="Dismissible popover"
+   data-bs-content="And here's some amazing content. It's very engaging. Right?">Dismissible popover</a>
