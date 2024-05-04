@@ -9,7 +9,7 @@ from django.shortcuts import render
 from core import constants as const
 from main.tasks import save_visit_task
 
-log = logging.getLogger("core")
+log = logging.getLogger("dev")
 
 
 class UserVisitMiddleware:
@@ -26,19 +26,24 @@ class UserVisitMiddleware:
         Check request for validity here and response with correct answers.
         Use bad codes when needed.
         Save visitor now with status code relation.
+
+        https://stackoverflow.com/a/64774625/4915733
         :param request:
         :return:
         """
-        # TODO: Catch: django.security.DisallowedHost
+
+        # Check the DisallowedHost early, record this, but not raise.
         try:
-            response = self.get_response(request)
-        except DisallowedHost as e:
-            save_visit_task(request, status='ERR')
-            log.info(f"DisallowedHost - save visit for later, Traceback:\n{e}")
+            request.get_host()
+        except DisallowedHost:
+            save_visit_task(request, status='DIS')
             return render(request, 'main/main_body.html', {
-                'error_message': 'Something went wrong!',
+                'error_message': 'DisallowedHost!',
                 'error_code': f'CODE: ERR do not try that again!'
             })
+
+        try:
+            response = self.get_response(request)
         except SuspiciousOperation as e:
             log.error(f"SuspiciousOperation:"
                       f"\nException:\n{e}\n")

@@ -35,9 +35,13 @@ def save_visit(request_d, **kwargs):
     path = request_d.get('path')
     request_get_args = request_d.get('request_get_args')
     request_post_args = request_d.get('request_post_args')
+    http_host = request_d.get('http_host')
 
     # Let the database do its work before proceed to next query in the next task,
     # time.sleep(0.5)
+
+    if status == 'DIS':
+        log.info(f"Somebody tries a disallowed host: {http_host} from: {client_ip}")
 
     # If status code provided adds rel, or None
     if status is not None:
@@ -76,6 +80,7 @@ def save_visit(request_d, **kwargs):
                 rel_user_agent=rel_user_agent,
                 rel_request_get=rel_request_get,
                 rel_request_post=rel_request_post,
+                http_host=http_host,
             ),
         )
         if show_log and created:
@@ -124,6 +129,10 @@ def pick_request_useful_data(request):
     if not request_post_args:
         request_post_args = None
 
+    http_host = None
+    if request.META:
+        http_host = request.META['HTTP_HOST']
+
     # log.debug(f"request: {client_ip} {request.path}  {request_get_args} {request_post_args} saving")
     pickable_dict = dict(
         client_ip=client_ip,
@@ -132,6 +141,7 @@ def pick_request_useful_data(request):
         path=request.path,
         request_get_args=request_get_args,
         request_post_args=request_post_args,
+        http_host=http_host,
     )
     return pickable_dict
 

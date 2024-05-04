@@ -138,6 +138,7 @@ class NetworkVisitorsAddresses(models.Model):
     ip = models.GenericIPAddressField(protocol='both', unpack_ipv4=True)
     is_routable = models.BooleanField(null=True, verbose_name='Rout')
     hashed_ip_agent_path = models.CharField(max_length=255)
+
     rel_url_path = models.ForeignKey(URLPathsVisitors,
                                      blank=True,
                                      null=True,
@@ -158,14 +159,12 @@ class NetworkVisitorsAddresses(models.Model):
                                          null=True,
                                          related_name='visitor_rel_request_post',
                                          on_delete=models.CASCADE)
+
+    # Some extra META data
+    http_host = models.CharField(max_length=255, null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    # TODO: Delete those cols soon after everything is fine
-    user_agent = models.TextField(null=True, blank=True)
-    url_path = models.TextField(null=True, blank=True)
-    request_get_args = models.TextField(null=True, blank=True)
-    request_post_args = models.TextField(null=True, blank=True)
 
     class Meta:
         managed = True

@@ -30,6 +30,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     list_display = (
         'ip',
         'is_routable',
+        'http_host',
         'url_path_fk',
         'url_path_code_fk',
         'user_agent_fk',
@@ -41,6 +42,7 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     readonly_fields = (
         'ip',
         'is_routable',
+        'http_host',
         'url_path_fk',
         'url_path_code_fk',
         'user_agent_fk',
@@ -57,13 +59,14 @@ class NetworkVisitorsAddressesAdmin(admin.ModelAdmin):
     )
     search_fields = (
         'ip',
+        'http_host',
     )
     list_per_page = 25
     fieldsets = [
         ('Details', {
             'description': "Basic info",
             'fields': [
-                ('ip', 'is_routable',),
+                ('ip', 'is_routable', 'http_host'),
                 ('updated_at', 'created_at',),
             ]
         }),
