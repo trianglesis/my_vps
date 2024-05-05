@@ -169,7 +169,7 @@ class VisitorsGets(ListView):
     template_name = 'visitors_request_args.html'
     title = "Visitor GET args hits"
     paginate_by = 100
-    limit_to = 5
+    limit_to = 1
 
     def get_context_data(self, **kwargs):
         context = super(VisitorsGets, self).get_context_data(**kwargs)
@@ -183,7 +183,16 @@ class VisitorsGets(ListView):
 
     def get_queryset(self):
         selector = main_selector(self.request.GET)
-
+        # Remove empty:
+        self.queryset = self.queryset.filter(
+            ~Q(request_get_args__isnull=True) &
+            ~Q(request_get_args__exact='{}') &
+            ~Q(request_get_args__contains='jetpack') &
+            ~Q(request_get_args__contains='trianglesis') &
+            ~Q(request_get_args__contains='share') &
+            ~Q(request_get_args__contains='page') &
+            ~Q(request_get_args__contains='tag')
+        )
         # For now only show URLs with max hists:
         self.queryset = self.queryset.all().annotate(total=Count('visitor_rel_request_get')).order_by('-total')
         self.queryset = self.queryset.filter(total__gte=self.limit_to)
@@ -195,8 +204,8 @@ class VisitorsPosts(ListView):
     queryset = RequestPostVisitors.objects.all().order_by('-created_at')
     template_name = 'visitors_request_args.html'
     title = "Visitor POST args hits"
-    paginate_by = 100
-    limit_to = 5
+    paginate_by = 250
+    limit_to = 1
 
     def get_context_data(self, **kwargs):
         context = super(VisitorsPosts, self).get_context_data(**kwargs)
@@ -210,6 +219,11 @@ class VisitorsPosts(ListView):
 
     def get_queryset(self):
         selector = main_selector(self.request.GET)
+        # Remove empty:
+        self.queryset = self.queryset.filter(
+            ~Q(request_post_args__isnull=True) &
+            ~Q(request_post_args__exact='{}')
+        )
 
         # For now only show URLs with max hists:
         self.queryset = self.queryset.all().annotate(total=Count('visitor_rel_request_post')).order_by('-total')
