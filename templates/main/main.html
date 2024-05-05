@@ -194,10 +194,13 @@
                 {% endcomment %}
             </div>
             {# AUTH: DJANGO_REGISTRATION  #}
-            <div class="site-login">
-                <div class="nav-item dropdown">
-                    <a type="button" class="btn btn-sm btn-light dropdown-toggle align-right"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="float: right;">
+            <div class="navbar-nav">
+                <div class="nav-item">
+                    <a class="btn btn-sm btn-light dropdown-toggle align-right" 
+                       href="#" 
+                       role="button" 
+                       data-bs-toggle="dropdown" 
+                       aria-expanded="false" style="float: right;">
                         {% spaceless %}
                             {% if user.is_authenticated %}
                                 {% trans 'Hi, ' %}{{ user }}
@@ -216,6 +219,7 @@
                             {% if user.is_staff %}
                                 <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
                                 <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'admin:index' %}main/">Main</a>
                             {% endif %}
                         {% endif %}
                     </ul>
@@ -234,11 +238,12 @@
 {# Activate #}
 <script src="{% static 'core/js/tooltip-active.js' %}"></script>
 {% comment %}
-    <script src="{% static 'custom/js/tooltip-active.js' %}"></script>
-{% endcomment %}
-{% comment %}
-Code highlighter prismJS
-https://prismjs.com/download.html#themes=prism-twilight&languages=markup+css+clike+javascript+apacheconf+bash+css-extras+django+editorconfig+git+graphql+http+ignore+ini+json+log+makefile+markdown+markup-templating+nginx+perl+php+powershell+python+regex+sql+systemd+vim+wiki+xml-doc+yaml&plugins=line-highlight+line-numbers+show-invisibles+file-highlight+show-language+highlight-keywords+normalize-whitespace+toolbar+copy-to-clipboard
+    Code highlighter prismJS
+    https://prismjs.com/download.html#themes=prism-twilight&
+    languages=markup+css+clike+javascript+apacheconf+bash+css-extras+django+editorconfig+git+graphql+http+ignore+ini
+    +json+log+makefile+markdown+markup-templating+nginx+perl+php+powershell+python+regex+sql+systemd+vim+wiki+xml-doc+yaml
+    &plugins=line-highlight+line-numbers+show-invisibles+file-highlight+show-language+highlight-keywords
+    +normalize-whitespace+toolbar+copy-to-clipboard
 {% endcomment %}
 <script src="/static/prismjs/prism.js"></script>
 {% comment %}
